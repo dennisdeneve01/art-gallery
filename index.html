@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="Dennis Hammerschlag — original oil and acrylic paintings. Browse the gallery, view prices, and enquire about a piece or commission.">
+<meta name="theme-color" content="#100f0d">
+<title>Dennis Hammerschlag</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300..600&family=Work+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #100f0d;
+    --bg-raised: #1a1815;
+    --bg-raised-2: #221f1a;
+    --line: #2c2822;
+    --text: #ece6da;
+    --muted: #a89e8d;
+    --muted-2: #766c5d;
+    --accent: #c39a5a;
+    --accent-dim: #8a6c3d;
+    --scrim: rgba(8,7,6,0.86);
+    --shadow: 0 30px 60px -20px rgba(0,0,0,0.6);
+    color-scheme: dark;
+  }
+
+  *{ box-sizing: border-box; }
+  body{
+    margin: 0;
+    padding-inline: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: "Work Sans", -apple-system, "Segoe UI", sans-serif;
+    font-weight: 300;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+  img{ max-width: 100%; display: block; }
+  h1,h2,h3{ font-family: "Fraunces", Georgia, serif; font-weight: 400; margin: 0; text-wrap: balance; }
+  a{ color: inherit; }
+  p{ margin: 0; }
+  button{ font-family: inherit; }
+
+  .wrap{ max-width: 1180px; margin-inline: auto; padding-inline: clamp(18px, 5vw, 56px); }
+
+  /* faint canvas grain across the whole page */
+  .grain{
+    position: fixed; inset: 0; pointer-events: none; z-index: 0;
+    opacity: 0.05; mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  }
+
+  /* ---------- nav ---------- */
+  header{
+    position: sticky; top: env(safe-area-inset-top, 0px); z-index: 50;
+    padding-block: 18px;
+    border-bottom: 1px solid transparent;
+    transition: background-color .35s ease, border-color .35s ease, backdrop-filter .35s ease;
+  }
+  header.scrolled{
+    background: rgba(16,15,13,0.82);
+    backdrop-filter: blur(10px);
+    border-bottom-color: var(--line);
+  }
+  nav.wrap{ display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+  .mark{ font-family: "Fraunces", serif; font-size: 1.05rem; letter-spacing: 0.02em; }
+  .mark em{ font-style: italic; color: var(--accent); }
+  .navlinks{ display: flex; gap: clamp(14px, 3vw, 32px); list-style: none; margin: 0; padding: 0; }
+  .navlinks a{
+    text-decoration: none; font-size: 0.78rem; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--muted); padding-bottom: 4px; border-bottom: 1px solid transparent;
+    transition: color .25s ease, border-color .25s ease;
+  }
+  .navlinks a:hover, .navlinks a:focus-visible{ color: var(--text); border-color: var(--accent); outline: none; }
+
+  /* ---------- hero ---------- */
+  .hero{ padding-block: clamp(56px, 12vw, 116px) clamp(48px, 8vw, 88px); position: relative; z-index: 1; }
+  .eyebrow{
+    font-size: 0.78rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--accent);
+    margin-bottom: 18px; display: flex; align-items: center; gap: 12px;
+  }
+  .eyebrow::before{ content: ""; width: 32px; height: 1px; background: var(--accent-dim); }
+  .hero h1{ font-size: clamp(2.6rem, 7vw, 5rem); line-height: 1.02; max-width: 14ch; }
+  .hero .tagline{
+    margin-top: 22px; max-width: 46ch; font-size: clamp(1.05rem, 1.6vw, 1.25rem);
+    font-style: italic; color: var(--muted); line-height: 1.6;
+  }
+  .hero .rule{ width: 64px; height: 1px; background: var(--accent-dim); margin-top: 34px; }
+  .scrollcue{
+    margin-top: 46px; display: inline-flex; align-items: center; gap: 10px;
+    font-size: 0.72rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted-2);
+    text-decoration: none;
+  }
+  .scrollcue svg{ width: 14px; height: 14px; animation: bob 2.2s ease-in-out infinite; }
+  @keyframes bob{ 0%,100%{ transform: translateY(0);} 50%{ transform: translateY(5px);} }
+
+  /* ---------- section headings ---------- */
+  section{ position: relative; z-index: 1; }
+  .section-head{ display: flex; align-items: baseline; justify-content: space-between; gap: 20px; margin-bottom: clamp(28px, 5vw, 48px); flex-wrap: wrap; }
+  .section-head h2{ font-size: clamp(1.7rem, 3.4vw, 2.4rem); }
+  .section-head .count{ font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted-2); }
+
+  /* ---------- gallery ---------- */
+  .gallery{ padding-block: clamp(40px, 8vw, 72px); border-top: 1px solid var(--line); }
+  .filters{ display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 34px; }
+  .filters button{
+    background: transparent; border: 1px solid var(--line); color: var(--muted);
+    padding: 8px 16px; border-radius: 999px; font-size: 0.76rem; letter-spacing: 0.08em;
+    text-transform: uppercase; cursor: pointer; transition: all .2s ease;
+  }
+  .filters button:hover{ color: var(--text); border-color: var(--muted-2); }
+  .filters button[aria-pressed="true"]{ background: var(--accent); border-color: var(--accent); color: #1a1408; }
+
+  .grid{
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
+    gap: clamp(22px, 3vw, 34px);
+  }
+  .piece{
+    background: var(--bg-raised); border: 1px solid var(--line); border-radius: 2px;
+    padding: 14px 14px 0; cursor: pointer; text-align: left; color: inherit;
+    display: flex; flex-direction: column; transition: transform .3s ease, border-color .3s ease, box-shadow .3s ease;
+  }
+  .piece:hover, .piece:focus-visible{ transform: translateY(-4px); border-color: var(--accent-dim); box-shadow: var(--shadow); outline: none; }
+  .canvas{
+    aspect-ratio: 4 / 5; border-radius: 1px; position: relative; overflow: hidden;
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,0.35);
+  }
+  .canvas::after{
+    content: ""; position: absolute; inset: 0; opacity: 0.16; mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  }
+  .plate{ padding: 16px 4px 18px; }
+  .plate .cat{ font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); }
+  .plate h3{ font-size: 1.15rem; margin-top: 6px; }
+  .plate .meta{ font-size: 0.82rem; color: var(--muted); margin-top: 5px; }
+  .plate .price{ font-size: 0.86rem; color: var(--text); margin-top: 10px; letter-spacing: 0.03em; }
+
+  /* ---------- lightbox ---------- */
+  .lightbox{
+    position: fixed; inset: 0; z-index: 100; display: flex; align-items: center; justify-content: center;
+    background: var(--scrim); padding: clamp(16px, 4vw, 40px); backdrop-filter: blur(6px);
+  }
+  .lightbox[hidden]{ display: none; }
+  .lb-card{
+    background: var(--bg-raised); border: 1px solid var(--line); max-width: 880px; width: 100%;
+    max-height: calc(100vh - 40px); overflow-y: auto; display: grid; grid-template-columns: 1.1fr 1fr; box-shadow: var(--shadow);
+  }
+  @media (max-width: 640px){ .lb-card{ grid-template-columns: 1fr; } }
+  .lb-canvas{ position: relative; aspect-ratio: 4/5; }
+  .lb-canvas::after{
+    content: ""; position: absolute; inset: 0; opacity: 0.16; mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  }
+  .lb-info{ padding: clamp(22px, 4vw, 40px); display: flex; flex-direction: column; }
+  .lb-info .cat{ font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); }
+  .lb-info h3{ font-size: clamp(1.5rem, 3vw, 1.9rem); margin-top: 10px; }
+  .lb-info .meta{ margin-top: 14px; color: var(--muted); font-size: 0.92rem; line-height: 1.7; }
+  .lb-info .price{ margin-top: 22px; font-size: 1.05rem; }
+  .lb-info .desc{ margin-top: 18px; color: var(--muted); font-size: 0.9rem; line-height: 1.7; }
+  .lb-actions{ margin-top: auto; padding-top: 28px; display: flex; gap: 12px; flex-wrap: wrap; }
+  .btn{
+    display: inline-flex; align-items: center; gap: 8px; padding: 12px 20px; text-decoration: none;
+    font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase; border: 1px solid var(--line);
+    transition: all .2s ease; cursor: pointer; background: transparent; color: var(--text);
+  }
+  .btn.primary{ background: var(--accent); border-color: var(--accent); color: #1a1408; }
+  .btn:hover{ border-color: var(--accent); }
+  .btn.primary:hover{ background: var(--text); }
+  .lb-close{
+    position: absolute; top: 16px; right: 16px; z-index: 2; width: 36px; height: 36px; border-radius: 50%;
+    background: rgba(16,15,13,0.7); border: 1px solid var(--line); color: var(--text); cursor: pointer;
+    display: flex; align-items: center; justify-content: center; font-size: 1.1rem;
+  }
+  .lb-close:hover{ border-color: var(--accent); color: var(--accent); }
+
+  /* ---------- about ---------- */
+  .about{ padding-block: clamp(48px, 9vw, 96px); border-top: 1px solid var(--line); }
+  .about-grid{ display: grid; grid-template-columns: 0.8fr 1.2fr; gap: clamp(32px, 6vw, 72px); align-items: center; }
+  @media (max-width: 720px){ .about-grid{ grid-template-columns: 1fr; } }
+  .portrait{
+    aspect-ratio: 3/4; position: relative; overflow: hidden; border: 1px solid var(--line);
+    background: linear-gradient(155deg, #2a2118 0%, #171310 55%, #0e0c0a 100%);
+  }
+  .portrait::after{
+    content: ""; position: absolute; inset: 0; opacity: 0.14; mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  }
+  .about h2{ font-size: clamp(1.7rem, 3.2vw, 2.3rem); margin-bottom: 22px; }
+  .about p{ color: var(--muted); line-height: 1.8; font-size: 1rem; max-width: 58ch; }
+  .about p + p{ margin-top: 16px; }
+  .about .pull{ font-family: "Fraunces", serif; font-style: italic; color: var(--text); font-size: 1.2rem; margin-top: 26px; max-width: 40ch; line-height: 1.5; }
+
+  /* ---------- contact ---------- */
+  .contact{ padding-block: clamp(56px, 10vw, 104px); border-top: 1px solid var(--line); text-align: center; }
+  .contact h2{ font-size: clamp(1.8rem, 4vw, 2.6rem); max-width: 18ch; margin-inline: auto; }
+  .contact .sub{ color: var(--muted); margin-top: 16px; max-width: 44ch; margin-inline: auto; line-height: 1.7; }
+  .contact-links{ margin-top: 36px; display: flex; flex-wrap: wrap; justify-content: center; gap: 14px; }
+  .contact-links a{ text-decoration: none; }
+
+  footer{ border-top: 1px solid var(--line); padding-block: 26px; }
+  footer .wrap{ display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; font-size: 0.76rem; letter-spacing: 0.05em; color: var(--muted-2); }
+  footer a{ color: var(--muted-2); text-decoration: none; }
+  footer a:hover{ color: var(--accent); }
+
+  @media (prefers-reduced-motion: reduce){ *{ animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; } }
+</style>
+</head>
+<body>
+<div class="grain" aria-hidden="true"></div>
+
+<header id="siteHeader">
+  <nav class="wrap">
+    <a class="mark" href="#top" style="text-decoration:none;">Dennis <em>Hammerschlag</em></a>
+    <ul class="navlinks">
+      <li><a href="#gallery">Gallery</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main id="top">
+  <section class="hero wrap">
+    <p class="eyebrow">Original paintings &middot; Johannesburg</p>
+    <h1>Quiet studies in colour,<br>light, and stillness.</h1>
+    <p class="tagline">Oil and acrylic works exploring landscape and everyday objects, painted slowly and shown a few pieces at a time.</p>
+    <div class="rule"></div>
+    <a class="scrollcue" href="#gallery">
+      View the gallery
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 4v16m0 0l-6-6m6 6l6-6"/></svg>
+    </a>
+  </section>
+
+  <section class="gallery wrap" id="gallery">
+    <div class="section-head">
+      <h2>Gallery</h2>
+      <span class="count" id="pieceCount"></span>
+    </div>
+    <div class="filters" id="filters"></div>
+    <div class="grid" id="grid"></div>
+  </section>
+
+  <section class="about wrap" id="about">
+    <div class="about-grid">
+      <div class="portrait"></div>
+      <div>
+        <h2>About the work</h2>
+        <p>I paint in a small studio in Johannesburg, mostly in oil, occasionally in acrylic when I want to work faster and wetter. Each painting starts from a photograph, a walk, or an object left too long on a table &mdash; then spends weeks being scraped back and repainted until the colour feels right.</p>
+        <p>I'm drawn to the moments between things: the last light before a storm, a room after everyone has left it, fruit going slightly soft. Nothing here is rushed, and I'd rather finish twelve paintings a year that I mean than forty I don't.</p>
+        <p class="pull">&ldquo;A painting is finished when it stops asking questions.&rdquo;</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="contact wrap" id="contact">
+    <h2>Interested in a piece, a commission, or a studio visit?</h2>
+    <p class="sub">Original works are sold unframed unless noted. Commissions are taken on a limited basis a few times a year &mdash; get in touch to ask about availability.</p>
+    <div class="contact-links">
+      <a class="btn primary" href="mailto:dennis.hammerschlag@soliditech.com?subject=Enquiry%20from%20the%20gallery%20site">Email the studio</a>
+      <a class="btn" href="#" onclick="return false;">Instagram</a>
+      <a class="btn" href="#" onclick="return false;">Studio mailing list</a>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>&copy; <span id="year"></span> Dennis Hammerschlag</span>
+    <span>Prices in ZAR &middot; shipping arranged on request</span>
+  </div>
+</footer>
+
+<div class="lightbox" id="lightbox" hidden>
+  <div class="lb-card" role="dialog" aria-modal="true" aria-labelledby="lbTitle">
+    <button class="lb-close" id="lbClose" aria-label="Close">&times;</button>
+    <div class="lb-canvas" id="lbCanvas"></div>
+    <div class="lb-info">
+      <p class="cat" id="lbCat"></p>
+      <h3 id="lbTitle"></h3>
+      <p class="meta" id="lbMeta"></p>
+      <p class="desc" id="lbDesc"></p>
+      <p class="price" id="lbPrice"></p>
+      <div class="lb-actions">
+        <a class="btn primary" id="lbInquire" href="#">Inquire about this piece</a>
+        <button class="btn" id="lbCloseBtn">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ---------------------------------------------------------------
+  // PLACEHOLDER ARTWORKS
+  // Each entry below stands in for a real photo of a painting using
+  // a CSS gradient ("art" field) instead of an image, so the layout
+  // can be judged before real photography is ready.
+  //
+  // TO SWAP IN A REAL PHOTO: change the piece's `art` value from a
+  // gradient string to  "url(your-image.jpg) center / cover"  --
+  // e.g.  art: "url(sunset-ridge.jpg) center / cover"
+  // Photos should be reasonably compressed (long side ~1600px).
+  // ---------------------------------------------------------------
+  const pieces = [
+    { title: "Amber Horizon", category: "Landscape", medium: "Oil on canvas", size: "70 × 90 cm", year: 2025, price: "R 8,400",
+      art: "linear-gradient(180deg, #1c2230 0%, #5a4326 42%, #c98a3f 58%, #7a2f1e 100%)",
+      desc: "A last-light study of the ridge behind the studio, painted over three sittings as the colour of the sky changed each evening." },
+    { title: "Quiet Field", category: "Landscape", medium: "Oil on canvas", size: "60 × 80 cm", year: 2024, price: "R 6,900",
+      art: "linear-gradient(175deg, #3c4536 0%, #5f6b48 45%, #99926a 70%, #d8cfa8 100%)",
+      desc: "Winter grass north of the city, kept deliberately flat and muted so the single line of the horizon carries the painting." },
+    { title: "Coastal Fog", category: "Landscape", medium: "Oil on linen", size: "50 × 70 cm", year: 2023, price: "R 5,600",
+      art: "linear-gradient(200deg, #2b3440 0%, #55677a 50%, #9fa8ab 80%, #c7c3ba 100%)",
+      desc: "Painted from memory rather than reference, after a week where the coast never fully cleared." },
+    { title: "Fractured Gold", category: "Abstract", medium: "Acrylic on canvas", size: "80 × 80 cm", year: 2025, price: "R 9,200",
+      art: "conic-gradient(from 210deg, #171310, #8a5a27, #c39a5a, #241c14, #4a3320, #171310)",
+      desc: "Built up in thin overlapping shapes, this piece began as an accident with masking tape and became a small series." },
+    { title: "Ash & Ember", category: "Abstract", medium: "Acrylic on canvas", size: "65 × 90 cm", year: 2024, price: "R 7,800",
+      art: "radial-gradient(120% 120% at 30% 20%, #7a2f1e 0%, #3a1f16 35%, #14100d 75%)",
+      desc: "The darkest painting I've made so far. Most people either love it immediately or ask if something is wrong with it." },
+    { title: "Static Bloom", category: "Abstract", medium: "Oil on canvas", size: "70 × 70 cm", year: 2023, price: "R 7,100",
+      art: "radial-gradient(100% 100% at 70% 30%, #4d5a52 0%, #2a3530 40%, #10130f 78%), linear-gradient(0deg, #c39a5a10, transparent)",
+      desc: "A study of a single flower photographed too close, until the petal edges became more interesting than the flower." },
+    { title: "Citrus on Linen", category: "Still Life", medium: "Oil on linen", size: "40 × 50 cm", year: 2025, price: "R 4,200",
+      art: "linear-gradient(160deg, #e8b25a 0%, #c98a3f 35%, #7a5230 65%, #241c14 100%)",
+      desc: "Three oranges and a linen cloth, painted over two afternoons before the fruit went soft." },
+    { title: "Blue Hour Vessel", category: "Still Life", medium: "Oil on canvas", size: "45 × 60 cm", year: 2024, price: "R 4,800",
+      art: "linear-gradient(200deg, #10151f 0%, #223047 45%, #3c5270 75%, #c39a5a 100%)",
+      desc: "A ceramic jug on the studio windowsill, caught in the ten minutes of blue light before the streetlamp switched on." },
+    { title: "Dried Bloom", category: "Still Life", medium: "Acrylic on canvas", size: "35 × 45 cm", year: 2023, price: "R 3,600",
+      art: "linear-gradient(170deg, #8a6a5a 0%, #6b4a3a 40%, #7a5a48 70%, #362520 100%)",
+      desc: "Part of an ongoing series of dried flowers left on the studio desk long after they should have been thrown out." }
+  ];
+
+  const grid = document.getElementById("grid");
+  const filtersEl = document.getElementById("filters");
+  const countEl = document.getElementById("pieceCount");
+  const categories = ["All", ...new Set(pieces.map(p => p.category))];
+  let active = "All";
+
+  function renderFilters(){
+    filtersEl.innerHTML = "";
+    categories.forEach(cat => {
+      const b = document.createElement("button");
+      b.textContent = cat;
+      b.setAttribute("aria-pressed", String(cat === active));
+      b.addEventListener("click", () => { active = cat; renderFilters(); renderGrid(); });
+      filtersEl.appendChild(b);
+    });
+  }
+
+  function renderGrid(){
+    const list = active === "All" ? pieces : pieces.filter(p => p.category === active);
+    countEl.textContent = list.length + (list.length === 1 ? " piece" : " pieces");
+    grid.innerHTML = "";
+    list.forEach(p => {
+      const card = document.createElement("button");
+      card.className = "piece";
+      card.setAttribute("aria-label", `View ${p.title}, ${p.category.toLowerCase()}, ${p.price}`);
+      card.innerHTML = `
+        <div class="canvas" style="background:${p.art}"></div>
+        <div class="plate">
+          <p class="cat">${p.category}</p>
+          <h3>${p.title}</h3>
+          <p class="meta">${p.medium} &middot; ${p.size} &middot; ${p.year}</p>
+          <p class="price">${p.price}</p>
+        </div>`;
+      card.addEventListener("click", () => openLightbox(p));
+      grid.appendChild(card);
+    });
+  }
+
+  // ---- lightbox ----
+  const lightbox = document.getElementById("lightbox");
+  const lbCanvas = document.getElementById("lbCanvas");
+  const lbCat = document.getElementById("lbCat");
+  const lbTitle = document.getElementById("lbTitle");
+  const lbMeta = document.getElementById("lbMeta");
+  const lbDesc = document.getElementById("lbDesc");
+  const lbPrice = document.getElementById("lbPrice");
+  const lbInquire = document.getElementById("lbInquire");
+  let lastFocused = null;
+
+  function openLightbox(p){
+    lastFocused = document.activeElement;
+    lbCanvas.style.background = p.art;
+    lbCat.textContent = p.category;
+    lbTitle.textContent = p.title;
+    lbMeta.textContent = `${p.medium} · ${p.size} · ${p.year}`;
+    lbDesc.textContent = p.desc;
+    lbPrice.textContent = p.price;
+    lbInquire.href = `mailto:dennis.hammerschlag@soliditech.com?subject=${encodeURIComponent("Enquiry: " + p.title)}&body=${encodeURIComponent("Hi Dennis,\n\nI'd like to ask about \"" + p.title + "\" (" + p.price + ").\n\n")}`;
+    lightbox.hidden = false;
+    document.getElementById("lbClose").focus();
+  }
+  function closeLightbox(){
+    lightbox.hidden = true;
+    if (lastFocused) lastFocused.focus();
+  }
+  document.getElementById("lbClose").addEventListener("click", closeLightbox);
+  document.getElementById("lbCloseBtn").addEventListener("click", closeLightbox);
+  lightbox.addEventListener("click", (e) => { if (e.target === lightbox) closeLightbox(); });
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !lightbox.hidden) closeLightbox(); });
+
+  // ---- header scroll state ----
+  const header = document.getElementById("siteHeader");
+  const onScroll = () => {
+    try { header.classList.toggle("scrolled", window.scrollY > 8); } catch (e) {}
+  };
+  document.addEventListener("scroll", onScroll, { passive: true });
+  onScroll();
+
+  document.getElementById("year").textContent = new Date().getFullYear();
+
+  renderFilters();
+  renderGrid();
+</script>
+
+</body>
+</html>
