@@ -26,6 +26,7 @@
   }
 
   *{ box-sizing: border-box; }
+  html{ scroll-behavior: smooth; }
   body{
     margin: 0;
     padding-inline: 0;
@@ -134,7 +135,6 @@
   .plate .cat{ font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); }
   .plate h3{ font-size: 1.15rem; margin-top: 6px; }
   .plate .meta{ font-size: 0.82rem; color: var(--muted); margin-top: 5px; }
-  .plate .price{ font-size: 0.86rem; color: var(--text); margin-top: 10px; letter-spacing: 0.03em; }
 
   /* ---------- lightbox ---------- */
   .lightbox{
@@ -156,7 +156,6 @@
   .lb-info .cat{ font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); }
   .lb-info h3{ font-size: clamp(1.5rem, 3vw, 1.9rem); margin-top: 10px; }
   .lb-info .meta{ margin-top: 14px; color: var(--muted); font-size: 0.92rem; line-height: 1.7; }
-  .lb-info .price{ margin-top: 22px; font-size: 1.05rem; }
   .lb-info .desc{ margin-top: 18px; color: var(--muted); font-size: 0.9rem; line-height: 1.7; }
   .lb-actions{ margin-top: auto; padding-top: 28px; display: flex; gap: 12px; flex-wrap: wrap; }
   .btn{
@@ -220,7 +219,7 @@
   footer a{ color: var(--muted-2); text-decoration: none; }
   footer a:hover{ color: var(--accent); }
 
-  @media (prefers-reduced-motion: reduce){ *{ animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; } }
+  @media (prefers-reduced-motion: reduce){ *{ animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; } html{ scroll-behavior: auto; } }
 </style>
 </head>
 <body>
@@ -305,7 +304,7 @@
 <footer>
   <div class="wrap">
     <span>&copy; <span id="year"></span> Dennis Hammerschlag</span>
-    <span>Prices in ZAR &middot; shipping arranged on request</span>
+    <span>Shipping arranged on request</span>
   </div>
 </footer>
 
@@ -318,9 +317,8 @@
       <h3 id="lbTitle"></h3>
       <p class="meta" id="lbMeta"></p>
       <p class="desc" id="lbDesc"></p>
-      <p class="price" id="lbPrice"></p>
       <div class="lb-actions">
-        <a class="btn primary" id="lbInquire" href="#">Inquire about this piece</a>
+        <a class="btn primary" id="lbInquire" href="#contact">Inquire about this piece</a>
         <button class="btn" id="lbCloseBtn">Close</button>
       </div>
     </div>
@@ -393,14 +391,13 @@
     list.forEach(p => {
       const card = document.createElement("button");
       card.className = "piece";
-      card.setAttribute("aria-label", `View ${p.title}, ${p.category.toLowerCase()}, ${p.price}`);
+      card.setAttribute("aria-label", `View ${p.title}, ${p.category.toLowerCase()}`);
       card.innerHTML = `
         <div class="canvas" style="background:${p.art}"></div>
         <div class="plate">
           <p class="cat">${p.category}</p>
           <h3>${p.title}</h3>
           <p class="meta">${p.medium} &middot; ${p.size} &middot; ${p.year}</p>
-          <p class="price">${p.price}</p>
         </div>`;
       card.addEventListener("click", () => openLightbox(p));
       grid.appendChild(card);
@@ -414,7 +411,6 @@
   const lbTitle = document.getElementById("lbTitle");
   const lbMeta = document.getElementById("lbMeta");
   const lbDesc = document.getElementById("lbDesc");
-  const lbPrice = document.getElementById("lbPrice");
   const lbInquire = document.getElementById("lbInquire");
   let lastFocused = null;
 
@@ -425,8 +421,6 @@
     lbTitle.textContent = p.title;
     lbMeta.textContent = `${p.medium} · ${p.size} · ${p.year}`;
     lbDesc.textContent = p.desc;
-    lbPrice.textContent = p.price;
-    lbInquire.href = `mailto:dennis.hammerschlag@soliditech.com?subject=${encodeURIComponent("Enquiry: " + p.title)}&body=${encodeURIComponent("Hi Dennis,\n\nI'd like to ask about \"" + p.title + "\" (" + p.price + ").\n\n")}`;
     lightbox.hidden = false;
     document.getElementById("lbClose").focus();
   }
@@ -436,6 +430,20 @@
   }
   document.getElementById("lbClose").addEventListener("click", closeLightbox);
   document.getElementById("lbCloseBtn").addEventListener("click", closeLightbox);
+
+  // "Inquire about this piece" -> jump to the Get in touch form instead of
+  // trying to open a mail client directly (which shows a blank page when
+  // no mail client is set up), and pre-fill the message with the title.
+  lbInquire.addEventListener("click", (e) => {
+    e.preventDefault();
+    const title = lbTitle.textContent;
+    closeLightbox();
+    const msg = document.getElementById("cfMessage");
+    if (msg) msg.value = `I'd like to ask about "${title}".`;
+    const contact = document.getElementById("contact");
+    if (contact) contact.scrollIntoView({ behavior: "smooth", block: "start" });
+    if (msg) msg.focus();
+  });
   lightbox.addEventListener("click", (e) => { if (e.target === lightbox) closeLightbox(); });
   document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !lightbox.hidden) closeLightbox(); });
 
