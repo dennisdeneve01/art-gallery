@@ -115,20 +115,22 @@
 
   .grid{
     display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
-    gap: clamp(22px, 3vw, 34px);
+    gap: clamp(22px, 3vw, 34px); align-items: start;
   }
   .piece{
     background: var(--bg-raised); border: 1px solid var(--line); border-radius: 2px;
     padding: 14px 14px 0; cursor: pointer; text-align: left; color: inherit;
-    display: flex; flex-direction: column; transition: transform .3s ease, border-color .3s ease, box-shadow .3s ease;
+    display: flex; flex-direction: column;
+    transition: transform .45s ease, opacity .6s ease, border-color .3s ease, box-shadow .3s ease;
   }
+  .piece.reveal-pending{ opacity: 0; transform: translateY(16px); }
   .piece:hover, .piece:focus-visible{ transform: translateY(-4px); border-color: var(--accent-dim); box-shadow: var(--shadow); outline: none; }
   .canvas{
     aspect-ratio: 4 / 5; border-radius: 1px; position: relative; overflow: hidden;
     box-shadow: inset 0 0 0 1px rgba(0,0,0,0.35);
   }
   .canvas::after{
-    content: ""; position: absolute; inset: 0; opacity: 0.16; mix-blend-mode: overlay;
+    content: ""; position: absolute; inset: 0; opacity: 0.16; mix-blend-mode: overlay; pointer-events: none;
     background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
   }
   .plate{ padding: 16px 4px 18px; }
@@ -149,9 +151,19 @@
   @media (max-width: 640px){ .lb-card{ grid-template-columns: 1fr; } }
   .lb-canvas{ position: relative; aspect-ratio: 4/5; }
   .lb-canvas::after{
-    content: ""; position: absolute; inset: 0; opacity: 0.16; mix-blend-mode: overlay;
+    content: ""; position: absolute; inset: 0; opacity: 0.16; mix-blend-mode: overlay; pointer-events: none;
     background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
   }
+  .lb-nav{
+    position: absolute; top: 50%; transform: translateY(-50%); z-index: 2;
+    width: 40px; height: 40px; border-radius: 50%;
+    background: rgba(16,15,13,0.55); border: 1px solid var(--line); color: var(--text);
+    display: flex; align-items: center; justify-content: center; font-size: 1.5rem; line-height: 1;
+    cursor: pointer; transition: border-color .2s ease, color .2s ease;
+  }
+  .lb-nav:hover, .lb-nav:focus-visible{ border-color: var(--accent); color: var(--accent); outline: none; }
+  .lb-prev{ left: 12px; }
+  .lb-next{ right: 12px; }
   .lb-info{ padding: clamp(22px, 4vw, 40px); display: flex; flex-direction: column; }
   .lb-info .cat{ font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); }
   .lb-info h3{ font-size: clamp(1.5rem, 3vw, 1.9rem); margin-top: 10px; }
@@ -210,6 +222,9 @@
   .field input:focus, .field textarea:focus{ outline: none; border-bottom-color: var(--accent); }
   .field input::placeholder, .field textarea::placeholder{ color: var(--muted-2); }
   .form-actions{ display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
+  .email-fallback{ margin-top: 26px; text-align: center; font-size: 0.85rem; color: var(--muted); }
+  .email-fallback a{ color: var(--text); text-decoration: underline; text-decoration-color: var(--line); text-underline-offset: 3px; }
+  .email-fallback a:hover{ color: var(--accent); text-decoration-color: var(--accent); }
   .brandmark{
     margin-top: 46px; display: flex; justify-content: center; width: 72px; margin-inline: auto;
     border-radius: 50%; transition: transform .25s ease;
@@ -300,6 +315,8 @@
       </div>
     </form>
 
+    <p class="email-fallback">Prefer to email directly? <a href="mailto:dennis.hammerschlag@soliditech.com">dennis.hammerschlag@soliditech.com</a></p>
+
     <a class="brandmark" href="#top" aria-label="Back to top">
       <svg viewBox="0 0 88 88" width="72" height="72">
         <circle cx="44" cy="44" r="42"/>
@@ -320,7 +337,10 @@
 <div class="lightbox" id="lightbox" hidden>
   <div class="lb-card" role="dialog" aria-modal="true" aria-labelledby="lbTitle">
     <button class="lb-close" id="lbClose" aria-label="Close">&times;</button>
-    <div class="lb-canvas" id="lbCanvas"></div>
+    <div class="lb-canvas" id="lbCanvas">
+      <button class="lb-nav lb-prev" id="lbPrev" aria-label="Previous piece">&lsaquo;</button>
+      <button class="lb-nav lb-next" id="lbNext" aria-label="Next piece">&rsaquo;</button>
+    </div>
     <div class="lb-info">
       <p class="cat" id="lbCat"></p>
       <h3 id="lbTitle"></h3>
@@ -347,31 +367,31 @@
   // Photos should be reasonably compressed (long side ~1600px).
   // ---------------------------------------------------------------
   const pieces = [
-    { title: "Amber Horizon", category: "Landscape", medium: "Oil on canvas", size: "70 × 90 cm", year: 2025, price: "R 8,400",
+    { title: "Amber Horizon", category: "Landscape", medium: "Oil on canvas", size: "70 × 90 cm", year: 2025, price: "R 8,400", aspect: "3/4",
       art: "linear-gradient(180deg, #1c2230 0%, #5a4326 42%, #c98a3f 58%, #7a2f1e 100%)",
       desc: "A last-light study of the ridge behind the studio, painted over three sittings as the colour of the sky changed each evening." },
-    { title: "Quiet Field", category: "Landscape", medium: "Oil on canvas", size: "60 × 80 cm", year: 2024, price: "R 6,900",
+    { title: "Quiet Field", category: "Landscape", medium: "Oil on canvas", size: "60 × 80 cm", year: 2024, price: "R 6,900", aspect: "4/5",
       art: "linear-gradient(175deg, #3c4536 0%, #5f6b48 45%, #99926a 70%, #d8cfa8 100%)",
       desc: "Winter grass north of the city, kept deliberately flat and muted so the single line of the horizon carries the painting." },
-    { title: "Coastal Fog", category: "Landscape", medium: "Oil on linen", size: "50 × 70 cm", year: 2023, price: "R 5,600",
+    { title: "Coastal Fog", category: "Landscape", medium: "Oil on linen", size: "50 × 70 cm", year: 2023, price: "R 5,600", aspect: "1/1",
       art: "linear-gradient(200deg, #2b3440 0%, #55677a 50%, #9fa8ab 80%, #c7c3ba 100%)",
       desc: "Painted from memory rather than reference, after a week where the coast never fully cleared." },
-    { title: "Fractured Gold", category: "Abstract", medium: "Acrylic on canvas", size: "80 × 80 cm", year: 2025, price: "R 9,200",
+    { title: "Fractured Gold", category: "Abstract", medium: "Acrylic on canvas", size: "80 × 80 cm", year: 2025, price: "R 9,200", aspect: "4/5",
       art: "conic-gradient(from 210deg, #171310, #8a5a27, #c39a5a, #241c14, #4a3320, #171310)",
       desc: "Built up in thin overlapping shapes, this piece began as an accident with masking tape and became a small series." },
-    { title: "Ash & Ember", category: "Abstract", medium: "Acrylic on canvas", size: "65 × 90 cm", year: 2024, price: "R 7,800",
+    { title: "Ash & Ember", category: "Abstract", medium: "Acrylic on canvas", size: "65 × 90 cm", year: 2024, price: "R 7,800", aspect: "3/4",
       art: "radial-gradient(120% 120% at 30% 20%, #7a2f1e 0%, #3a1f16 35%, #14100d 75%)",
       desc: "The darkest painting I've made so far. Most people either love it immediately or ask if something is wrong with it." },
-    { title: "Static Bloom", category: "Abstract", medium: "Oil on canvas", size: "70 × 70 cm", year: 2023, price: "R 7,100",
+    { title: "Static Bloom", category: "Abstract", medium: "Oil on canvas", size: "70 × 70 cm", year: 2023, price: "R 7,100", aspect: "1/1",
       art: "radial-gradient(100% 100% at 70% 30%, #4d5a52 0%, #2a3530 40%, #10130f 78%), linear-gradient(0deg, #c39a5a10, transparent)",
       desc: "A study of a single flower photographed too close, until the petal edges became more interesting than the flower." },
-    { title: "Citrus on Linen", category: "Still Life", medium: "Oil on linen", size: "40 × 50 cm", year: 2025, price: "R 4,200",
+    { title: "Citrus on Linen", category: "Still Life", medium: "Oil on linen", size: "40 × 50 cm", year: 2025, price: "R 4,200", aspect: "4/5",
       art: "linear-gradient(160deg, #e8b25a 0%, #c98a3f 35%, #7a5230 65%, #241c14 100%)",
       desc: "Three oranges and a linen cloth, painted over two afternoons before the fruit went soft." },
-    { title: "Blue Hour Vessel", category: "Still Life", medium: "Oil on canvas", size: "45 × 60 cm", year: 2024, price: "R 4,800",
+    { title: "Blue Hour Vessel", category: "Still Life", medium: "Oil on canvas", size: "45 × 60 cm", year: 2024, price: "R 4,800", aspect: "3/4",
       art: "linear-gradient(200deg, #10151f 0%, #223047 45%, #3c5270 75%, #c39a5a 100%)",
       desc: "A ceramic jug on the studio windowsill, caught in the ten minutes of blue light before the streetlamp switched on." },
-    { title: "Dried Bloom", category: "Still Life", medium: "Acrylic on canvas", size: "35 × 45 cm", year: 2023, price: "R 3,600",
+    { title: "Dried Bloom", category: "Still Life", medium: "Acrylic on canvas", size: "35 × 45 cm", year: 2023, price: "R 3,600", aspect: "1/1",
       art: "linear-gradient(170deg, #8a6a5a 0%, #6b4a3a 40%, #7a5a48 70%, #362520 100%)",
       desc: "Part of an ongoing series of dried flowers left on the studio desk long after they should have been thrown out." }
   ];
@@ -381,6 +401,7 @@
   const countEl = document.getElementById("pieceCount");
   const categories = ["All", ...new Set(pieces.map(p => p.category))];
   let active = "All";
+  let currentFiltered = pieces;
 
   function renderFilters(){
     filtersEl.innerHTML = "";
@@ -395,6 +416,7 @@
 
   function renderGrid(){
     const list = active === "All" ? pieces : pieces.filter(p => p.category === active);
+    currentFiltered = list;
     countEl.textContent = list.length + (list.length === 1 ? " piece" : " pieces");
     grid.innerHTML = "";
     list.forEach(p => {
@@ -402,7 +424,7 @@
       card.className = "piece";
       card.setAttribute("aria-label", `View ${p.title}, ${p.category.toLowerCase()}`);
       card.innerHTML = `
-        <div class="canvas" style="background:${p.art}"></div>
+        <div class="canvas" style="background:${p.art}; aspect-ratio:${p.aspect || "4/5"}"></div>
         <div class="plate">
           <p class="cat">${p.category}</p>
           <h3>${p.title}</h3>
@@ -410,6 +432,30 @@
         </div>`;
       card.addEventListener("click", () => openLightbox(p));
       grid.appendChild(card);
+    });
+  }
+
+  // Fade + rise gallery cards in as they scroll into view. Anything already
+  // visible in the first frame is left alone (shown immediately), so the
+  // page never depends on scrolling or JS to reveal its initial content.
+  function setupReveal(){
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduceMotion || !("IntersectionObserver" in window)) return;
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.remove("reveal-pending");
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15, rootMargin: "0px 0px -40px 0px" });
+    grid.querySelectorAll(".piece").forEach(el => {
+      const rect = el.getBoundingClientRect();
+      const alreadyVisible = rect.top < window.innerHeight && rect.bottom > 0;
+      if (!alreadyVisible) {
+        el.classList.add("reveal-pending");
+        io.observe(el);
+      }
     });
   }
 
@@ -422,14 +468,20 @@
   const lbDesc = document.getElementById("lbDesc");
   const lbInquire = document.getElementById("lbInquire");
   let lastFocused = null;
+  let currentIndex = -1;
 
-  function openLightbox(p){
-    lastFocused = document.activeElement;
+  function fillLightbox(p){
     lbCanvas.style.background = p.art;
+    lbCanvas.style.aspectRatio = p.aspect || "4/5";
     lbCat.textContent = p.category;
     lbTitle.textContent = p.title;
     lbMeta.textContent = `${p.medium} · ${p.size} · ${p.year}`;
     lbDesc.textContent = p.desc;
+  }
+  function openLightbox(p){
+    lastFocused = document.activeElement;
+    currentIndex = currentFiltered.indexOf(p);
+    fillLightbox(p);
     lightbox.hidden = false;
     document.getElementById("lbClose").focus();
   }
@@ -437,8 +489,15 @@
     lightbox.hidden = true;
     if (lastFocused) lastFocused.focus();
   }
+  function showByOffset(offset){
+    if (!currentFiltered.length) return;
+    currentIndex = (currentIndex + offset + currentFiltered.length) % currentFiltered.length;
+    fillLightbox(currentFiltered[currentIndex]);
+  }
   document.getElementById("lbClose").addEventListener("click", closeLightbox);
   document.getElementById("lbCloseBtn").addEventListener("click", closeLightbox);
+  document.getElementById("lbPrev").addEventListener("click", () => showByOffset(-1));
+  document.getElementById("lbNext").addEventListener("click", () => showByOffset(1));
 
   // "Inquire about this piece" -> jump to the Get in touch form instead of
   // trying to open a mail client directly (which shows a blank page when
@@ -454,7 +513,12 @@
     if (msg) msg.focus();
   });
   lightbox.addEventListener("click", (e) => { if (e.target === lightbox) closeLightbox(); });
-  document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !lightbox.hidden) closeLightbox(); });
+  document.addEventListener("keydown", (e) => {
+    if (lightbox.hidden) return;
+    if (e.key === "Escape") closeLightbox();
+    else if (e.key === "ArrowRight") showByOffset(1);
+    else if (e.key === "ArrowLeft") showByOffset(-1);
+  });
 
   // ---- header scroll state ----
   const header = document.getElementById("siteHeader");
@@ -468,6 +532,7 @@
 
   renderFilters();
   renderGrid();
+  setupReveal();
 
   // ---- contact form -> mailto ----
   const contactForm = document.getElementById("contactForm");
