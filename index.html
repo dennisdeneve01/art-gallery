@@ -210,10 +210,14 @@
   .field input:focus, .field textarea:focus{ outline: none; border-bottom-color: var(--accent); }
   .field input::placeholder, .field textarea::placeholder{ color: var(--muted-2); }
   .form-actions{ display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
-  .form-note{ font-size: 0.8rem; color: var(--muted-2); }
-  .brandmark{ margin-top: 46px; display: flex; justify-content: center; }
+  .brandmark{
+    margin-top: 46px; display: flex; justify-content: center; width: 72px; margin-inline: auto;
+    border-radius: 50%; transition: transform .25s ease;
+  }
+  .brandmark:hover, .brandmark:focus-visible{ transform: translateY(-3px); outline: none; }
+  .brandmark:hover circle, .brandmark:focus-visible circle{ stroke: var(--accent); }
   .brandmark svg{ overflow: visible; }
-  .brandmark circle{ fill: none; stroke: var(--line); stroke-width: 1; }
+  .brandmark circle{ fill: none; stroke: var(--line); stroke-width: 1; transition: stroke .25s ease; }
   .brandmark path{ fill: none; stroke: var(--accent-dim); stroke-width: 1; stroke-linecap: round; }
   .brandmark text{ font-family: "Fraunces", Georgia, serif; font-style: italic; font-size: 30px; fill: var(--accent); }
 
@@ -293,17 +297,16 @@
       </div>
       <div class="form-actions">
         <button type="submit" class="btn primary">Send enquiry</button>
-        <span class="form-note">Opens your email app with this pre-filled &mdash; you send it from there.</span>
       </div>
     </form>
 
-    <div class="brandmark" aria-hidden="true">
+    <a class="brandmark" href="#top" aria-label="Back to top">
       <svg viewBox="0 0 88 88" width="72" height="72">
         <circle cx="44" cy="44" r="42"/>
         <text x="44" y="50" text-anchor="middle">DH</text>
         <path d="M25 62 Q44 69 63 62"/>
       </svg>
-    </div>
+    </a>
   </section>
 </main>
 
