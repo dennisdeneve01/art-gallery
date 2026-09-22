@@ -211,8 +211,11 @@
   .field input::placeholder, .field textarea::placeholder{ color: var(--muted-2); }
   .form-actions{ display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
   .form-note{ font-size: 0.8rem; color: var(--muted-2); }
-  .contact-links{ margin-top: 34px; display: flex; flex-wrap: wrap; justify-content: center; gap: 14px; }
-  .contact-links a{ text-decoration: none; }
+  .brandmark{ margin-top: 46px; display: flex; justify-content: center; }
+  .brandmark svg{ overflow: visible; }
+  .brandmark circle{ fill: none; stroke: var(--line); stroke-width: 1; }
+  .brandmark path{ fill: none; stroke: var(--accent-dim); stroke-width: 1; stroke-linecap: round; }
+  .brandmark text{ font-family: "Fraunces", Georgia, serif; font-style: italic; font-size: 30px; fill: var(--accent); }
 
   footer{ border-top: 1px solid var(--line); padding-block: 26px; }
   footer .wrap{ display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; font-size: 0.76rem; letter-spacing: 0.05em; color: var(--muted-2); }
@@ -294,9 +297,12 @@
       </div>
     </form>
 
-    <div class="contact-links">
-      <a class="btn" href="#" onclick="return false;">Instagram</a>
-      <a class="btn" href="#" onclick="return false;">Studio mailing list</a>
+    <div class="brandmark" aria-hidden="true">
+      <svg viewBox="0 0 88 88" width="72" height="72">
+        <circle cx="44" cy="44" r="42"/>
+        <text x="44" y="50" text-anchor="middle">DH</text>
+        <path d="M25 62 Q44 69 63 62"/>
+      </svg>
     </div>
   </section>
 </main>
