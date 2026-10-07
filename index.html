@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
+<meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="description" content="Dennis Hammerschlag — bold, colour-forward oil and acrylic paintings inspired by the beauty of the natural world. Browse the gallery and get in touch.">
+<meta name="description" content="Dennis Hammerschlag &mdash; bold, colour-forward oil and acrylic paintings inspired by the beauty of the natural world.">
 <meta name="theme-color" content="#100f0d">
 <title>Dennis Hammerschlag</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -113,10 +113,10 @@
   .filters button:hover{ color: var(--text); border-color: var(--muted-2); }
   .filters button[aria-pressed="true"]{ background: var(--accent); border-color: var(--accent); color: #1a1408; }
 
-  .grid{
-    display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
-    gap: clamp(22px, 3vw, 34px); align-items: start;
-  }
+  .grid{ display: flex; gap: clamp(22px, 3vw, 34px); align-items: flex-start; }
+  .grid .col{ flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; gap: clamp(22px, 3vw, 34px); }
+  .more{ display: flex; justify-content: center; margin-top: clamp(32px, 5vw, 52px); }
+  .more[hidden]{ display: none; }
   .piece{
     background: var(--bg-raised); border: 1px solid var(--line); border-radius: 2px;
     padding: 14px 14px 0; cursor: pointer; text-align: left; color: inherit;
@@ -127,8 +127,9 @@
   .piece:hover, .piece:focus-visible{ transform: translateY(-4px); border-color: var(--accent-dim); box-shadow: var(--shadow); outline: none; }
   .canvas{
     aspect-ratio: 4 / 5; border-radius: 1px; position: relative; overflow: hidden;
-    box-shadow: inset 0 0 0 1px rgba(0,0,0,0.35);
+    background: #0b0a09; box-shadow: inset 0 0 0 1px rgba(0,0,0,0.35);
   }
+  .canvas img{ display: block; width: 100%; height: 100%; object-fit: cover; }
   .canvas::after{
     content: ""; position: absolute; inset: 0; opacity: 0.16; mix-blend-mode: overlay; pointer-events: none;
     background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
@@ -145,11 +146,11 @@
   }
   .lightbox[hidden]{ display: none; }
   .lb-card{
-    background: var(--bg-raised); border: 1px solid var(--line); max-width: 880px; width: 100%;
-    max-height: calc(100vh - 40px); overflow-y: auto; display: grid; grid-template-columns: 1.1fr 1fr; box-shadow: var(--shadow);
+    background: var(--bg-raised); border: 1px solid var(--line); max-width: 1040px; width: 100%;
+    max-height: calc(100vh - 40px); overflow-y: auto; display: grid; grid-template-columns: 1.5fr 1fr; box-shadow: var(--shadow);
   }
   @media (max-width: 640px){ .lb-card{ grid-template-columns: 1fr; } }
-  .lb-canvas{ position: relative; aspect-ratio: 4/5; }
+  .lb-canvas{ position: relative; aspect-ratio: 4/5; align-self: center; background: #0b0a09; }
   .lb-canvas::after{
     content: ""; position: absolute; inset: 0; opacity: 0.16; mix-blend-mode: overlay; pointer-events: none;
     background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
@@ -245,6 +246,8 @@
 </style>
 </head>
 <body>
+
+
 <div class="grain" aria-hidden="true"></div>
 
 <header id="siteHeader">
@@ -277,6 +280,7 @@
     </div>
     <div class="filters" id="filters"></div>
     <div class="grid" id="grid"></div>
+    <div class="more" id="moreWrap" hidden><button class="btn" id="moreBtn" type="button">Show more</button></div>
   </section>
 
   <section class="about wrap" id="about">
@@ -356,52 +360,351 @@
 
 <script>
   // ---------------------------------------------------------------
-  // PLACEHOLDER ARTWORKS
-  // Each entry below stands in for a real photo of a painting using
-  // a CSS gradient ("art" field) instead of an image, so the layout
-  // can be judged before real photography is ready.
-  //
-  // TO SWAP IN A REAL PHOTO: change the piece's `art` value from a
-  // gradient string to  "url(your-image.jpg) center / cover"  --
-  // e.g.  art: "url(sunset-ridge.jpg) center / cover"
-  // Photos should be reasonably compressed (long side ~1600px).
+  // THE PAINTINGS
+  // Each entry is one painting. `thumb` is the small image used in the
+  // grid, `img` the larger one used in the lightbox, and `w` / `h` the
+  // image's pixel size (used to keep the layout from jumping while the
+  // pictures load). To add a painting, drop its photos into images/ and
+  // images/thumbs/ and add a line here. `credit` is optional.
   // ---------------------------------------------------------------
   const pieces = [
-    { title: "Amber Horizon", category: "Landscape", medium: "Oil on canvas", size: "70 × 90 cm", year: 2025, price: "R 8,400", aspect: "3/4",
-      art: "linear-gradient(180deg, #1c2230 0%, #5a4326 42%, #c98a3f 58%, #7a2f1e 100%)",
-      desc: "A last-light study of the ridge behind the studio, painted over three sittings as the colour of the sky changed each evening." },
-    { title: "Quiet Field", category: "Landscape", medium: "Oil on canvas", size: "60 × 80 cm", year: 2024, price: "R 6,900", aspect: "4/5",
-      art: "linear-gradient(175deg, #3c4536 0%, #5f6b48 45%, #99926a 70%, #d8cfa8 100%)",
-      desc: "Winter grass north of the city, kept deliberately flat and muted so the single line of the horizon carries the painting." },
-    { title: "Coastal Fog", category: "Landscape", medium: "Oil on linen", size: "50 × 70 cm", year: 2023, price: "R 5,600", aspect: "1/1",
-      art: "linear-gradient(200deg, #2b3440 0%, #55677a 50%, #9fa8ab 80%, #c7c3ba 100%)",
-      desc: "Painted from memory rather than reference, after a week where the coast never fully cleared." },
-    { title: "Fractured Gold", category: "Abstract", medium: "Acrylic on canvas", size: "80 × 80 cm", year: 2025, price: "R 9,200", aspect: "4/5",
-      art: "conic-gradient(from 210deg, #171310, #8a5a27, #c39a5a, #241c14, #4a3320, #171310)",
-      desc: "Built up in thin overlapping shapes, this piece began as an accident with masking tape and became a small series." },
-    { title: "Ash & Ember", category: "Abstract", medium: "Acrylic on canvas", size: "65 × 90 cm", year: 2024, price: "R 7,800", aspect: "3/4",
-      art: "radial-gradient(120% 120% at 30% 20%, #7a2f1e 0%, #3a1f16 35%, #14100d 75%)",
-      desc: "The darkest painting I've made so far. Most people either love it immediately or ask if something is wrong with it." },
-    { title: "Static Bloom", category: "Abstract", medium: "Oil on canvas", size: "70 × 70 cm", year: 2023, price: "R 7,100", aspect: "1/1",
-      art: "radial-gradient(100% 100% at 70% 30%, #4d5a52 0%, #2a3530 40%, #10130f 78%), linear-gradient(0deg, #c39a5a10, transparent)",
-      desc: "A study of a single flower photographed too close, until the petal edges became more interesting than the flower." },
-    { title: "Citrus on Linen", category: "Still Life", medium: "Oil on linen", size: "40 × 50 cm", year: 2025, price: "R 4,200", aspect: "4/5",
-      art: "linear-gradient(160deg, #e8b25a 0%, #c98a3f 35%, #7a5230 65%, #241c14 100%)",
-      desc: "Three oranges and a linen cloth, painted over two afternoons before the fruit went soft." },
-    { title: "Blue Hour Vessel", category: "Still Life", medium: "Oil on canvas", size: "45 × 60 cm", year: 2024, price: "R 4,800", aspect: "3/4",
-      art: "linear-gradient(200deg, #10151f 0%, #223047 45%, #3c5270 75%, #c39a5a 100%)",
-      desc: "A ceramic jug on the studio windowsill, caught in the ten minutes of blue light before the streetlamp switched on." },
-    { title: "Dried Bloom", category: "Still Life", medium: "Acrylic on canvas", size: "35 × 45 cm", year: 2023, price: "R 3,600", aspect: "1/1",
-      art: "linear-gradient(170deg, #8a6a5a 0%, #6b4a3a 40%, #7a5a48 70%, #362520 100%)",
-      desc: "Part of an ongoing series of dried flowers left on the studio desk long after they should have been thrown out." }
-  ];
+  {
+    "title": "Burnt Horizon",
+    "category": "Landscapes",
+    "w": 1302,
+    "h": 1400,
+    "thumb": "images/thumbs/burnt-horizon.jpg",
+    "img": "images/burnt-horizon.jpg",
+    "desc": "Two acacias against a sky burning down into the grass."
+  },
+  {
+    "title": "Fire at Moonrise",
+    "category": "Seascapes",
+    "w": 996,
+    "h": 1400,
+    "thumb": "images/thumbs/fire-at-moonrise.jpg",
+    "img": "images/fire-at-moonrise.jpg",
+    "desc": "A lighthouse, a crescent moon and a bonfire on the sand, the last green of the sky sinking into night."
+  },
+  {
+    "title": "The Lookout",
+    "category": "Wildlife",
+    "w": 1400,
+    "h": 610,
+    "thumb": "images/thumbs/the-lookout.jpg",
+    "img": "images/the-lookout.jpg",
+    "desc": "A cheetah keeps watch from the rocks while her four cubs peer over the edge."
+  },
+  {
+    "title": "Aurora & Embers",
+    "category": "Landscapes",
+    "w": 1400,
+    "h": 1109,
+    "thumb": "images/thumbs/aurora-and-embers.jpg",
+    "img": "images/aurora-and-embers.jpg",
+    "desc": "Green light pouring over the pines, with a campfire the only warmth in the frame."
+  },
+  {
+    "title": "Dusk Walker",
+    "category": "Wildlife",
+    "w": 1198,
+    "h": 1400,
+    "thumb": "images/thumbs/dusk-walker.jpg",
+    "img": "images/dusk-walker.jpg",
+    "desc": "An elephant walks out of the grey as the sun sinks behind him."
+  },
+  {
+    "title": "Red Sail, Quiet Harbour",
+    "category": "Seascapes",
+    "w": 1400,
+    "h": 1011,
+    "thumb": "images/thumbs/red-sail-quiet-harbour.jpg",
+    "img": "images/red-sail-quiet-harbour.jpg",
+    "desc": "Boats tied up at the quay, one red sail catching what light is left."
+  },
+  {
+    "title": "Phoenix",
+    "category": "Abstracts",
+    "w": 1088,
+    "h": 1400,
+    "thumb": "images/thumbs/phoenix.jpg",
+    "img": "images/phoenix.jpg",
+    "desc": "Fire pulled into the shape of a bird, rising out of black."
+  },
+  {
+    "title": "Through the Palms",
+    "category": "Seascapes",
+    "w": 1400,
+    "h": 1064,
+    "thumb": "images/thumbs/through-the-palms.jpg",
+    "img": "images/through-the-palms.jpg",
+    "desc": "A sailboat on bright water, framed by two leaning palms."
+  },
+  {
+    "title": "Night Howl",
+    "category": "Landscapes",
+    "w": 927,
+    "h": 1400,
+    "thumb": "images/thumbs/night-howl.jpg",
+    "img": "images/night-howl.jpg",
+    "desc": "A lone wolf on a ridge, calling out to the Milky Way."
+  },
+  {
+    "title": "Roar & Wonder",
+    "category": "Wildlife",
+    "w": 1400,
+    "h": 999,
+    "thumb": "images/thumbs/roar-and-wonder.jpg",
+    "img": "images/roar-and-wonder.jpg",
+    "desc": "Two lion cubs: one mid-yawn, the other quietly taking the world in."
+  },
+  {
+    "title": "Dusk Divided",
+    "category": "Abstracts",
+    "w": 1400,
+    "h": 1011,
+    "thumb": "images/thumbs/dusk-divided.jpg",
+    "img": "images/dusk-divided.jpg",
+    "desc": "A deep blue half and a red half, with a single gold sun."
+  },
+  {
+    "title": "Amber Eyes",
+    "category": "Wildlife",
+    "w": 1400,
+    "h": 941,
+    "thumb": "images/thumbs/amber-eyes.jpg",
+    "img": "images/amber-eyes.jpg",
+    "desc": "Only the eyes break the surface."
+  },
+  {
+    "title": "Fire Lily",
+    "category": "Florals",
+    "w": 1117,
+    "h": 1400,
+    "thumb": "images/thumbs/fire-lily.jpg",
+    "img": "images/fire-lily.jpg",
+    "desc": "An orange lily glowing against black."
+  },
+  {
+    "title": "Breach",
+    "category": "Wildlife",
+    "w": 1400,
+    "h": 1081,
+    "thumb": "images/thumbs/breach.jpg",
+    "img": "images/breach.jpg",
+    "desc": "A dolphin at the top of its leap, spray still hanging in the air."
+  },
+  {
+    "title": "Autumn Valley",
+    "category": "Landscapes",
+    "w": 1400,
+    "h": 957,
+    "thumb": "images/thumbs/autumn-valley.jpg",
+    "img": "images/autumn-valley.jpg",
+    "desc": "A stream winding down through a valley, with pink along the horizon."
+  },
+  {
+    "title": "Old Soul",
+    "category": "Wildlife",
+    "w": 1210,
+    "h": 1400,
+    "thumb": "images/thumbs/old-soul.jpg",
+    "img": "images/old-soul.jpg",
+    "desc": "A rhino looks out of a ring of ragged white, steady and unhurried."
+  },
+  {
+    "title": "Moonrise in Lilac",
+    "category": "Abstracts",
+    "w": 1400,
+    "h": 949,
+    "thumb": "images/thumbs/moonrise-in-lilac.jpg",
+    "img": "images/moonrise-in-lilac.jpg",
+    "desc": "Bands of indigo and lilac with one small yellow moon."
+  },
+  {
+    "title": "Still Water, High Peaks",
+    "category": "Landscapes",
+    "w": 1400,
+    "h": 965,
+    "thumb": "images/thumbs/still-water-high-peaks.jpg",
+    "img": "images/still-water-high-peaks.jpg",
+    "desc": "Snow peaks, dark pines and a still grey river."
+  },
+  {
+    "title": "Before the Storm",
+    "category": "Wildlife",
+    "w": 1349,
+    "h": 1400,
+    "thumb": "images/thumbs/before-the-storm.jpg",
+    "img": "images/before-the-storm.jpg",
+    "desc": "Two dark horses, braced and watchful, as a cloud builds behind them."
+  },
+  {
+    "title": "Red Funnels",
+    "category": "Seascapes",
+    "w": 1400,
+    "h": 1011,
+    "thumb": "images/thumbs/red-funnels.jpg",
+    "img": "images/red-funnels.jpg",
+    "desc": "An ocean liner slides past a skyline of colour."
+  },
+  {
+    "title": "Amber Dusk",
+    "category": "Abstracts",
+    "w": 1400,
+    "h": 1123,
+    "thumb": "images/thumbs/amber-dusk.jpg",
+    "img": "images/amber-dusk.jpg",
+    "desc": "A lone figure walks the glowing sand beneath a rising moon."
+  },
+  {
+    "title": "The Road Home",
+    "category": "Landscapes",
+    "w": 1400,
+    "h": 975,
+    "thumb": "images/thumbs/the-road-home.jpg",
+    "img": "images/the-road-home.jpg",
+    "desc": "A dirt road climbing past a red barn and through the trees."
+  },
+  {
+    "title": "Violet Bloom",
+    "category": "Florals",
+    "w": 1241,
+    "h": 1400,
+    "thumb": "images/thumbs/violet-bloom.jpg",
+    "img": "images/violet-bloom.jpg",
+    "desc": "A violet flower against a soft, rain-grey blue."
+  },
+  {
+    "title": "Long Shadows",
+    "category": "Landscapes",
+    "w": 1400,
+    "h": 1012,
+    "thumb": "images/thumbs/long-shadows.jpg",
+    "img": "images/long-shadows.jpg",
+    "desc": "Dunes cut by long black shadows, and one dead tree."
+  },
+  {
+    "title": "Restless Sky",
+    "category": "Figures & Studies",
+    "credit": "After Van Gogh",
+    "w": 1400,
+    "h": 978,
+    "thumb": "images/thumbs/restless-sky.jpg",
+    "img": "images/restless-sky.jpg",
+    "desc": "A study after The Starry Night."
+  },
+  {
+    "title": "Brothers",
+    "category": "Wildlife",
+    "w": 1400,
+    "h": 891,
+    "thumb": "images/thumbs/brothers.jpg",
+    "img": "images/brothers.jpg",
+    "desc": "Two lions resting in the long grass as evening settles in."
+  },
+  {
+    "title": "Breaking Light",
+    "category": "Seascapes",
+    "w": 1400,
+    "h": 965,
+    "thumb": "images/thumbs/breaking-light.jpg",
+    "img": "images/breaking-light.jpg",
+    "desc": "Surf crashing through the mouth of a cave, a band of amber sky beyond."
+  },
+  {
+    "title": "Gemsbok",
+    "category": "Wildlife",
+    "w": 1177,
+    "h": 1400,
+    "thumb": "images/thumbs/gemsbok.jpg",
+    "img": "images/gemsbok.jpg",
+    "desc": "A gemsbok, long horns raised, against a burnt-orange ground."
+  },
+  {
+    "title": "Last Light, Two Huts",
+    "category": "Landscapes",
+    "w": 1400,
+    "h": 1037,
+    "thumb": "images/thumbs/last-light-two-huts.jpg",
+    "img": "images/last-light-two-huts.jpg",
+    "desc": "Two thatched huts in the last of the light, mountains behind."
+  },
+  {
+    "title": "Lady with an Ermine",
+    "category": "Figures & Studies",
+    "credit": "After Leonardo da Vinci",
+    "w": 1136,
+    "h": 1400,
+    "thumb": "images/thumbs/lady-with-an-ermine.jpg",
+    "img": "images/lady-with-an-ermine.jpg",
+    "desc": "A study after Leonardo's portrait."
+  },
+  {
+    "title": "Violet Tide",
+    "category": "Seascapes",
+    "w": 1400,
+    "h": 1102,
+    "thumb": "images/thumbs/violet-tide.jpg",
+    "img": "images/violet-tide.jpg",
+    "desc": "Dusk settling over the waves on a quiet shoreline."
+  },
+  {
+    "title": "The Sweep",
+    "category": "Figures & Studies",
+    "w": 1400,
+    "h": 927,
+    "thumb": "images/thumbs/the-sweep.jpg",
+    "img": "images/the-sweep.jpg",
+    "desc": "A batsman drops to one knee and sweeps."
+  },
+  {
+    "title": "Leaning Palm",
+    "category": "Seascapes",
+    "w": 1400,
+    "h": 1237,
+    "thumb": "images/thumbs/leaning-palm.jpg",
+    "img": "images/leaning-palm.jpg",
+    "desc": "A palm leans out over a quiet beach."
+  },
+  {
+    "title": "The Hollow",
+    "category": "Landscapes",
+    "w": 1400,
+    "h": 1092,
+    "thumb": "images/thumbs/the-hollow.jpg",
+    "img": "images/the-hollow.jpg",
+    "desc": "A pinnacle of rock lit from within a dark cavern."
+  },
+  {
+    "title": "Window, Bone & Blue",
+    "category": "Figures & Studies",
+    "credit": "After Picasso",
+    "w": 1075,
+    "h": 1400,
+    "thumb": "images/thumbs/window-bone-and-blue.jpg",
+    "img": "images/window-bone-and-blue.jpg",
+    "desc": "A horned skull on a table by the window, in Picasso's angles."
+  }
+];
 
+  const INITIAL_COUNT = 12;
+  const PAGE_SIZE = 12;
   const grid = document.getElementById("grid");
   const filtersEl = document.getElementById("filters");
   const countEl = document.getElementById("pieceCount");
-  const categories = ["All", ...new Set(pieces.map(p => p.category))];
+  const moreWrap = document.getElementById("moreWrap");
+  const moreBtn = document.getElementById("moreBtn");
+  const CATEGORY_ORDER = ["Wildlife", "Seascapes", "Landscapes", "Florals", "Abstracts", "Figures & Studies"];
+  const present = new Set(pieces.map(p => p.category));
+  const categories = ["All", ...CATEGORY_ORDER.filter(c => present.has(c)), ...[...present].filter(c => !CATEGORY_ORDER.includes(c))];
   let active = "All";
   let currentFiltered = pieces;
+  let shown = INITIAL_COUNT;
+  let cols = [], heights = [], colsN = 0, placed = 0;
+
+  function esc(t){ return String(t).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
+  function metaLine(p){ return p.credit || [p.medium, p.size, p.year].filter(Boolean).join(" \u00b7 "); }
 
   function renderFilters(){
     filtersEl.innerHTML = "";
@@ -409,52 +712,103 @@
       const b = document.createElement("button");
       b.textContent = cat;
       b.setAttribute("aria-pressed", String(cat === active));
-      b.addEventListener("click", () => { active = cat; renderFilters(); renderGrid(); });
+      b.addEventListener("click", () => { active = cat; shown = INITIAL_COUNT; renderFilters(); renderGrid(); });
       filtersEl.appendChild(b);
     });
   }
 
-  function renderGrid(){
-    const list = active === "All" ? pieces : pieces.filter(p => p.category === active);
-    currentFiltered = list;
-    countEl.textContent = list.length + (list.length === 1 ? " piece" : " pieces");
-    grid.innerHTML = "";
-    list.forEach(p => {
-      const card = document.createElement("button");
-      card.className = "piece";
-      card.setAttribute("aria-label", `View ${p.title}, ${p.category.toLowerCase()}`);
-      card.innerHTML = `
-        <div class="canvas" style="background:${p.art}; aspect-ratio:${p.aspect || "4/5"}"></div>
-        <div class="plate">
-          <p class="cat">${p.category}</p>
-          <h3>${p.title}</h3>
-          <p class="meta">${p.medium} &middot; ${p.size} &middot; ${p.year}</p>
-        </div>`;
-      card.addEventListener("click", () => openLightbox(p));
-      grid.appendChild(card);
-    });
+  function columnCount(){
+    const w = grid.clientWidth || window.innerWidth;
+    return w < 540 ? 1 : (w < 880 ? 2 : 3);
   }
+
+  function makeCard(p){
+    const card = document.createElement("button");
+    card.className = "piece";
+    card.setAttribute("aria-label", `View ${p.title}, ${p.category.toLowerCase()}`);
+    const meta = metaLine(p);
+    card.innerHTML = `
+      <div class="canvas" style="aspect-ratio:${p.w} / ${p.h}"><img src="${p.thumb}" alt="${esc(p.title)}" width="${p.w}" height="${p.h}" loading="lazy" decoding="async"></div>
+      <div class="plate">
+        <p class="cat">${esc(p.category)}</p>
+        <h3>${esc(p.title)}</h3>
+        ${meta ? `<p class="meta">${esc(meta)}</p>` : ""}
+      </div>`;
+    card.addEventListener("click", () => openLightbox(p));
+    return card;
+  }
+
+  // Masonry: each painting keeps its own proportions and is dropped into
+  // whichever column is currently shortest, so reading order stays natural.
+  function buildColumns(){
+    grid.innerHTML = "";
+    colsN = columnCount();
+    cols = []; heights = []; placed = 0;
+    for (let i = 0; i < colsN; i++){
+      const c = document.createElement("div");
+      c.className = "col";
+      grid.appendChild(c);
+      cols.push(c); heights.push(0);
+    }
+  }
+  function addCards(items){
+    const colW = grid.clientWidth / colsN || 280;
+    const els = [];
+    items.forEach(p => {
+      const i = heights.indexOf(Math.min(...heights));
+      const card = makeCard(p);
+      cols[i].appendChild(card);
+      heights[i] += (colW - 28) * p.h / p.w + 96;
+      els.push(card);
+    });
+    placed += items.length;
+    setupReveal(els);
+  }
+  function updateMore(){
+    const total = currentFiltered.length;
+    countEl.textContent = placed < total ? `${placed} of ${total} pieces` : total + (total === 1 ? " piece" : " pieces");
+    moreWrap.hidden = placed >= total;
+  }
+  function renderGrid(){
+    currentFiltered = active === "All" ? pieces : pieces.filter(p => p.category === active);
+    buildColumns();
+    addCards(currentFiltered.slice(0, shown));
+    updateMore();
+  }
+  moreBtn.addEventListener("click", () => {
+    shown += PAGE_SIZE;
+    addCards(currentFiltered.slice(placed, shown));
+    updateMore();
+  });
+  let resizeTimer = null;
+  window.addEventListener("resize", () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => { if (columnCount() !== colsN) { shown = Math.max(shown, placed); renderGrid(); } }, 180);
+  });
 
   // Fade + rise gallery cards in as they scroll into view. Anything already
   // visible in the first frame is left alone (shown immediately), so the
   // page never depends on scrolling or JS to reveal its initial content.
-  function setupReveal(){
+  let revealObserver = null;
+  function setupReveal(els){
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reduceMotion || !("IntersectionObserver" in window)) return;
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.remove("reveal-pending");
-          io.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.15, rootMargin: "0px 0px -40px 0px" });
-    grid.querySelectorAll(".piece").forEach(el => {
+    if (!revealObserver){
+      revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.remove("reveal-pending");
+            revealObserver.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.1, rootMargin: "0px 0px -40px 0px" });
+    }
+    els.forEach(el => {
       const rect = el.getBoundingClientRect();
       const alreadyVisible = rect.top < window.innerHeight && rect.bottom > 0;
       if (!alreadyVisible) {
         el.classList.add("reveal-pending");
-        io.observe(el);
+        revealObserver.observe(el);
       }
     });
   }
@@ -471,12 +825,15 @@
   let currentIndex = -1;
 
   function fillLightbox(p){
-    lbCanvas.style.background = p.art;
-    lbCanvas.style.aspectRatio = p.aspect || "4/5";
+    lbCanvas.style.background = `#0b0a09 url("${p.img}") center / cover no-repeat`;
+    lbCanvas.style.aspectRatio = `${p.w} / ${p.h}`;
     lbCat.textContent = p.category;
     lbTitle.textContent = p.title;
-    lbMeta.textContent = `${p.medium} · ${p.size} · ${p.year}`;
-    lbDesc.textContent = p.desc;
+    const meta = metaLine(p);
+    lbMeta.textContent = meta;
+    lbMeta.hidden = !meta;
+    lbDesc.textContent = p.desc || "";
+    lbDesc.hidden = !p.desc;
   }
   function openLightbox(p){
     lastFocused = document.activeElement;
@@ -532,7 +889,6 @@
 
   renderFilters();
   renderGrid();
-  setupReveal();
 
   // ---- contact form -> mailto ----
   const contactForm = document.getElementById("contactForm");
