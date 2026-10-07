@@ -29,4 +29,4 @@ This is a static site, so it works as-is on GitHub Pages, Netlify, Vercel, or an
 
 ## Contact details
 
-The contact form and the email link both use Dennis's SOLIDitech email — search for `mailto:` in `index.html` to update it to a dedicated art address.
+The contact form and the email link both use dennishammerschlag01@gmail.com — search for `mailto:` in `index.html` to change it.
