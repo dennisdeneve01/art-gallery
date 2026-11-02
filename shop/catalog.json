@@ -1,0 +1,374 @@
+{
+  "_readme": "Sizes and prices (rand) for canvas prints. 'pieces' is filled in by `npm run sync-catalog` from index.html. Set a painting's forSale to false to hide its Buy button, or pin its sizes with a \"sizes\": [\"12x16\"] list.",
+  "currency": "ZAR",
+  "skuPrefix": "GLOBAL-CAN",
+  "wrap": "ImageWrap",
+  "wrapNote": "Gallery-wrapped on a stretcher bar, ready to hang. The painting continues around the edges.",
+  "maxCrop": 0.1,
+  "minShippingZAR": 150,
+  "sizes": [
+    {
+      "id": "8x10",
+      "w": 8,
+      "h": 10,
+      "price": 1190
+    },
+    {
+      "id": "12x12",
+      "w": 12,
+      "h": 12,
+      "price": 1290
+    },
+    {
+      "id": "12x16",
+      "w": 12,
+      "h": 16,
+      "price": 1590
+    },
+    {
+      "id": "12x18",
+      "w": 12,
+      "h": 18,
+      "price": 1690
+    },
+    {
+      "id": "16x16",
+      "w": 16,
+      "h": 16,
+      "price": 1890
+    },
+    {
+      "id": "16x20",
+      "w": 16,
+      "h": 20,
+      "price": 2190
+    },
+    {
+      "id": "16x24",
+      "w": 16,
+      "h": 24,
+      "price": 2490
+    },
+    {
+      "id": "18x24",
+      "w": 18,
+      "h": 24,
+      "price": 2690
+    },
+    {
+      "id": "20x20",
+      "w": 20,
+      "h": 20,
+      "price": 2390
+    },
+    {
+      "id": "20x30",
+      "w": 20,
+      "h": 30,
+      "price": 3190
+    },
+    {
+      "id": "24x24",
+      "w": 24,
+      "h": 24,
+      "price": 2890
+    },
+    {
+      "id": "24x32",
+      "w": 24,
+      "h": 32,
+      "price": 3690
+    },
+    {
+      "id": "24x36",
+      "w": 24,
+      "h": 36,
+      "price": 3990
+    }
+  ],
+  "countries": [
+    {
+      "code": "ZA",
+      "name": "South Africa"
+    },
+    {
+      "code": "GB",
+      "name": "United Kingdom"
+    },
+    {
+      "code": "US",
+      "name": "United States"
+    },
+    {
+      "code": "AU",
+      "name": "Australia"
+    },
+    {
+      "code": "CA",
+      "name": "Canada"
+    },
+    {
+      "code": "NZ",
+      "name": "New Zealand"
+    },
+    {
+      "code": "IE",
+      "name": "Ireland"
+    },
+    {
+      "code": "DE",
+      "name": "Germany"
+    },
+    {
+      "code": "FR",
+      "name": "France"
+    },
+    {
+      "code": "NL",
+      "name": "Netherlands"
+    },
+    {
+      "code": "BE",
+      "name": "Belgium"
+    },
+    {
+      "code": "ES",
+      "name": "Spain"
+    },
+    {
+      "code": "IT",
+      "name": "Italy"
+    },
+    {
+      "code": "PT",
+      "name": "Portugal"
+    },
+    {
+      "code": "AT",
+      "name": "Austria"
+    },
+    {
+      "code": "CH",
+      "name": "Switzerland"
+    },
+    {
+      "code": "SE",
+      "name": "Sweden"
+    },
+    {
+      "code": "NO",
+      "name": "Norway"
+    },
+    {
+      "code": "DK",
+      "name": "Denmark"
+    },
+    {
+      "code": "FI",
+      "name": "Finland"
+    },
+    {
+      "code": "PL",
+      "name": "Poland"
+    },
+    {
+      "code": "AE",
+      "name": "United Arab Emirates"
+    },
+    {
+      "code": "SG",
+      "name": "Singapore"
+    },
+    {
+      "code": "HK",
+      "name": "Hong Kong"
+    },
+    {
+      "code": "JP",
+      "name": "Japan"
+    }
+  ],
+  "pieces": {
+    "burnt-horizon": {
+      "title": "Burnt Horizon",
+      "w": 1269,
+      "h": 1400
+    },
+    "fire-at-moonrise": {
+      "title": "Fire at Moonrise",
+      "w": 981,
+      "h": 1400
+    },
+    "the-lookout": {
+      "title": "The Lookout",
+      "w": 1400,
+      "h": 613
+    },
+    "aurora-and-embers": {
+      "title": "Aurora & Embers",
+      "w": 1400,
+      "h": 1104
+    },
+    "meadow-in-bloom": {
+      "title": "Meadow in Bloom",
+      "w": 1400,
+      "h": 1389
+    },
+    "dusk-walker": {
+      "title": "Dusk Walker",
+      "w": 1199,
+      "h": 1400
+    },
+    "red-sail-quiet-harbour": {
+      "title": "Red Sail, Quiet Harbour",
+      "w": 1400,
+      "h": 1006
+    },
+    "wildfire": {
+      "title": "Wildfire",
+      "w": 1061,
+      "h": 1400
+    },
+    "through-the-palms": {
+      "title": "Through the Palms",
+      "w": 1400,
+      "h": 1059
+    },
+    "night-howl": {
+      "title": "Night Howl",
+      "w": 927,
+      "h": 1400
+    },
+    "roar-and-wonder": {
+      "title": "Roar & Wonder",
+      "w": 1400,
+      "h": 1010
+    },
+    "where-the-sun-lands": {
+      "title": "Where the Sun Lands",
+      "w": 1012,
+      "h": 1400
+    },
+    "amber-eyes": {
+      "title": "Amber Eyes",
+      "w": 1400,
+      "h": 966
+    },
+    "fire-lily": {
+      "title": "Fire Lily",
+      "w": 1118,
+      "h": 1400
+    },
+    "breach": {
+      "title": "Breach",
+      "w": 1400,
+      "h": 1082
+    },
+    "autumn-valley": {
+      "title": "Autumn Valley",
+      "w": 1400,
+      "h": 967
+    },
+    "old-soul": {
+      "title": "Old Soul",
+      "w": 1191,
+      "h": 1400
+    },
+    "moonrise-in-lilac": {
+      "title": "Moonrise in Lilac",
+      "w": 948,
+      "h": 1400
+    },
+    "still-water-high-peaks": {
+      "title": "Still Water, High Peaks",
+      "w": 1400,
+      "h": 975
+    },
+    "before-the-storm": {
+      "title": "Before the Storm",
+      "w": 1350,
+      "h": 1400
+    },
+    "red-funnels": {
+      "title": "Red Funnels",
+      "w": 1400,
+      "h": 1006
+    },
+    "amber-dusk": {
+      "title": "Amber Dusk",
+      "w": 1400,
+      "h": 1129
+    },
+    "the-road-home": {
+      "title": "The Road Home",
+      "w": 1400,
+      "h": 991
+    },
+    "violet-bloom": {
+      "title": "Violet Bloom",
+      "w": 1210,
+      "h": 1400
+    },
+    "long-shadows": {
+      "title": "Long Shadows",
+      "w": 1400,
+      "h": 1027
+    },
+    "restless-sky": {
+      "title": "Restless Sky",
+      "w": 1400,
+      "h": 948
+    },
+    "brothers": {
+      "title": "Brothers",
+      "w": 1400,
+      "h": 886
+    },
+    "breaking-light": {
+      "title": "Breaking Light",
+      "w": 1400,
+      "h": 970
+    },
+    "small-giant": {
+      "title": "Small Giant",
+      "w": 1178,
+      "h": 1400
+    },
+    "last-light-two-huts": {
+      "title": "Last Light, Two Huts",
+      "w": 1400,
+      "h": 1036
+    },
+    "lady-with-an-ermine": {
+      "title": "Lady with an Ermine",
+      "w": 1118,
+      "h": 1400
+    },
+    "violet-tide": {
+      "title": "Violet Tide",
+      "w": 1400,
+      "h": 1097
+    },
+    "the-sweep": {
+      "title": "The Sweep",
+      "w": 1400,
+      "h": 917
+    },
+    "leaning-palm": {
+      "title": "Leaning Palm",
+      "w": 1400,
+      "h": 1237
+    },
+    "the-hollow": {
+      "title": "The Hollow",
+      "w": 1400,
+      "h": 1087
+    },
+    "window-bone-and-blue": {
+      "title": "Window, Bone & Blue",
+      "w": 1030,
+      "h": 1400,
+      "forSale": false
+    }
+  }
+}

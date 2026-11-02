@@ -242,6 +242,48 @@
   footer a{ color: var(--muted-2); text-decoration: none; }
   footer a:hover{ color: var(--accent); }
 
+  /* ---------- shop (canvas prints) ---------- */
+  .btn[hidden], .steps[hidden]{ display: none; }
+  .btn[disabled]{ opacity: .55; cursor: default; }
+  .shop-card{ max-width: 940px; grid-template-columns: 0.85fr 1.3fr; }
+  .shop-card.solo{ max-width: 560px; grid-template-columns: 1fr; }
+  .shop-card.solo .lb-canvas{ display: none; }
+  @media (max-width: 640px){ .shop-card{ grid-template-columns: 1fr; } .shop-card .lb-canvas{ display: none; } }
+  .shop-body{ min-height: 440px; }
+  .steps{ display: flex; gap: 8px; list-style: none; margin: 18px 0 0; padding: 0; font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted-2); }
+  .steps li + li::before{ content: "\00b7"; margin-right: 8px; color: var(--line); }
+  .steps li[aria-current="step"]{ color: var(--accent); }
+  .shop-lead{ margin-top: 18px; color: var(--muted); font-size: 0.9rem; line-height: 1.7; }
+  .size-list{ display: grid; gap: 10px; margin-top: 20px; }
+  .size-opt{
+    display: flex; align-items: center; gap: 16px; text-align: left; padding: 12px 14px; width: 100%;
+    background: transparent; border: 1px solid var(--line); color: var(--text); cursor: pointer;
+    transition: border-color .2s ease, background-color .2s ease; font-size: 0.95rem;
+  }
+  .size-opt:hover, .size-opt:focus-visible{ border-color: var(--muted-2); outline: none; }
+  .size-opt[aria-checked="true"]{ border-color: var(--accent); background: var(--bg-raised-2); }
+  .size-shape{ width: 52px; height: 52px; display: flex; align-items: center; justify-content: center; flex: none; }
+  .size-shape i{ display: block; background: var(--accent-dim); border: 1px solid var(--accent); opacity: .85; }
+  .size-text{ flex: 1; }
+  .size-text b{ display: block; font-weight: 400; }
+  .size-text small{ color: var(--muted-2); font-size: 0.78rem; }
+  .size-price{ font-family: "Fraunces", Georgia, serif; font-size: 1.05rem; white-space: nowrap; }
+  .shop-note{ color: var(--muted); font-size: 0.82rem; line-height: 1.6; margin-top: 14px; }
+  .shop-error{ color: #e0907a; font-size: 0.88rem; margin-top: 14px; min-height: 1.2em; }
+  .shop-actions{ display: flex; gap: 12px; flex-wrap: wrap; margin-top: 22px; align-items: center; }
+  .shop-form{ display: flex; flex-direction: column; gap: 18px; margin-top: 20px; }
+  .shop-form .field-row{ gap: 18px; }
+  .field select{
+    background: var(--bg-raised); border: none; border-bottom: 1px solid var(--line); color: var(--text);
+    font-family: "Work Sans", sans-serif; font-weight: 300; font-size: 0.95rem; padding: 8px 2px; border-radius: 0;
+  }
+  .field select:focus{ outline: none; border-bottom-color: var(--accent); }
+  .sum{ margin-top: 20px; border-top: 1px solid var(--line); }
+  .sum div{ display: flex; justify-content: space-between; gap: 16px; padding: 11px 0; border-bottom: 1px solid var(--line); color: var(--muted); font-size: 0.92rem; }
+  .sum .total{ color: var(--text); font-size: 1.1rem; font-family: "Fraunces", Georgia, serif; }
+  .ship-to{ color: var(--muted); font-size: 0.85rem; line-height: 1.6; margin-top: 16px; }
+  .thanks-mark{ width: 44px; height: 44px; border: 1px solid var(--accent-dim); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--accent); margin-bottom: 18px; }
+
   @media (prefers-reduced-motion: reduce){ *{ animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; } html{ scroll-behavior: auto; } }
 </style>
 </head>
@@ -334,7 +376,7 @@
 <footer>
   <div class="wrap">
     <span>&copy; <span id="year"></span> Dennis Hammerschlag</span>
-    <span>Shipping arranged on request</span>
+    <span>Canvas prints shipped worldwide</span>
   </div>
 </footer>
 
@@ -351,9 +393,25 @@
       <p class="meta" id="lbMeta"></p>
       <p class="desc" id="lbDesc"></p>
       <div class="lb-actions">
-        <a class="btn primary" id="lbInquire" href="#contact">Inquire about this piece</a>
+        <button class="btn primary" id="lbBuy" type="button" hidden>Buy a canvas print</button>
+        <a class="btn" id="lbInquire" href="#contact">Inquire about this piece</a>
         <button class="btn" id="lbCloseBtn">Close</button>
       </div>
+    </div>
+  </div>
+</div>
+
+<div class="lightbox" id="shop" hidden>
+  <div class="lb-card shop-card" role="dialog" aria-modal="true" aria-labelledby="shopTitle">
+    <button class="lb-close" id="shopClose" aria-label="Close">&times;</button>
+    <div class="lb-canvas" id="shopCanvas"></div>
+    <div class="lb-info shop-body">
+      <p class="cat" id="shopCat">Canvas print</p>
+      <h3 id="shopTitle"></h3>
+      <ol class="steps" id="shopSteps" aria-label="Checkout steps">
+        <li>Size</li><li>Delivery</li><li>Pay</li>
+      </ol>
+      <div id="shopView" aria-live="polite"></div>
     </div>
   </div>
 </div>
@@ -843,6 +901,8 @@
     lbMeta.hidden = !meta;
     lbDesc.textContent = p.desc || "";
     lbDesc.hidden = !p.desc;
+    const buy = document.getElementById("lbBuy");
+    if (buy) { const can = !!(typeof shopData !== "undefined" && shopData && shopData.items[p.img.replace(/^.*\//, "").replace(/\.[a-z]+$/i, "")]); buy.hidden = !can; lbInquire.classList.toggle("primary", !can); }
   }
   function openLightbox(p){
     lastFocused = document.activeElement;
@@ -898,6 +958,232 @@
 
   renderFilters();
   renderGrid();
+
+  // ---------------------------------------------------------------
+  // CANVAS PRINTS
+  // Sizes, prices and which paintings can be bought come from the server
+  // (/api/catalog, set up in shop/catalog.json). If that isn't reachable
+  // — for example when you open index.html straight from disk — the site
+  // simply shows no Buy buttons and works exactly as before.
+  // ---------------------------------------------------------------
+  let shopData = null;
+  const shop = document.getElementById("shop");
+  const shopCard = shop.querySelector(".shop-card");
+  const shopView = document.getElementById("shopView");
+  const shopSteps = document.getElementById("shopSteps");
+  const lbBuy = document.getElementById("lbBuy");
+  let sale = null; // { piece, slug, info, size, recipient, quote }
+  let pollTimer = null;
+
+  const slugOf = (p) => p.img.replace(/^.*\//, "").replace(/\.[a-z]+$/i, "");
+  const money = (n) => "R " + String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+  const cm = (inches) => Math.round(inches * 2.54);
+
+  fetch("/api/catalog", { headers: { Accept: "application/json" } })
+    .then(r => r.ok ? r.json() : null)
+    .then(d => { if (d && d.items) { shopData = d; if (!lightbox.hidden && currentFiltered[currentIndex]) fillLightbox(currentFiltered[currentIndex]); } })
+    .catch(() => {});
+
+  function dimsFor(info, s){
+    // Landscape paintings are printed on a landscape canvas, so flip the numbers.
+    return info.orientation === "landscape" ? [s.h, s.w] : [s.w, s.h];
+  }
+  function setStep(n){
+    [...shopSteps.children].forEach((li, i) => { if (i === n) li.setAttribute("aria-current", "step"); else li.removeAttribute("aria-current"); });
+    shopSteps.hidden = n < 0;
+  }
+  function setBusy(btn, busy, label){
+    btn.disabled = busy;
+    if (label) btn.textContent = label;
+  }
+
+  function openShop(p){
+    const slug = slugOf(p);
+    const info = shopData && shopData.items[slug];
+    if (!info) return;
+    sale = { piece: p, slug, info, size: null, recipient: null, quote: null };
+    shopCard.classList.remove("solo");
+    document.getElementById("shopCanvas").style.background = `#0b0a09 url("${p.img}") center / cover no-repeat`;
+    document.getElementById("shopCanvas").style.aspectRatio = `${p.w} / ${p.h}`;
+    document.getElementById("shopCat").textContent = "Canvas print";
+    document.getElementById("shopTitle").textContent = p.title;
+    lightbox.hidden = true;
+    shop.hidden = false;
+    viewSize();
+    document.getElementById("shopClose").focus();
+  }
+  function closeShop(backToLightbox){
+    shop.hidden = true;
+    clearTimeout(pollTimer);
+    if (backToLightbox && sale) { lightbox.hidden = false; document.getElementById("lbClose").focus(); }
+    else if (lastFocused) lastFocused.focus();
+    sale = null;
+  }
+
+  // ---- step 1: choose a size ----
+  function viewSize(){
+    const { info } = sale;
+    setStep(0);
+    const biggest = Math.max(...info.sizes.map(s => Math.max(s.w, s.h)));
+    const opts = info.sizes.map(s => {
+      const [w, h] = dimsFor(info, s);
+      const k = 46 / biggest;
+      return `<button type="button" class="size-opt" role="radio" aria-checked="${sale.size && sale.size.id === s.id}" data-id="${s.id}">
+        <span class="size-shape"><i style="width:${Math.max(10, w * k)}px;height:${Math.max(10, h * k)}px"></i></span>
+        <span class="size-text"><b>${w} &times; ${h} in</b><small>${cm(w)} &times; ${cm(h)} cm</small></span>
+        <span class="size-price">${money(s.price)}</span>
+      </button>`;
+    }).join("");
+    shopView.innerHTML = `
+      <p class="shop-lead">${esc(shopData.wrapNote || "Printed on canvas and stretched, ready to hang.")} Choose a size:</p>
+      <div class="size-list" role="radiogroup" aria-label="Canvas size">${opts}</div>
+      <p class="shop-note" id="cropNote" hidden></p>
+      <div class="shop-actions">
+        <button type="button" class="btn primary" id="sizeNext" disabled>Continue</button>
+        <button type="button" class="btn" id="sizeBack">Back to painting</button>
+      </div>`;
+    const next = document.getElementById("sizeNext");
+    const note = document.getElementById("cropNote");
+    function choose(id){
+      sale.size = info.sizes.find(s => s.id === id);
+      shopView.querySelectorAll(".size-opt").forEach(b => b.setAttribute("aria-checked", String(b.dataset.id === id)));
+      next.disabled = false;
+      const pct = Math.round(sale.size.crop * 100);
+      note.hidden = pct < 3;
+      if (pct >= 3) note.textContent = `This canvas is a slightly different shape to the painting, so it's printed edge to edge and about ${pct}% is trimmed from one side.`;
+    }
+    shopView.querySelectorAll(".size-opt").forEach(b => b.addEventListener("click", () => choose(b.dataset.id)));
+    if (sale.size) choose(sale.size.id);
+    next.addEventListener("click", viewDelivery);
+    document.getElementById("sizeBack").addEventListener("click", () => closeShop(true));
+  }
+
+  // ---- step 2: where should it go? ----
+  function viewDelivery(){
+    setStep(1);
+    const r = sale.recipient || {};
+    const countries = shopData.countries.map(c => `<option value="${c.code}"${(r.country || "ZA") === c.code ? " selected" : ""}>${esc(c.name)}</option>`).join("");
+    const f = (id, label, val, attrs) => `<div class="field"><label for="sh_${id}">${label}</label><input id="sh_${id}" name="${id}" value="${esc(val || "")}" ${attrs || ""}></div>`;
+    shopView.innerHTML = `
+      <form class="shop-form" id="shopForm" novalidate>
+        <div class="field-row">${f("name", "Full name", r.name, 'autocomplete="name" required')}${f("email", "Email", r.email, 'type="email" autocomplete="email" required')}</div>
+        ${f("line1", "Address", r.line1, 'autocomplete="address-line1" required')}
+        ${f("line2", "Apartment, suite, etc. (optional)", r.line2, 'autocomplete="address-line2"')}
+        <div class="field-row">${f("city", "City / town", r.city, 'autocomplete="address-level2" required')}${f("state", "Province / state (optional)", r.state, 'autocomplete="address-level1"')}</div>
+        <div class="field-row">${f("postcode", "Postal code", r.postcode, 'autocomplete="postal-code" required')}
+          <div class="field"><label for="sh_country">Country</label><select id="sh_country" name="country" autocomplete="country" required>${countries}</select></div></div>
+        ${f("phone", "Phone (optional, helps the courier)", r.phone, 'type="tel" autocomplete="tel"')}
+        <p class="shop-error" id="shopErr" role="alert"></p>
+        <div class="shop-actions">
+          <button type="submit" class="btn primary" id="delNext">See shipping &amp; total</button>
+          <button type="button" class="btn" id="delBack">Back</button>
+        </div>
+      </form>`;
+    document.getElementById("delBack").addEventListener("click", viewSize);
+    document.getElementById("shopForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const form = e.target, err = document.getElementById("shopErr"), btn = document.getElementById("delNext");
+      err.textContent = "";
+      if (!form.checkValidity()) { form.reportValidity(); return; }
+      const d = Object.fromEntries(new FormData(form).entries());
+      sale.recipient = d;
+      setBusy(btn, true, "Checking shipping…");
+      try {
+        const res = await fetch("/api/quote", { method: "POST", headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ slug: sale.slug, size: sale.size.id, country: d.country }) });
+        const q = await res.json().catch(() => ({}));
+        if (!res.ok) throw new Error(q.error || "Couldn't get a shipping price. Please try again.");
+        sale.quote = q;
+        viewReview();
+      } catch (ex) {
+        err.textContent = ex.message;
+        setBusy(btn, false, "See shipping & total");
+      }
+    });
+    document.getElementById("sh_name").focus();
+  }
+
+  // ---- step 3: review and pay ----
+  function viewReview(){
+    setStep(2);
+    const { size, quote: q, recipient: r, info } = sale;
+    const [w, h] = dimsFor(info, size);
+    const country = (shopData.countries.find(c => c.code === r.country) || {}).name || r.country;
+    const intl = r.country !== "ZA";
+    shopView.innerHTML = `
+      <div class="sum">
+        <div><span>${esc(sale.piece.title)} &mdash; canvas ${w} &times; ${h} in</span><span>${money(q.item)}</span></div>
+        <div><span>Delivery to ${esc(country)}</span><span>${money(q.shipping)}</span></div>
+        <div class="total"><span>Total</span><span>${money(q.total)}</span></div>
+      </div>
+      <p class="ship-to">Sending to ${esc(r.name)}, ${esc(r.line1)}${r.line2 ? ", " + esc(r.line2) : ""}, ${esc(r.city)}, ${esc(r.postcode)}, ${esc(country)}.</p>
+      <p class="shop-note">Each canvas is printed to order, which usually takes a few days before it ships.${intl ? " Import duties or taxes may be charged by your country on delivery." : ""} If it arrives damaged, get in touch and I'll put it right.</p>
+      <p class="shop-error" id="shopErr" role="alert"></p>
+      <div class="shop-actions">
+        <button type="button" class="btn primary" id="payBtn">Pay ${money(q.total)} securely</button>
+        <button type="button" class="btn" id="revBack">Back</button>
+      </div>
+      <p class="shop-note">Payment is handled by Paystack. Your card details never touch this site.</p>`;
+    document.getElementById("revBack").addEventListener("click", viewDelivery);
+    document.getElementById("payBtn").addEventListener("click", async (e) => {
+      const btn = e.currentTarget, err = document.getElementById("shopErr");
+      err.textContent = "";
+      setBusy(btn, true, "Taking you to Paystack…");
+      try {
+        const res = await fetch("/api/checkout", { method: "POST", headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ slug: sale.slug, size: size.id, recipient: r }) });
+        const out = await res.json().catch(() => ({}));
+        if (!res.ok || !out.url) throw new Error(out.error || "Couldn't start the payment. Please try again.");
+        window.location.href = out.url;
+      } catch (ex) {
+        err.textContent = ex.message;
+        setBusy(btn, false, `Pay ${money(q.total)} securely`);
+      }
+    });
+  }
+
+  // ---- after Paystack sends the customer back: ?order=DH-... ----
+  function showThanks(ref){
+    sale = null;
+    shopCard.classList.add("solo");
+    document.getElementById("shopCat").textContent = "Your order";
+    document.getElementById("shopTitle").textContent = "Thank you";
+    setStep(-1);
+    shop.hidden = false;
+    let tries = 0;
+    const paint = (title, body, tick) => {
+      shopView.innerHTML = `<div class="thanks-mark" aria-hidden="true">${tick ? "&#10003;" : "&hellip;"}</div><p class="shop-lead" style="margin-top:0">${body}</p>
+        <p class="shop-note">Order reference: <strong>${esc(ref)}</strong></p>
+        <div class="shop-actions"><button type="button" class="btn primary" id="thanksClose">Back to the gallery</button></div>`;
+      document.getElementById("shopTitle").textContent = title;
+      document.getElementById("thanksClose").addEventListener("click", () => { history.replaceState(null, "", location.pathname + location.hash); closeShop(false); });
+    };
+    paint("Thank you", "Confirming your payment&hellip;", false);
+    const check = async () => {
+      tries++;
+      try {
+        const r = await fetch("/api/order?ref=" + encodeURIComponent(ref));
+        const s = await r.json();
+        if (s.state === "placed") {
+          paint("Order confirmed", "Your payment went through and your canvas is now being printed. Paystack will email you a receipt. Keep this page's link &mdash; it shows your tracking once the canvas ships." + (s.tracking ? ` <a href="${esc(s.tracking)}" target="_blank" rel="noopener">Track your delivery</a>.` : ""), true);
+          return;
+        }
+        if (s.state === "review") { paint("We've got your payment", "Your payment went through, but I want to double-check one detail before printing. I'll email you shortly.", true); return; }
+        if (s.state === "unpaid" && tries >= 3) { paint("Payment not completed", "We haven't received a confirmed payment for this order. If you were charged, please get in touch and quote the reference below.", false); return; }
+      } catch (e) { if (tries >= 6) { paint("Still checking", "We couldn't reach the order service just now. Your payment is safe &mdash; please refresh this page in a minute.", false); return; } }
+      if (tries < 8) pollTimer = setTimeout(check, 2500);
+      else paint("Still checking", "This is taking longer than usual. Your payment is safe &mdash; please refresh this page in a minute, or get in touch with the reference below.", false);
+    };
+    check();
+  }
+
+  lbBuy.addEventListener("click", () => { const p = currentFiltered[currentIndex]; if (p) openShop(p); });
+  document.getElementById("shopClose").addEventListener("click", () => closeShop(!!sale));
+  shop.addEventListener("click", (e) => { if (e.target === shop) closeShop(!!sale); });
+  document.addEventListener("keydown", (e) => { if (!shop.hidden && e.key === "Escape") closeShop(!!sale); });
+
+  const orderRef = new URLSearchParams(location.search).get("order");
+  if (orderRef && /^DH-[A-Z0-9]+-[A-F0-9]{6}$/.test(orderRef)) showThanks(orderRef);
 
   // ---- contact form -> mailto ----
   const contactForm = document.getElementById("contactForm");

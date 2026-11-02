@@ -1,0 +1,13 @@
+{
+  "name": "art-gallery",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Dennis Hammerschlag's painting portfolio with canvas-print checkout (Paystack + Prodigi).",
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "dev": "vercel dev",
+    "sync-catalog": "node scripts/sync-catalog.js",
+    "check-skus": "node --env-file=.env scripts/check-skus.js",
+    "test": "node --test test/shop.test.js"
+  }
+}
