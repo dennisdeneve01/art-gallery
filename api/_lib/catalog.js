@@ -35,11 +35,11 @@ function sizesFor(piece) {
   return scored.filter((x) => x.crop <= best + 0.03).sort((a, b) => a.size.price - b.size.price);
 }
 
-// Prodigi SKUs are WIDTHxHEIGHT in inches, so a landscape painting flips them.
+// Prodigi only lists one code per canvas size (shorter side first, e.g. 18X24);
+// landscape codes like 24X18 do not exist (confirmed against the live catalogue).
 function skuFor(piece, size) {
-  const [short, long] = [size.w, size.h];
-  const dims = orientationOf(piece) === "landscape" ? `${long}X${short}` : `${short}X${long}`;
-  return `${catalog.skuPrefix}-${dims}`;
+  const [short, long] = [Math.min(size.w, size.h), Math.max(size.w, size.h)];
+  return `${catalog.skuPrefix}-${short}X${long}`;
 }
 
 module.exports = { catalog, sizes, sizeById, sizesFor, skuFor, cropFor, orientationOf };

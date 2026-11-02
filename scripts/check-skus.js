@@ -13,7 +13,7 @@ const country = (process.argv[2] || "ZA").toUpperCase();
   console.log("size    orient     sku                  status   make   ship   cost(R)  your price  margin");
   let bad = 0;
   for (const s of catalog.sizes) {
-    for (const orient of s.w === s.h ? ["square"] : ["portrait", "landscape"]) {
+    for (const orient of [s.w === s.h ? "square" : "portrait"]) {
       const sku = `${catalog.skuPrefix}-${orient === "landscape" ? `${s.h}X${s.w}` : `${s.w}X${s.h}`}`;
       let status = "ok", make = "-", ship = "-", costR = "-", margin = "-";
       try {
@@ -28,6 +28,10 @@ const country = (process.argv[2] || "ZA").toUpperCase();
       } catch (e) {
         status = e.prodigiStatus === 404 ? "UNKNOWN" : "error";
         bad++;
+        if (!global.__shown || (status === "error" && global.__shown < 3)) {
+          global.__shown = (global.__shown || 0) + 1;
+          console.log("   ! " + e.message + " | " + (e.cause && (e.cause.code || e.cause.message) || "") + " | " + JSON.stringify(e.detail || "").slice(0, 400));
+        }
       }
       console.log(`${s.id.padEnd(7)} ${orient.padEnd(10)} ${sku.padEnd(20)} ${status.padEnd(8)} ${String(make).padEnd(6)} ${String(ship).padEnd(6)} ${String(costR).padEnd(8)} R${String(s.price).padEnd(10)} ${margin}`);
     }

@@ -64,7 +64,7 @@ test("catalog lists paintings and hides ones that can't be printed", async () =>
 test("quote adds marked-up shipping in rand", async () => {
   const { status, body } = await call("quote", { body: { slug: "burnt-horizon", size: "12x12", country: "ZA" } });
   assert.equal(status, 200);
-  assert.equal(body.item, 1290);
+  assert.equal(body.item, 1830);
   assert.equal(body.shipping, Math.ceil((12 * 24 * 1.15) / 10) * 10); // 340
   assert.equal(body.total, body.item + body.shipping);
 });
@@ -81,7 +81,7 @@ test("full flow: checkout -> paid -> webhook prints once, even if repeated", asy
   const ref = c.body.reference;
   const tx = state.paystack.get(ref);
   assert.equal(tx.currency, "ZAR");
-  assert.equal(tx.amount, (1690 + 340) * 100, "amount comes from the server, ignoring the browser");
+  assert.equal(tx.amount, (2120 + 340) * 100, "amount comes from the server, ignoring the browser");
 
   let w = await call("webhook", { body: { event: "charge.success", data: { reference: ref } } });
   assert.equal(w.body.state, "unpaid");
@@ -91,7 +91,7 @@ test("full flow: checkout -> paid -> webhook prints once, even if repeated", asy
   w = await call("webhook", { body: { event: "charge.success", data: { reference: ref } } });
   assert.equal(w.body.state, "placed");
   const o = state.prodigiOrders.get(ref);
-  assert.equal(o.items[0].sku, "GLOBAL-CAN-18X12", "landscape painting -> landscape SKU");
+  assert.equal(o.items[0].sku, "GLOBAL-CAN-12X18", "landscape painting uses the single (portrait-named) SKU");
   assert.equal(o.items[0].assets[0].url, "https://shop.test/images/brothers.jpg");
   assert.equal(o.recipient.address.countryCode, "ZA");
 
