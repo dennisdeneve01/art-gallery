@@ -257,14 +257,15 @@
   }
   .shop-stage .lb-canvas{ align-self: auto; flex: none; box-shadow: 0 0 0 1px var(--accent-dim), 0 0 0 7px #1c1710, 0 0 0 8px var(--accent-dim), 0 26px 46px rgba(0,0,0,.6); }
   .shop-stage .lb-canvas::after{ display: none; }
-  .shop-floor{ position: relative; width: 100%; height: 82px; flex: none; border-bottom: 1px solid rgba(195,154,90,.28); }
-  .shop-floor::before{ content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 22px; background: linear-gradient(transparent, rgba(195,154,90,.07)); }
-  .visitor{ position: absolute; left: 0; bottom: -1px; width: 46px; height: 74px; will-change: transform; --swing: 26deg; --step: .5s; --tilt: -16deg; }
+  .shop-floor{ position: relative; width: 100%; height: 96px; flex: none; }
+  .shop-floor::before{ content: ""; position: absolute; left: -26px; right: -26px; bottom: -30px; height: 56px; border-top: 1px solid rgba(195,154,90,.26); background: linear-gradient(rgba(195,154,90,.10), rgba(195,154,90,.02)); }
+  .visitor{ position: absolute; left: 0; bottom: 2px; width: 46px; height: 74px; will-change: transform; transform-origin: 50% 100%; --swing: 26deg; --step: .5s; --tilt: -16deg; }
   .visitor .v-flip{ width: 100%; height: 100%; transition: transform .25s; }
   .visitor svg{ width: 100%; height: 100%; overflow: visible; display: block; }
   .visitor .shadow{ fill: rgba(0,0,0,.45); }
   .visitor .head, .visitor .lean, .visitor .claw, .visitor .pupil{ transition: transform .5s ease; }
   .visitor.admire .head{ transform: rotate(var(--tilt)); }
+  .visitor.looking .head{ transform: rotate(calc(var(--tilt) * .55)); }
   .visitor.admire .pupil{ transform: translateY(-1px); }
   .visitor.walking .bodybob{ animation: v-bob var(--step) ease-in-out infinite; }
   .visitor.walking .leg.a{ animation: v-leg var(--step) ease-in-out infinite alternate; }
@@ -278,7 +279,7 @@
   .visitor[data-kind="visitor"] .leg.b{ transform: rotate(9deg); }
   .visitor[data-kind="meerkat"]{ --swing: 30deg; --step: .34s; --tilt: -20deg; }
   .visitor[data-kind="meerkat"].walking .lean{ transform: rotate(15deg); }
-  .visitor[data-kind="crab"]{ --swing: 10deg; --step: .26s; }
+  .visitor[data-kind="crab"]{ --swing: 10deg; --step: .26s; --tilt: -8deg; }
   .visitor[data-kind="crab"].admire .head{ transform: translateY(-2.5px); }
   .visitor[data-kind="crab"].admire .claw.l{ transform: rotate(28deg); }
   .visitor[data-kind="crab"].admire .claw.r{ transform: rotate(-28deg); }
@@ -1065,7 +1066,7 @@
   // Each is a hand-drawn SVG in the site's own colours. "leg a/b" swing while walking, "head" tilts up when admiring.
   const O = (x, y) => `style="transform-origin:${x}px ${y}px"`;
   const CAST = {
-    visitor: { w: 46, h: 74, speed: 36, pause: 3000, svg: `<svg viewBox="0 0 40 64" focusable="false">
+    visitor: { w: 46, h: 74, speed: 26, pause: 3000, svg: `<svg viewBox="0 0 40 64" focusable="false">
       <ellipse class="shadow" cx="20" cy="62" rx="12" ry="2.4"/>
       <g class="leg a" ${O(20,45)}><rect x="17.6" y="45" width="4.8" height="14" rx="2.4" fill="#6b5d49"/><ellipse cx="22.2" cy="59.6" rx="4.6" ry="2.1" fill="#2e2720"/></g>
       <g class="leg b" ${O(20,45)}><rect x="17.6" y="45" width="4.8" height="14" rx="2.4" fill="#85745a"/><ellipse cx="22.2" cy="59.6" rx="4.6" ry="2.1" fill="#2e2720"/></g>
@@ -1082,7 +1083,7 @@
           <circle cx="19" cy="4.3" r="1.6" fill="#8a6c3d"/>
         </g>
       </g></svg>` },
-    meerkat: { w: 40, h: 70, speed: 48, pause: 3200, svg: `<svg viewBox="0 0 40 70" focusable="false">
+    meerkat: { w: 40, h: 70, speed: 34, pause: 3200, svg: `<svg viewBox="0 0 40 70" focusable="false">
       <ellipse class="shadow" cx="20" cy="68" rx="10" ry="2.1"/>
       <path d="M16 57 q-9 2 -11 9" stroke="#a98a5c" stroke-width="3" fill="none" stroke-linecap="round"/>
       <path d="M6.2 63.5 l-1.2 2.6" stroke="#4a3d2c" stroke-width="3" stroke-linecap="round"/>
@@ -1102,7 +1103,7 @@
           <circle cx="25.4" cy="14.3" r=".4" fill="#f3e7d0"/>
         </g>
       </g></g></svg>` },
-    crab: { w: 58, h: 42, speed: 30, pause: 2800, noFlip: true, svg: `<svg viewBox="0 0 56 40" focusable="false">
+    crab: { w: 58, h: 42, speed: 24, pause: 2800, noFlip: true, svg: `<svg viewBox="0 0 56 40" focusable="false">
       <ellipse class="shadow" cx="28" cy="38" rx="18" ry="2"/>
       <g fill="none" stroke="#8a6c3d" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
         <path class="leg a" ${O(18,26)} d="M17 24 L8 29 L6 37"/><path class="leg b" ${O(18,27)} d="M18 27 L11 32 L10 37"/><path class="leg a" ${O(20,29)} d="M20 29 L15 33 L15 37"/>
@@ -1120,7 +1121,7 @@
         <ellipse cx="28" cy="22" rx="9" ry="3.6" fill="#dcbb80" opacity=".55"/>
         <path d="M24 29.4 q4 2.4 8 0" stroke="#6b5d49" stroke-width="1.1" fill="none" stroke-linecap="round"/>
       </g></svg>` },
-    fox: { w: 72, h: 54, speed: 44, pause: 3000, svg: `<svg viewBox="0 0 70 52" focusable="false">
+    fox: { w: 72, h: 54, speed: 30, pause: 3000, svg: `<svg viewBox="0 0 70 52" focusable="false">
       <ellipse class="shadow" cx="34" cy="50" rx="22" ry="2.2"/>
       <g class="tail" ${O(18,30)}><path d="M19 32 C8 31 1 23 4 13 C11 16 17 22 21 28 Z" fill="#c98a45"/><path d="M4 13 C2.4 18 3.6 22.5 7.4 25.5 C8.4 20.5 7 16.4 4 13 Z" fill="#f3e7d0"/></g>
       <g class="leg a" ${O(22,37)}><rect x="20" y="36" width="4.2" height="13" rx="2.1" fill="#a66d33"/><rect x="20" y="43" width="4.2" height="6" rx="2.1" fill="#3a2a1c"/></g>
@@ -1140,7 +1141,7 @@
           <circle class="pupil" cx="58.2" cy="18.4" r="1.3" fill="#2a251e"/>
         </g>
       </g></svg>` },
-    owl: { w: 46, h: 54, speed: 22, pause: 3400, noFlip: true, svg: `<svg viewBox="0 0 44 52" focusable="false">
+    owl: { w: 46, h: 54, speed: 18, pause: 3400, noFlip: true, svg: `<svg viewBox="0 0 44 52" focusable="false">
       <ellipse class="shadow" cx="22" cy="50" rx="11" ry="2"/>
       <path class="leg a" ${O(17,45)} d="M14 49 h6.4" stroke="#c39a5a" stroke-width="3" stroke-linecap="round"/>
       <path class="leg b" ${O(27,45)} d="M23.6 49 h6.4" stroke="#c39a5a" stroke-width="3" stroke-linecap="round"/>
@@ -1158,7 +1159,7 @@
           <path d="M22 18.6 l-2.4 3.2 h4.8 Z" fill="#c39a5a"/>
         </g>
       </g></svg>` },
-    tortoise: { w: 64, h: 42, speed: 14, pause: 3600, svg: `<svg viewBox="0 0 62 40" focusable="false">
+    tortoise: { w: 64, h: 42, speed: 12, pause: 3600, svg: `<svg viewBox="0 0 62 40" focusable="false">
       <ellipse class="shadow" cx="30" cy="38" rx="20" ry="2"/>
       <path d="M11 30 l-5 3.4" stroke="#8c7a5e" stroke-width="3" stroke-linecap="round"/>
       <rect class="leg a" ${O(17,29)} x="14" y="27" width="6" height="10" rx="3" fill="#7a6a52"/>
@@ -1192,37 +1193,85 @@
     return Object.keys(CAST_FOR).find(k => CAST_FOR[k].includes(slug)) || CAST_BY_CATEGORY[p.category] || "visitor";
   }
 
-  let visitorTimer = null, visitorRun = 0;
-  function stopVisitor(){ visitorRun++; clearTimeout(visitorTimer); }
+  // Movement: the companion wanders in from one side, drifts nearer to and further from the wall as it goes,
+  // slows down and stops in front of the painting (sometimes stepping back for a better look), then carries on
+  // out the other side. A little later it comes back the other way. Every pass is slightly different.
+  let visitorRun = 0;
+  function stopVisitor(){ visitorRun++; }
   function startVisitor(p){
     stopVisitor();
     const run = visitorRun, floor = document.getElementById("shopFloor"), v = document.getElementById("visitor");
     if (!floor || !v) return;
     const kind = castFor(p), c = CAST[kind], flip = v.querySelector(".v-flip");
     v.dataset.kind = kind; v.className = "visitor";
-    v.style.width = c.w + "px"; v.style.height = c.h + "px";
+    v.style.width = c.w + "px"; v.style.height = c.h + "px"; v.style.transition = "none";
     flip.innerHTML = c.svg; flip.style.transform = "";
+    const DEPTH = 16, EDGE = 34;                       // how far "back" it can wander (px), and how far off-stage it goes
     const room = () => Math.max(0, floor.clientWidth - c.w);
-    const stops = [0.08, 0.34, 0.62, 0.92, 0.64, 0.36];
-    let i = 0, x = stops[0] * room();
-    v.style.transition = "none"; v.style.transform = `translateX(${x}px)`;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches || room() === 0) { v.classList.add("admire"); return; }
-    const walk = () => {
-      if (run !== visitorRun) return;
-      i = (i + 1) % stops.length;
-      const tx = stops[i] * room(), dist = Math.abs(tx - x), secs = Math.max(0.4, dist / c.speed);
-      if (!c.noFlip) flip.style.transform = tx >= x ? "scaleX(1)" : "scaleX(-1)";
-      v.classList.remove("admire"); v.classList.add("walking");
-      void v.offsetWidth;
-      v.style.transition = `transform ${secs}s linear`; v.style.transform = `translateX(${tx}px)`;
-      x = tx;
-      visitorTimer = setTimeout(() => {
-        if (run !== visitorRun) return;
-        v.classList.remove("walking"); v.classList.add("admire");
-        visitorTimer = setTimeout(walk, c.pause);
-      }, secs * 1000);
+    const rnd = (a, b) => a + Math.random() * (b - a);
+    const place = (x, d) => { v.style.transform = `translate(${x.toFixed(1)}px, ${(-d).toFixed(1)}px) scale(${(1 - 0.1 * d / DEPTH).toFixed(3)})`; };
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches || room() === 0) { place(room() * 0.62, DEPTH * 0.5); v.classList.add("admire"); return; }
+
+    let dir = 1, x = -c.w * 0.7, d = rnd(0, DEPTH * 0.5), vx = 0, route = [], wp = null;
+    let mode = "walk", until = 0, backTo = 0, last = performance.now();
+    const plan = () => {                                // a fresh, slightly different route for each crossing
+      const W = room(), at = (f) => (dir > 0 ? f : 1 - f) * W;
+      route = [
+        { x: at(rnd(0.12, 0.22)), d: rnd(0, DEPTH) },
+        { x: at(rnd(0.36, 0.48)), d: rnd(DEPTH * 0.45, DEPTH), stop: true, back: Math.random() < 0.5 },
+        { x: at(rnd(0.60, 0.72)), d: rnd(0, DEPTH), stop: Math.random() < 0.55, back: Math.random() < 0.3 },
+        { x: at(rnd(0.84, 0.92)), d: rnd(0, DEPTH * 0.6) },
+        { x: dir > 0 ? W + c.w + EDGE : -c.w - EDGE, d: rnd(0, DEPTH * 0.5), exit: true },
+      ];
+      wp = route.shift();
+      if (!c.noFlip) flip.style.transform = dir > 0 ? "scaleX(1)" : "scaleX(-1)";
     };
-    visitorTimer = setTimeout(walk, 600);
+    plan();
+
+    const frame = (now) => {
+      if (run !== visitorRun) return;
+      const dt = Math.min(0.05, (now - last) / 1000); last = now;
+      const W = room(), mid = x / (W || 1);
+      let want = 0;                                     // the speed it is trying to reach (px/s, signed)
+
+      if (mode === "walk") {
+        const gap = wp.x - x, far = Math.abs(gap);
+        let pace = c.speed * (0.82 + 0.18 * Math.sin(now / 900));        // never perfectly even
+        if (mid > 0.25 && mid < 0.78) pace *= 0.78;                       // dawdles in front of the painting
+        if (wp.stop) pace *= Math.min(1, Math.max(0.18, far / 46));       // eases to a halt
+        want = Math.sign(gap) * pace;
+        if (far < 1.5 || Math.sign(gap) !== dir) {
+          if (wp.exit) { mode = "away"; until = now + rnd(1400, 3600); }
+          else if (wp.stop) { mode = "admire"; until = now + c.pause * rnd(0.7, 1.3); }
+          else wp = route.shift();
+        }
+      } else if (mode === "admire") {
+        if (now > until) {
+          if (wp.back) { wp.back = false; mode = "back"; backTo = x - dir * rnd(12, 22); }
+          else { mode = "walk"; wp = route.shift(); }
+        }
+      } else if (mode === "back") {                     // a couple of steps backwards to take it all in
+        want = -dir * c.speed * 0.5;
+        if ((dir > 0 && x <= backTo) || (dir < 0 && x >= backTo)) { mode = "admire"; until = now + c.pause * rnd(0.6, 1); }
+      } else if (mode === "away") {                     // off-stage for a moment, then back the other way
+        if (now > until) { dir = -dir; mode = "walk"; plan(); }
+      }
+
+      vx += (want - vx) * Math.min(1, dt * 3.2);
+      x += vx * dt;
+      const sway = Math.sin(now / 1700 + run) * 2.2;
+      const goal = Math.max(0, Math.min(DEPTH, (wp ? wp.d : d) + (mode === "walk" ? sway : 0)));
+      d += (goal - d) * Math.min(1, dt * (mode === "walk" ? 0.9 : 0.4));
+      place(x, d);
+
+      const moving = Math.abs(vx) > Math.max(2.5, c.speed * 0.12);
+      v.classList.toggle("walking", moving);
+      v.classList.toggle("admire", mode === "admire" && !moving);
+      v.classList.toggle("looking", mode !== "admire" && mid > 0.2 && mid < 0.8);
+      requestAnimationFrame(frame);
+    };
+    place(x, d);
+    requestAnimationFrame(frame);
   }
 
   function openShop(p){
