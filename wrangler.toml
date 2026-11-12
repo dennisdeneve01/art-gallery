@@ -1,8 +1,13 @@
-# Cloudflare Pages settings for the art shop.
+# Cloudflare settings for the art shop (a Worker that also serves the built site).
 name = "art-gallery"
-pages_build_output_dir = "dist"
+main = "src/worker.mjs"
 compatibility_date = "2025-09-01"
 compatibility_flags = ["nodejs_compat"]
+
+[assets]
+directory = "./dist"
+binding = "ASSETS"
+run_worker_first = ["/api/*"]
 
 # Non-secret settings. Switching to real printing is a deliberate commit:
 # change PRODIGI_ENV to "live" here (and add the live key as a secret).

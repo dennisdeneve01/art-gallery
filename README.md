@@ -20,11 +20,11 @@ npx serve .
 
 ## Deploying
 
-Without the shop, this is a static site and works on any static host. **With the shop it is hosted on Cloudflare Pages** (free). The `functions/api/` files wrap the shop code in `api/` so it runs there as serverless functions; GitHub Pages can't run them. Until the shop is set up the site works exactly as before: no Buy buttons appear.
+Without the shop, this is a static site and works on any static host. **With the shop it is hosted on Cloudflare** (free), as a Worker that serves the site and runs the shop code (`src/worker.mjs` wraps the handlers in `api/`). GitHub Pages can't run them. Until the shop is set up the site works exactly as before: no Buy buttons appear.
 
-Cloudflare Pages settings (Workers & Pages -> Create -> Pages -> Connect to Git -> this repo):
+Cloudflare setup (Workers & Pages -> Create application -> import this GitHub repo):
 - Build command: `npm run build`
-- Build output directory: `dist`
+- Deploy command: `npx wrangler deploy`
 - Secrets (Settings -> Variables and Secrets): `PRODIGI_API_KEY` and `PAYSTACK_SECRET_KEY`. Everything else (`PRODIGI_ENV`, `FX_RATE` ...) lives in `wrangler.toml`.
 
 ## Adding or editing paintings
@@ -55,7 +55,7 @@ Prices are always worked out on the server (`api/_lib/shop.js`), never trusted f
 
 - `npm test`: runs the whole payment -> print flow against pretend Paystack/Prodigi servers (nothing real is called).
 - `npm run check-skus`: asks Prodigi (with your sandbox key) whether each canvas size/product code exists, and prints your real cost + shipping to South Africa so you can price properly. Pass a country code to check elsewhere: `npm run check-skus -- GB`.
-- `npm run dev`: builds `dist/` and runs the site and API together on your computer with Cloudflare's local runtime (needs `.dev.vars`).
+- `npm run dev`: builds `dist/` and runs the site and API together on your computer with Cloudflare's local runtime (`wrangler dev`) (needs `.dev.vars`).
 - `npm run build`: copies the public site into `dist/`.
 
 ### Going live checklist

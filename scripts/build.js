@@ -4,7 +4,7 @@ const fs = require("fs");
 const path = require("path");
 const root = path.join(__dirname, "..");
 const out = path.join(root, "dist");
-fs.rmSync(out, { recursive: true, force: true });
+try { fs.rmSync(out, { recursive: true, force: true }); } catch (e) { /* locked folder: files are simply overwritten below */ }
 fs.mkdirSync(out, { recursive: true });
 for (const item of ["index.html", "images", "favicon.ico", "robots.txt", "sitemap.xml"]) {
   const from = path.join(root, item);
