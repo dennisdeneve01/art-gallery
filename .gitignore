@@ -3,3 +3,7 @@
 !.env.example
 node_modules/
 .vercel/
+
+dist/
+.dev.vars
+.wrangler/

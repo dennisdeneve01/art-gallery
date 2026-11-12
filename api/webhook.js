@@ -9,11 +9,11 @@ const crypto = require("crypto");
 // payment reference out of it and ask Paystack directly whether that payment
 // really succeeded (inside placeOrder), so a forged call can't print anything.
 // The signature check is logged as an extra warning sign rather than used to
-// reject, because some hosts re-serialise the body and break byte-exact checks.
+// reject, because some hosts re-serialise the body and break byte-exact checks (Cloudflare passes the raw body, so it matches there).
 module.exports = handler(["POST"], async (req, res) => {
   const body = req.body || {};
   try {
-    const expected = crypto.createHmac("sha512", process.env.PAYSTACK_SECRET_KEY || "").update(JSON.stringify(body)).digest("hex");
+    const expected = crypto.createHmac("sha512", process.env.PAYSTACK_SECRET_KEY || "").update(req.rawBody || JSON.stringify(body)).digest("hex");
     if (req.headers["x-paystack-signature"] !== expected) console.warn("[webhook] signature did not match re-serialised body (continuing: payment is verified with Paystack directly)");
   } catch (e) { /* ignore */ }
 

@@ -1,0 +1,18 @@
+# Cloudflare Pages settings for the art shop.
+name = "art-gallery"
+pages_build_output_dir = "dist"
+compatibility_date = "2025-09-01"
+compatibility_flags = ["nodejs_compat"]
+
+# Non-secret settings. Switching to real printing is a deliberate commit:
+# change PRODIGI_ENV to "live" here (and add the live key as a secret).
+# SITE_URL is left out on purpose: the site works out its own address.
+[vars]
+PRODIGI_ENV = "sandbox"
+PRODIGI_CURRENCY = "GBP"
+FX_RATE = "24"
+SHIPPING_MARKUP = "0.15"
+SHIPPING_METHOD = "Standard"
+
+# Secrets (set in the Cloudflare dashboard, never in this file):
+#   PRODIGI_API_KEY, PAYSTACK_SECRET_KEY

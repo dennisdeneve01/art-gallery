@@ -20,7 +20,12 @@ npx serve .
 
 ## Deploying
 
-Without the shop, this is a static site and works on any static host. **With the shop it must be hosted on Vercel** (the `api/` folder runs there as serverless functions; GitHub Pages can't run them). Until the shop is set up the site works exactly as before: no Buy buttons appear.
+Without the shop, this is a static site and works on any static host. **With the shop it is hosted on Cloudflare Pages** (free). The `functions/api/` files wrap the shop code in `api/` so it runs there as serverless functions; GitHub Pages can't run them. Until the shop is set up the site works exactly as before: no Buy buttons appear.
+
+Cloudflare Pages settings (Workers & Pages -> Create -> Pages -> Connect to Git -> this repo):
+- Build command: `npm run build`
+- Build output directory: `dist`
+- Secrets (Settings -> Variables and Secrets): `PRODIGI_API_KEY` and `PAYSTACK_SECRET_KEY`. Everything else (`PRODIGI_ENV`, `FX_RATE` ...) lives in `wrangler.toml`.
 
 ## Adding or editing paintings
 
@@ -37,11 +42,11 @@ The contact form and the email link both use dennishammerschlag01@gmail.com — 
 
 How it works: visitor opens a painting -> **Buy a canvas print** -> picks a size -> enters delivery details -> sees shipping + total -> pays on Paystack -> Paystack tells `api/webhook.js` -> the server re-checks the payment with Paystack and places the order with Prodigi -> Prodigi prints, stretches and ships it.
 
-Prices are always worked out on the server (`api/_lib/shop.js`), never trusted from the browser. A payment whose amount doesn't match is flagged in the Vercel logs (`[ORDER FLAGGED]`) instead of being printed, and Prodigi's idempotency key means one payment can never create two print orders.
+Prices are always worked out on the server (`api/_lib/shop.js`), never trusted from the browser. A payment whose amount doesn't match is flagged in the Cloudflare logs (`[ORDER FLAGGED]`) instead of being printed, and Prodigi's idempotency key means one payment can never create two print orders.
 
 ### Files you'll touch
 
-- `.env` (copy `.env.example`; also add the same values in Vercel -> Settings -> Environment Variables): Prodigi key, Paystack secret key, exchange rate.
+- `.env` (copy `.env.example`; used by `npm run check-skus`). On Cloudflare, secrets are set in the dashboard and other settings in `wrangler.toml`. For `npm run dev`, put the two secrets in `.dev.vars`.
 - `shop/catalog.json`: sizes and **prices in rand**. The prices in there are placeholders.
 - `shop/print-files.json`: `"painting-slug": "https://link-to-high-res-file.jpg"` for each painting. Slugs are the image file names, e.g. `burnt-horizon`.
 - Run `npm run sync-catalog` after adding or removing paintings in `index.html`. Set `"forSale": false` on a painting in `catalog.json` to hide its Buy button.
@@ -50,11 +55,12 @@ Prices are always worked out on the server (`api/_lib/shop.js`), never trusted f
 
 - `npm test`: runs the whole payment -> print flow against pretend Paystack/Prodigi servers (nothing real is called).
 - `npm run check-skus`: asks Prodigi (with your sandbox key) whether each canvas size/product code exists, and prints your real cost + shipping to South Africa so you can price properly. Pass a country code to check elsewhere: `npm run check-skus -- GB`.
-- `npx vercel dev`: runs the site and API together on your computer.
+- `npm run dev`: builds `dist/` and runs the site and API together on your computer with Cloudflare's local runtime (needs `.dev.vars`).
+- `npm run build`: copies the public site into `dist/`.
 
 ### Going live checklist
 
-1. Prodigi: swap to your live API key and set `PRODIGI_ENV=live` (live mode only sells paintings that have a high-res file in `print-files.json`).
+1. Prodigi: set the live API key as a Cloudflare secret and change `PRODIGI_ENV` to `live` in `wrangler.toml` (live mode only sells paintings that have a high-res file in `print-files.json`).
 2. Paystack: finish business verification, switch to `sk_live_...`, enable international cards if you want overseas buyers.
 3. Paystack -> Settings -> API Keys & Webhooks: set the webhook URL to `https://YOUR-SITE/api/webhook`.
 4. Order one real canvas of your own painting to yourself and check the colours.
