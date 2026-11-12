@@ -51,9 +51,10 @@ function cleanRecipient(r) {
     line1: clean(r && r.line1), line2: clean(r && r.line2), city: clean(r && r.city, 80),
     state: clean(r && r.state, 80), postcode: clean(r && r.postcode, 20), country: clean(r && r.country, 2).toUpperCase(),
   };
-  const missing = ["name", "email", "line1", "city", "postcode", "country"].filter((k) => !out[k]);
+  const missing = ["name", "email", "phone", "line1", "city", "postcode", "country"].filter((k) => !out[k]);
   if (missing.length) throw new HttpError(400, "Please fill in all the required delivery details.");
   if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(out.email)) throw new HttpError(400, "That email address doesn't look right.");
+  if (!/^\+?[0-9 ()\-]{7,20}$/.test(out.phone) || out.phone.replace(/\D/g, "").length < 7) throw new HttpError(400, "Please enter a phone number the courier can reach you on.");
   return out;
 }
 

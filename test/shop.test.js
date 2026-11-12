@@ -51,7 +51,7 @@ const call = async (mod, { method = "POST", body, query } = {}) => {
   return out;
 };
 
-const recipient = { name: "Jo Buyer", email: "jo@example.com", line1: "1 Long St", city: "Cape Town", postcode: "8001", country: "ZA", phone: "" };
+const recipient = { name: "Jo Buyer", email: "jo@example.com", line1: "1 Long St", city: "Cape Town", postcode: "8001", country: "ZA", phone: "082 555 0123" };
 const pay = (ref, mutate) => { const t = state.paystack.get(ref); t.status = "success"; if (mutate) mutate(t); };
 
 test("catalog lists paintings and hides ones that can't be printed", async () => {
@@ -125,4 +125,11 @@ test("live mode never prints from the low-res web image", async () => {
   const { body } = await call("catalog", { method: "GET" });
   assert.deepEqual(Object.keys(body.items), []);
   process.env.PRODIGI_ENV = "sandbox";
+});
+
+test("delivery details need a usable phone number", async () => {
+  const bad = await call("checkout", { body: { slug: "brothers", size: "12x18", recipient: { ...recipient, phone: "" } } });
+  assert.equal(bad.status, 400);
+  const bad2 = await call("checkout", { body: { slug: "brothers", size: "12x18", recipient: { ...recipient, phone: "abc" } } });
+  assert.equal(bad2.status, 400);
 });
