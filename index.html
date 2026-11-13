@@ -74,6 +74,7 @@
     transition: color .25s ease, border-color .25s ease;
   }
   .navlinks a:hover, .navlinks a:focus-visible{ color: var(--text); border-color: var(--accent); outline: none; }
+  @media (max-width: 480px){ .navlinks{ gap: 12px; } .navlinks a{ font-size: 0.62rem; letter-spacing: 0.08em; } }
 
   /* ---------- hero ---------- */
   .hero{ padding-block: clamp(56px, 12vw, 116px) clamp(48px, 8vw, 88px); position: relative; z-index: 1; }
@@ -241,6 +242,7 @@
   footer .wrap{ display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; font-size: 0.76rem; letter-spacing: 0.05em; color: var(--muted-2); }
   footer a{ color: var(--muted-2); text-decoration: none; }
   footer a:hover{ color: var(--accent); }
+  .foot-links{ display: flex; flex-wrap: wrap; gap: 8px 22px; }
 
   /* ---------- shop (canvas prints) ---------- */
   .btn[hidden], .steps[hidden]{ display: none; }
@@ -324,6 +326,7 @@
   .size-text b{ display: block; font-weight: 400; }
   .size-text small{ color: var(--muted-2); font-size: 0.78rem; }
   .size-price{ font-family: "Fraunces", Georgia, serif; font-size: 1.05rem; white-space: nowrap; }
+  .shop-note a{ color: var(--accent); }
   .shop-note{ color: var(--muted); font-size: 0.82rem; line-height: 1.6; margin-top: 14px; }
   .shop-error{ color: #e0907a; font-size: 0.88rem; margin-top: 14px; min-height: 1.2em; }
   .shop-actions{ display: flex; gap: 12px; flex-wrap: wrap; margin-top: 22px; align-items: center; }
@@ -355,6 +358,7 @@
     <a class="mark" href="#top" style="text-decoration:none;">Dennis <em>Hammerschlag</em></a>
     <ul class="navlinks">
       <li><a href="#gallery">Gallery</a></li>
+      <li><a href="/policies#pricing">Prices</a></li>
       <li><a href="#about">About</a></li>
       <li><a href="#contact">Contact</a></li>
     </ul>
@@ -434,7 +438,7 @@
 <footer>
   <div class="wrap">
     <span>&copy; <span id="year"></span> Dennis Hammerschlag</span>
-    <span>Canvas prints shipped worldwide</span>
+    <span class="foot-links"><a href="/policies#pricing">Print prices</a><a href="/policies#shipping">Shipping &amp; delivery</a><a href="/policies#refunds">Refunds &amp; cancellations</a><a href="/policies#terms">Terms of service</a></span>
   </div>
 </footer>
 
@@ -462,13 +466,13 @@
 <div class="lightbox" id="shop" hidden>
   <div class="lb-card shop-card" role="dialog" aria-modal="true" aria-labelledby="shopTitle">
     <button class="lb-close" id="shopClose" aria-label="Close">&times;</button>
-    <header class="shop-head">
+    <div class="shop-head">
       <p class="cat" id="shopCat">Canvas print</p>
       <h3 id="shopTitle"></h3>
       <ol class="steps" id="shopSteps" aria-label="Checkout steps">
         <li>Size</li><li>Delivery</li><li>Pay</li>
       </ol>
-    </header>
+    </div>
     <div class="shop-stage" id="shopStage" aria-hidden="true">
       <div class="lb-canvas" id="shopCanvas"></div>
       <div class="shop-floor" id="shopFloor">
@@ -1403,7 +1407,6 @@
     const { size, quote: q, recipient: r, info } = sale;
     const [w, h] = dimsFor(info, size);
     const country = (shopData.countries.find(c => c.code === r.country) || {}).name || r.country;
-    const intl = r.country !== "ZA";
     shopView.innerHTML = `
       <div class="sum">
         <div><span>${esc(sale.piece.title)} &mdash; canvas ${w} &times; ${h} in</span><span>${money(q.item)}</span></div>
@@ -1411,13 +1414,13 @@
         <div class="total"><span>Total</span><span>${money(q.total)}</span></div>
       </div>
       <p class="ship-to">Sending to ${esc(r.name)}, ${esc(r.line1)}${r.line2 ? ", " + esc(r.line2) : ""}, ${esc(r.city)}, ${esc(r.postcode)}, ${esc(country)}.</p>
-      <p class="shop-note">Each canvas is printed to order, which usually takes a few days before it ships.${intl ? " Import duties or taxes may be charged by your country on delivery." : ""} If it arrives damaged, get in touch and I'll put it right.</p>
+      <p class="shop-note">Each canvas is printed to order, which usually takes a few days before it ships. It is made abroad, so customs may charge import duties or taxes on delivery. If it arrives damaged, get in touch and I'll put it right.</p>
       <p class="shop-error" id="shopErr" role="alert"></p>
       <div class="shop-actions">
         <button type="button" class="btn primary" id="payBtn">Pay ${money(q.total)} securely</button>
         <button type="button" class="btn" id="revBack">Back</button>
       </div>
-      <p class="shop-note">Payment is handled by Paystack. Your card details never touch this site.</p>`;
+      <p class="shop-note">Payment is handled by Paystack. Your card details never touch this site. By paying you agree to the <a href="/policies#terms" target="_blank" rel="noopener">terms</a>, <a href="/policies#shipping" target="_blank" rel="noopener">delivery</a> and <a href="/policies#refunds" target="_blank" rel="noopener">refund</a> policies.</p>`;
     document.getElementById("revBack").addEventListener("click", viewDelivery);
     document.getElementById("payBtn").addEventListener("click", async (e) => {
       const btn = e.currentTarget, err = document.getElementById("shopErr");
