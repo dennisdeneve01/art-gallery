@@ -251,6 +251,12 @@
   .shop-card.solo{ max-width: 560px; grid-template-columns: 1fr; }
   .shop-card.solo .shop-stage{ display: none; }
   @media (max-width: 640px){ .shop-card{ grid-template-columns: 1fr; } .shop-card .shop-stage{ display: none; } }
+  /* click a painting to see it large */
+  #shopCanvas, #lbCanvas{ cursor: zoom-in; }
+  #shopCanvas:focus-visible{ outline: 2px solid var(--accent); outline-offset: 12px; }
+  .zoom{ position: fixed; inset: 0; z-index: 200; display: flex; align-items: center; justify-content: center; padding: clamp(12px, 3vw, 44px); background: rgba(6,5,4,.95); cursor: zoom-out; }
+  .zoom[hidden]{ display: none; }
+  .zoom img{ max-width: 100%; max-height: 100%; object-fit: contain; box-shadow: var(--shadow); }
   /* the painting "hung" on a gallery wall, with a little visitor strolling past */
   .shop-stage{
     position: relative; align-self: stretch; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 30px;
@@ -259,7 +265,7 @@
   }
   .shop-stage .lb-canvas{ align-self: auto; flex: none; box-shadow: 0 0 0 1px var(--accent-dim), 0 0 0 7px #1c1710, 0 0 0 8px var(--accent-dim), 0 26px 46px rgba(0,0,0,.6); }
   .shop-stage .lb-canvas::after{ display: none; }
-  .shop-floor{ position: relative; width: 100%; height: 96px; flex: none; }
+  .shop-floor{ position: relative; width: 100%; height: 116px; flex: none; }
   .shop-floor::before{ content: ""; position: absolute; left: -26px; right: -26px; bottom: -30px; height: 56px; border-top: 1px solid rgba(195,154,90,.26); background: linear-gradient(rgba(195,154,90,.10), rgba(195,154,90,.02)); }
   .visitor{ position: absolute; left: 0; bottom: 2px; width: 46px; height: 74px; will-change: transform; transform-origin: 50% 100%; --swing: 26deg; --step: .5s; --tilt: -16deg; }
   .visitor .v-flip{ width: 100%; height: 100%; transition: transform .25s; }
@@ -277,19 +283,27 @@
   @keyframes v-wag{ from{ transform: rotate(-8deg); } to{ transform: rotate(13deg); } }
   @keyframes v-waddle{ from{ transform: rotate(-6deg); } to{ transform: rotate(6deg); } }
   /* the cast: each painting gets a companion that suits its scene */
-  .visitor[data-kind="visitor"] .leg.a{ transform: rotate(-9deg); }
-  .visitor[data-kind="visitor"] .leg.b{ transform: rotate(9deg); }
-  .visitor[data-kind="meerkat"]{ --swing: 30deg; --step: .34s; --tilt: -20deg; }
-  .visitor[data-kind="meerkat"].walking .lean{ transform: rotate(15deg); }
-  .visitor[data-kind="crab"]{ --swing: 10deg; --step: .26s; --tilt: -8deg; }
-  .visitor[data-kind="crab"].admire .head{ transform: translateY(-2.5px); }
-  .visitor[data-kind="crab"].admire .claw.l{ transform: rotate(28deg); }
-  .visitor[data-kind="crab"].admire .claw.r{ transform: rotate(-28deg); }
-  .visitor[data-kind="fox"]{ --swing: 24deg; --step: .4s; --tilt: -22deg; }
-  .visitor[data-kind="fox"].admire .tail{ animation: v-wag .7s ease-in-out infinite alternate; }
-  .visitor[data-kind="owl"]{ --swing: 16deg; --step: .44s; --tilt: -13deg; }
-  .visitor[data-kind="owl"].walking .waddle{ animation: v-waddle .88s ease-in-out infinite alternate; }
-  .visitor[data-kind="tortoise"]{ --swing: 15deg; --step: .9s; --tilt: -26deg; }
+  /* characters with two poses: one for moving, one for standing still to look */
+  .visitor .pose-walk, .visitor .pose-stand{ transition: opacity .16s ease; }
+  .visitor .pose-stand{ opacity: 0; }
+  .visitor.admire .pose-stand{ opacity: 1; }
+  .visitor.admire .pose-walk{ opacity: 0; }
+  .visitor .forearm, .visitor .point, .visitor .rise{ transition: transform .6s ease; }
+  .visitor[data-kind="person"]{ --swing: 19deg; --step: .56s; --tilt: -12deg; }
+  .visitor[data-kind="person"] .leg.a{ transform: rotate(-4deg); }
+  .visitor[data-kind="person"] .leg.b{ transform: rotate(4deg); }
+  .visitor[data-kind="person"].admire .forearm{ transform: rotate(-140deg); }
+  .visitor[data-kind="person"].admire .point{ transform: rotate(-135deg); }
+  .visitor[data-kind="meerkat"]{ --swing: 26deg; --step: .3s; --tilt: -15deg; }
+  .visitor[data-kind="crab"]{ --swing: 9deg; --step: .26s; --tilt: 0deg; }
+  .visitor[data-kind="crab"].admire .rise{ transform: translateY(-2px) rotate(-3deg); }
+  .visitor[data-kind="crab"].admire .head{ transform: translateY(-1.6px); }
+  .visitor[data-kind="crab"].admire .claw.l{ transform: rotate(12deg); }
+  .visitor[data-kind="crab"].admire .claw.r{ transform: rotate(-12deg); }
+  .visitor[data-kind="fox"]{ --swing: 24deg; --step: .42s; --tilt: -20deg; }
+  .visitor[data-kind="owl"]{ --swing: 14deg; --step: .46s; --tilt: -13deg; }
+  .visitor[data-kind="owl"].walking .waddle{ animation: v-waddle .92s ease-in-out infinite alternate; }
+  .visitor[data-kind="tortoise"]{ --swing: 12deg; --step: 1s; --tilt: -24deg; }
   .shop-body{ min-height: 420px; padding-top: clamp(18px, 3vw, 28px); }
   /* title and progress sit across the top, centred over the painting and the form */
   .shop-head{ grid-column: 1 / -1; text-align: center; padding: clamp(24px, 4vw, 36px) clamp(22px, 4vw, 40px) clamp(18px, 3vw, 26px); border-bottom: 1px solid var(--line); }
@@ -442,6 +456,11 @@
   </div>
 </footer>
 
+<div class="zoom" id="zoom" role="dialog" aria-modal="true" aria-label="Painting, enlarged" hidden>
+  <button class="lb-close" id="zoomClose" aria-label="Close enlarged view">&times;</button>
+  <img id="zoomImg" alt="">
+</div>
+
 <div class="lightbox" id="lightbox" hidden>
   <div class="lb-card" role="dialog" aria-modal="true" aria-labelledby="lbTitle">
     <button class="lb-close" id="lbClose" aria-label="Close">&times;</button>
@@ -473,9 +492,9 @@
         <li>Size</li><li>Delivery</li><li>Pay</li>
       </ol>
     </div>
-    <div class="shop-stage" id="shopStage" aria-hidden="true">
-      <div class="lb-canvas" id="shopCanvas"></div>
-      <div class="shop-floor" id="shopFloor">
+    <div class="shop-stage" id="shopStage">
+      <div class="lb-canvas" id="shopCanvas" role="button" tabindex="0" aria-label="Enlarge the painting" title="Click to enlarge"></div>
+      <div class="shop-floor" id="shopFloor" aria-hidden="true">
         <div class="visitor" id="visitor"><div class="v-flip"></div></div>
       </div>
     </div>
@@ -1066,121 +1085,234 @@
     if (label) btn.textContent = label;
   }
 
-  // ---- the cast: a small companion strolls along the floor under the painting and stops to admire it ----
-  // Each is a hand-drawn SVG in the site's own colours. "leg a/b" swing while walking, "head" tilts up when admiring.
-  const O = (x, y) => `style="transform-origin:${x}px ${y}px"`;
-  const CAST = {
-    visitor: { w: 46, h: 74, speed: 26, pause: 3000, svg: `<svg viewBox="0 0 40 64" focusable="false">
-      <ellipse class="shadow" cx="20" cy="62" rx="12" ry="2.4"/>
-      <g class="leg a" ${O(20,45)}><rect x="17.6" y="45" width="4.8" height="14" rx="2.4" fill="#6b5d49"/><ellipse cx="22.2" cy="59.6" rx="4.6" ry="2.1" fill="#2e2720"/></g>
-      <g class="leg b" ${O(20,45)}><rect x="17.6" y="45" width="4.8" height="14" rx="2.4" fill="#85745a"/><ellipse cx="22.2" cy="59.6" rx="4.6" ry="2.1" fill="#2e2720"/></g>
+  // ---- the cast: a small companion wanders along the floor under the painting and stops to look at it ----
+  // Hand-built SVGs with real proportions and muted natural colours. "leg a/b" swing while moving, "head" tilts
+  // up when looking, and a character with two poses swaps "pose-walk" for "pose-stand" when it stops.
+  const O = (x, y, extra) => `style="transform-origin:${x}px ${y}px${extra ? ";" + extra : ""}"`;
+
+  // -- people (side view, facing right). One of four is picked at random for the paintings that get a human visitor.
+  const personLegs = (legDark, leg, shoe) => `
+      <g class="leg b" ${O(25,54)}><rect x="22.4" y="52" width="5.2" height="41.4" rx="2.6" fill="${legDark}"/><path d="M22.2 93 h8.4 c1.6 0 2.4 1.4 2.4 2.6 h-10.8 z" fill="${shoe}"/></g>
+      <g class="leg a" ${O(25,54)}><rect x="22.4" y="52" width="5.2" height="41.4" rx="2.6" fill="${leg}"/><path d="M22.2 93 h8.4 c1.6 0 2.4 1.4 2.4 2.6 h-10.8 z" fill="${shoe}"/></g>`;
+  const personTorso = (top, hem) => `<path d="M18.6 25 C18.6 21.6 21.4 20.4 25 20.4 C28.8 20.4 31.4 21.8 31.6 25 L33 ${hem} L17.2 ${hem} Z" fill="${top}"/>`;
+  const personHead = (skin, hair) => `<g class="head" ${O(25,21)}>
+        <rect x="23.4" y="16.4" width="3.8" height="5.2" fill="${skin}"/>
+        <ellipse cx="25.6" cy="12" rx="5.3" ry="6.2" fill="${skin}"/>
+        <path d="M30.5 11 L32.2 13.4 L30.3 13.9 Z" fill="${skin}"/>
+        ${hair}
+      </g>`;
+  const PEOPLE = [
+    { // man in a long coat, hands clasped behind his back
+      w: 46, h: 92, speed: 24, pause: 3600, svg: `<svg viewBox="0 0 50 100" focusable="false">
+      <ellipse class="shadow" cx="26" cy="96.6" rx="12" ry="2.2"/>
+      ${personLegs("#2c3035", "#383d43", "#1c1916")}
       <g class="bodybob">
-        <rect x="11" y="26" width="18" height="21" rx="8" fill="#8c7a5e"/>
-        <rect x="11.5" y="26.5" width="17" height="5" rx="2.5" fill="#c39a5a"/>
-        <path d="M9.5 36 q-3 4 1 8" stroke="#6b5d49" stroke-width="3.4" fill="none" stroke-linecap="round"/>
-        <g class="head" ${O(20,27)}>
-          <circle cx="20" cy="16.5" r="9" fill="#e9d2ae"/>
-          <circle cx="24.4" cy="15.6" r="1.35" fill="#2a251e"/>
-          <path d="M22.6 20.2 q2 1.2 3.9 0" stroke="#9c6b4d" stroke-width="1" fill="none" stroke-linecap="round"/>
-          <circle cx="25.8" cy="18.2" r="1.7" fill="#e4a38a" opacity=".55"/>
-          <ellipse cx="19" cy="8.6" rx="11.5" ry="4.2" fill="#c39a5a"/>
-          <circle cx="19" cy="4.3" r="1.6" fill="#8a6c3d"/>
-        </g>
+        ${personTorso("#4b5661", 68)}
+        <path d="M25.4 20.6 V68" stroke="#3b454f" stroke-width="1" opacity=".7"/>
+        <path d="M20.6 25 C17.8 31 16 38 17 45" stroke="#3f4954" stroke-width="4.8" fill="none" stroke-linecap="round"/>
+        <circle cx="17.5" cy="46.8" r="2.1" fill="#c99a76"/>
+        <path d="M22.4 20.8 L25.6 25.4 L29 21" stroke="#8a8f94" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        ${personHead("#c99a76", `<path d="M20.2 12 C19.6 7 22.6 4.8 26.4 5 C29.6 5.2 31.2 7.2 30.8 9.2 C28 8.2 25 8.6 23.6 10.4 C23.2 12.4 22.8 14.2 21.6 15.4 C20.6 14.6 20.3 13.4 20.2 12 Z" fill="#2a2420"/>`)}
       </g></svg>` },
-    meerkat: { w: 40, h: 70, speed: 34, pause: 3200, svg: `<svg viewBox="0 0 40 70" focusable="false">
-      <ellipse class="shadow" cx="20" cy="68" rx="10" ry="2.1"/>
-      <path d="M16 57 q-9 2 -11 9" stroke="#a98a5c" stroke-width="3" fill="none" stroke-linecap="round"/>
-      <path d="M6.2 63.5 l-1.2 2.6" stroke="#4a3d2c" stroke-width="3" stroke-linecap="round"/>
-      <g class="leg a" ${O(19,55)}><rect x="16.8" y="54" width="4.4" height="12" rx="2.2" fill="#8a6c3d"/><ellipse cx="21" cy="66.4" rx="4" ry="1.8" fill="#5a4a36"/></g>
-      <g class="leg b" ${O(19,55)}><rect x="16.8" y="54" width="4.4" height="12" rx="2.2" fill="#a98a5c"/><ellipse cx="21" cy="66.4" rx="4" ry="1.8" fill="#5a4a36"/></g>
-      <g class="bodybob"><g class="lean" ${O(20,57)}>
-        <ellipse cx="20" cy="41" rx="8" ry="17" fill="#c39a5a"/>
-        <ellipse cx="22.4" cy="43" rx="4.6" ry="12.5" fill="#e9d2ae"/>
-        <path d="M25.5 33 q4.5 3 2.4 8.5" stroke="#a98a5c" stroke-width="2.6" fill="none" stroke-linecap="round"/>
-        <g class="head" ${O(20,25)}>
-          <circle cx="14.6" cy="11.4" r="2.3" fill="#5a4a36"/>
-          <ellipse cx="21" cy="16.5" rx="8.2" ry="7.2" fill="#c39a5a"/>
-          <ellipse cx="28" cy="18.6" rx="4.6" ry="3.2" fill="#e9d2ae"/>
-          <circle cx="32" cy="17.9" r="1.35" fill="#2a251e"/>
-          <ellipse cx="24.6" cy="14.8" rx="2.7" ry="2.3" fill="#5a4a36"/>
-          <circle class="pupil" cx="25" cy="14.7" r="1.1" fill="#120f0b"/>
-          <circle cx="25.4" cy="14.3" r=".4" fill="#f3e7d0"/>
-        </g>
+    { // woman with a shoulder bag; her hand comes up when she stops to look
+      w: 46, h: 92, speed: 25, pause: 3400, svg: `<svg viewBox="0 0 50 100" focusable="false">
+      <ellipse class="shadow" cx="26" cy="96.6" rx="11.5" ry="2.2"/>
+      ${personLegs("#26252a", "#313036", "#17130f")}
+      <g class="bodybob">
+        ${personTorso("#6b4a55", 61)}
+        <path d="M18 41 H32.4" stroke="#4f3640" stroke-width="2"/>
+        <path d="M22.8 21.6 L18.6 46" stroke="#7a5f3a" stroke-width="1.3"/>
+        <rect x="12.4" y="45" width="9.6" height="8.2" rx="1.8" fill="#9a7a4a"/>
+        <path d="M12.4 48 H22" stroke="#7a5f3a" stroke-width="1"/>
+        <path d="M27 25 L28 38" stroke="#5c3f49" stroke-width="4.4" stroke-linecap="round"/>
+        <g class="forearm" ${O(28,38)}><path d="M28 38 L29.4 47.6" stroke="#5c3f49" stroke-width="4.2" stroke-linecap="round"/><circle cx="29.6" cy="49.4" r="2" fill="#8a5a3c"/></g>
+        ${personHead("#8a5a3c", `<circle cx="19.6" cy="8.6" r="3.2" fill="#2e2019"/><path d="M20 12.4 C19.4 7 22.8 4.6 26.6 4.8 C29.8 5 31.4 7.2 31 9.4 C28.2 8 25.4 8.4 24 10.2 C23.6 12.6 23.4 15 22.2 16.6 C20.8 15.6 20.2 14 20 12.4 Z" fill="#2e2019"/>`)}
+      </g></svg>` },
+    { // older gent in a flat cap, with a cane; a little stooped and slower
+      w: 46, h: 92, speed: 16, pause: 4200, svg: `<svg viewBox="0 0 50 100" focusable="false">
+      <ellipse class="shadow" cx="28" cy="96.6" rx="13" ry="2.2"/>
+      ${personLegs("#3f3a30", "#4b4539", "#1f1a15")}
+      <path class="leg b" ${O(36.2,46.5,"--swing:5deg")} d="M36.2 46.5 L40 95.8" stroke="#3a2a1c" stroke-width="1.8" stroke-linecap="round"/>
+      <g class="bodybob"><g transform="rotate(8 25 54)">
+        ${personTorso("#6f6250", 57)}
+        <path d="M27.6 25 L31 37 L34.6 44" stroke="#5d5243" stroke-width="4.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="35" cy="45" r="2.1" fill="#e0b594"/>
+        <path d="M33 44.4 q2.2 -2.4 4.6 -.4" stroke="#3a2a1c" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+        ${personHead("#e0b594", `<path d="M20.1 9.8 C19.8 12.6 20.4 14.8 21.6 16 L22.6 10.2 Z" fill="#b9b2a6"/><path d="M19.8 9.8 C20 5.2 23 3.8 26.4 4 C29.6 4.2 31.4 6.2 31.6 8.6 L35.2 10 L31.4 10.6 C27 9.2 23 9.2 19.8 9.8 Z" fill="#5a5248"/>`)}
       </g></g></svg>` },
-    crab: { w: 58, h: 42, speed: 24, pause: 2800, noFlip: true, svg: `<svg viewBox="0 0 56 40" focusable="false">
-      <ellipse class="shadow" cx="28" cy="38" rx="18" ry="2"/>
-      <g fill="none" stroke="#8a6c3d" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
-        <path class="leg a" ${O(18,26)} d="M17 24 L8 29 L6 37"/><path class="leg b" ${O(18,27)} d="M18 27 L11 32 L10 37"/><path class="leg a" ${O(20,29)} d="M20 29 L15 33 L15 37"/>
-        <path class="leg b" ${O(38,26)} d="M39 24 L48 29 L50 37"/><path class="leg a" ${O(38,27)} d="M38 27 L45 32 L46 37"/><path class="leg b" ${O(36,29)} d="M36 29 L41 33 L41 37"/>
+    { // parent and small child, hand in hand; the child points up at the painting
+      w: 68, h: 92, speed: 20, pause: 3800, svg: `<svg viewBox="0 0 74 100" focusable="false">
+      <ellipse class="shadow" cx="38" cy="96.6" rx="24" ry="2.2"/>
+      ${personLegs("#34404f", "#3f4c5d", "#1c1916")}
+      <g class="leg b" ${O(52,80,"--swing:26deg")}><rect x="50.2" y="78" width="3.6" height="15.6" rx="1.8" fill="#3a3f46"/><path d="M50 93.4 h5.2 c1.2 0 1.8 1 1.8 2.2 h-7 z" fill="#8a3f34"/></g>
+      <g class="leg a" ${O(52,80,"--swing:26deg")}><rect x="50.2" y="78" width="3.6" height="15.6" rx="1.8" fill="#474d55"/><path d="M50 93.4 h5.2 c1.2 0 1.8 1 1.8 2.2 h-7 z" fill="#8a3f34"/></g>
+      <g class="bodybob">
+        ${personTorso("#5f6b52", 55)}
+        <path d="M27.4 25 L33 42 L41 58.6" stroke="#4f5a44" stroke-width="4.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        ${personHead("#a8744f", `<path d="M20.2 12.2 C19.4 6.8 22.8 4.6 26.6 4.8 C29.8 5 31.4 7.2 31 9.4 C28.2 8 25.6 8.4 24.2 10.2 C24 13.4 23.6 17.4 21.6 20 C20 18 20.4 14.6 20.2 12.2 Z" fill="#3a2a1e"/>`)}
+        <path d="M47.6 66.6 C47.6 64.8 49.6 64.2 52 64.2 C54.4 64.2 56.4 64.8 56.4 66.6 L57.4 80 L46.6 80 Z" fill="#b0704a"/>
+        <path d="M48.8 66.8 L44 62.4 L41 59.2" stroke="#9a5f3d" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="41" cy="59" r="2" fill="#a8744f"/>
+        <g class="point" ${O(55.4,66.8)}><path d="M55.4 66.8 L56.8 74.6" stroke="#9a5f3d" stroke-width="3" stroke-linecap="round"/><circle cx="57" cy="76" r="1.6" fill="#a8744f"/></g>
+        <g class="head" ${O(52,64)}>
+          <rect x="50.6" y="61.4" width="2.8" height="3.4" fill="#a8744f"/>
+          <circle cx="52.2" cy="57" r="5.2" fill="#a8744f"/>
+          <path d="M47.2 57.4 C46.6 52.6 49.6 50.6 53 50.8 C55.8 51 57.4 52.8 57 54.6 C54.6 53.8 52 54.2 50.8 55.8 C50.6 57.6 50.2 59.4 49 60.6 C48 59.8 47.4 58.6 47.2 57.4 Z" fill="#3a2a1e"/>
+        </g>
+      </g></svg>` },
+  ];
+
+  const foxHead = (dx, dy, ox, oy) => `<g class="head" ${O(ox,oy)}><g transform="translate(${dx} ${dy})">
+        <path d="M62 30 C66 25 70 22.5 74 22 L77 31 C73 35 68 37 64 36.5 Z" fill="#b5653a"/>
+        <path d="M76.6 16.8 L80.6 10.2 L82.2 17.8 Z" fill="#96512f"/>
+        <ellipse cx="76" cy="23" rx="7.2" ry="6.4" fill="#b5653a"/>
+        <path d="M71.2 19.6 L72.4 9.4 L78.2 16.8 Z" fill="#b5653a"/><path d="M72 12.6 L72.4 9.4 L74.4 12 Z" fill="#2e2620"/>
+        <path d="M80 20.2 C85 21.2 91 24.2 93.4 26.4 C91 28.2 85 29.2 80.6 28.6 C79 26 79 23 80 20.2 Z" fill="#b5653a"/>
+        <path d="M76.8 26 C81 27.2 88 27.6 93.2 26.6 C90 29.6 84 30.6 79 30 C77.4 29 76.6 27.4 76.8 26 Z" fill="#e9dfcf"/>
+        <circle cx="93" cy="26.2" r="1.5" fill="#1f1a16"/>
+        <ellipse class="pupil" cx="80.2" cy="22" rx="1.3" ry="1" fill="#1f1a16"/>
+      </g></g>`;
+
+  const CAST = {
+    visitor: { variants: PEOPLE },
+    meerkat: { w: 88, h: 79, speed: 40, pause: 3400, svg: `<svg viewBox="0 0 80 72" focusable="false">
+      <g class="pose-walk">
+        <ellipse class="shadow" cx="38" cy="69.4" rx="24" ry="2.2"/>
+        <path d="M17 45 C10 43 5 38 3 31" stroke="#b0905f" stroke-width="3.4" fill="none" stroke-linecap="round"/>
+        <path d="M4.7 34.8 C3.9 33.5 3.3 32.2 3 31" stroke="#3a2e22" stroke-width="3.4" fill="none" stroke-linecap="round"/>
+        <g class="leg b" ${O(22,51)}><path d="M18.2 48 C17.4 53 18.8 58 20.4 60 L24.2 60 C26.4 57 26.8 52 25.8 48 Z" fill="#9c7f55"/><rect x="20.4" y="57" width="3.7" height="10.4" rx="1.8" fill="#9c7f55"/><ellipse cx="24" cy="67.7" rx="3.9" ry="1.5" fill="#7c6342"/></g>
+        <g class="leg a" ${O(51,50)}><path d="M48.4 48 L53.8 48 L53 66.6 C53 67.7 49.6 67.7 49.4 66.6 Z" fill="#9c7f55"/><ellipse cx="52.6" cy="67.7" rx="3.5" ry="1.4" fill="#7c6342"/></g>
+        <g class="bodybob">
+          <path d="M15 46 C18 37 30 35.5 42 36.5 C50 37 55 39 57 43 C57 50 52 55 44 56 C34 57 22 57 17 53 C14.5 51 14 48.5 15 46 Z" fill="#b0905f"/>
+          <path d="M20 54 C28 57.5 44 57.5 53 51.5 C50 56.5 44 58.5 36 58.6 C28 58.6 23 57 20 54 Z" fill="#d8c29c"/>
+          <path d="M24 38.6 q-1.2 4 .2 8 M29.5 37.4 q-1.2 4.4 .2 8.6 M35 36.8 q-1.2 4.4 .2 8.6 M40.5 36.9 q-1.2 4.2 .2 8.2 M46 37.6 q-1 3.6 .2 7" stroke="#86693f" stroke-width="1.5" fill="none" stroke-linecap="round" opacity=".75"/>
+          <g class="head" ${O(54,43)}>
+            <path d="M50 40 C54 36 58 35 61 36 L62 46 C58 48 54 47.5 51 46 Z" fill="#b0905f"/>
+            <ellipse cx="57.2" cy="34.6" rx="2.3" ry="1.7" fill="#3b2f24" transform="rotate(-25 57.2 34.6)"/>
+            <ellipse cx="62" cy="38.5" rx="7.4" ry="6" fill="#b8986a"/>
+            <path d="M66.5 35.4 C70.5 36 75 38.4 76.4 40.6 C75 42.6 70.6 43.6 66.5 43.4 Z" fill="#dcc8a4"/>
+            <circle cx="76" cy="40.4" r="1.35" fill="#2a2119"/>
+            <ellipse cx="64.6" cy="37" rx="2.9" ry="2.3" fill="#3b2f24"/><circle cx="65.4" cy="36.5" r=".55" fill="#f1e6d0"/>
+            <path d="M70 42.2 q3 .8 5.4 -.6" stroke="#6d573c" stroke-width=".7" fill="none" stroke-linecap="round"/>
+          </g>
+        </g>
+        <g class="leg a" ${O(22,51)}><path d="M18.2 48 C17.4 53 18.8 58 20.4 60 L24.2 60 C26.4 57 26.8 52 25.8 48 Z" fill="#b0905f"/><rect x="20.4" y="57" width="3.7" height="10.4" rx="1.8" fill="#b0905f"/><ellipse cx="24" cy="67.7" rx="3.9" ry="1.5" fill="#8a6f4a"/></g>
+        <g class="leg b" ${O(51,50)}><path d="M48.4 48 L53.8 48 L53 66.6 C53 67.7 49.6 67.7 49.4 66.6 Z" fill="#b0905f"/><ellipse cx="52.6" cy="67.7" rx="3.5" ry="1.4" fill="#8a6f4a"/></g>
       </g>
+      <g class="pose-stand">
+        <ellipse class="shadow" cx="38" cy="69.4" rx="13" ry="2.1"/>
+        <path d="M33 62 C27 64 21 66.5 15 67.6" stroke="#b0905f" stroke-width="3.4" fill="none" stroke-linecap="round"/>
+        <path d="M18.6 67.1 L15 67.6" stroke="#3a2e22" stroke-width="3.4" stroke-linecap="round"/>
+        <ellipse cx="38" cy="67.4" rx="5" ry="1.6" fill="#7c6342"/>
+        <ellipse cx="37.5" cy="58.5" rx="8" ry="8.6" fill="#b0905f"/>
+        <path d="M31.5 58 C29.5 46 31 33 35.5 27 C39 24.5 43.5 26 45 30 C47 40 46.5 52 44.5 60 C41 64 34.5 63.5 31.5 58 Z" fill="#b0905f"/>
+        <path d="M40.5 30 C44.5 34 45.5 48 43.5 59 C41 60.5 39.5 59 39.2 56 C38.6 46 38.8 36 40.5 30 Z" fill="#d8c29c"/>
+        <path d="M31.6 40 q3 .8 5 .2 M31.2 45 q3.2 .9 5.4 .2 M31.2 50 q3.2 .9 5.4 .2 M31.6 55 q3 .8 5 .2" stroke="#86693f" stroke-width="1.5" fill="none" stroke-linecap="round" opacity=".75"/>
+        <ellipse cx="41.5" cy="67.6" rx="5.6" ry="1.8" fill="#8a6f4a"/>
+        <path d="M43.5 36 C47.5 38.5 48.5 43 46.6 47.5" stroke="#a5875a" stroke-width="3" fill="none" stroke-linecap="round"/>
+        <circle cx="46.5" cy="48" r="1.7" fill="#8a6f4a"/>
+        <g class="head" ${O(39,28)}>
+          <ellipse cx="35.6" cy="17" rx="2.3" ry="1.7" fill="#3b2f24" transform="rotate(-25 35.6 17)"/>
+          <ellipse cx="40.5" cy="20.5" rx="7.4" ry="6.2" fill="#b8986a"/>
+          <path d="M45 17.4 C49 18 53.4 20.4 54.8 22.6 C53.4 24.6 49 25.6 45 25.4 Z" fill="#dcc8a4"/>
+          <circle cx="54.4" cy="22.4" r="1.35" fill="#2a2119"/>
+          <ellipse cx="43.2" cy="19" rx="2.9" ry="2.3" fill="#3b2f24"/><circle cx="44" cy="18.5" r=".55" fill="#f1e6d0"/>
+          <path d="M48.4 24.2 q3 .8 5.4 -.6" stroke="#6d573c" stroke-width=".7" fill="none" stroke-linecap="round"/>
+        </g>
+      </g></svg>` },
+    crab: { w: 76, h: 49, speed: 24, pause: 3000, noFlip: true, svg: `<svg viewBox="0 0 72 46" focusable="false">
+      <ellipse class="shadow" cx="36" cy="43.6" rx="24" ry="2"/>
+      <g fill="none" stroke="#b56a4a" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+        <path class="leg a" ${O(22,27)} d="M22 27 L12 22 L6 34"/><path class="leg b" ${O(21,30)} d="M21 30 L10 28 L5 40"/><path class="leg a" ${O(22,33)} d="M22 33 L12 33 L9 42.6"/><path class="leg b" ${O(24,35)} d="M24 35 L17 37 L16 42.6"/>
+        <path class="leg b" ${O(50,27)} d="M50 27 L60 22 L66 34"/><path class="leg a" ${O(51,30)} d="M51 30 L62 28 L67 40"/><path class="leg b" ${O(50,33)} d="M50 33 L60 33 L63 42.6"/><path class="leg a" ${O(48,35)} d="M48 35 L55 37 L56 42.6"/>
+      </g>
+      <g class="bodybob"><g class="rise" ${O(36,36)}>
+        <g class="claw l" ${O(25,24)}><path d="M25 24 C20 20 17 16 18 12" stroke="#a5543a" stroke-width="4" fill="none" stroke-linecap="round"/><path d="M18 13 C13 12 10 7 13 3 C15 5 17 6 19 6 C18 4 19 2 21 1.6 C24 5 23 11 18 13 Z" fill="#a5543a"/><path d="M13 3 C14.4 4.6 16 5.6 17.6 6 M21 1.6 C19.8 2.6 19.2 4 19.4 5.6" stroke="#e2c9a6" stroke-width="1.1" fill="none" stroke-linecap="round"/></g>
+        <g class="claw r" ${O(47,24)}><path d="M47 24 C52 20 55 16 54 12" stroke="#a5543a" stroke-width="4" fill="none" stroke-linecap="round"/><path d="M54 13 C59 12 62 7 59 3 C57 5 55 6 53 6 C54 4 53 2 51 1.6 C48 5 49 11 54 13 Z" fill="#a5543a"/><path d="M59 3 C57.6 4.6 56 5.6 54.4 6 M51 1.6 C52.2 2.6 52.8 4 52.6 5.6" stroke="#e2c9a6" stroke-width="1.1" fill="none" stroke-linecap="round"/></g>
+        <g class="head" ${O(36,22)}>
+          <path d="M31 22 L30.4 16 M41 22 L41.6 16" stroke="#7d3c2a" stroke-width="1.8" stroke-linecap="round"/>
+          <ellipse class="pupil" cx="30.4" cy="14.6" rx="2" ry="2.4" fill="#1b1512"/><ellipse class="pupil" cx="41.6" cy="14.6" rx="2" ry="2.4" fill="#1b1512"/>
+          <circle cx="31" cy="13.8" r=".55" fill="#f1e6d0"/><circle cx="42.2" cy="13.8" r=".55" fill="#f1e6d0"/>
+        </g>
+        <path d="M20 24 C22 19.5 30 18 36 18 C42 18 50 19.5 52 24 C54 28 52 34 47 37 C42 39.5 30 39.5 25 37 C20 34 18 28 20 24 Z" fill="#a5543a"/>
+        <path d="M25 36.4 C30 38.8 42 38.8 47 36.4 C43 40.8 29 40.8 25 36.4 Z" fill="#d9b89a"/>
+        <path d="M27 23 q9 -3 18 0" stroke="#c47a58" stroke-width="1.4" fill="none" stroke-linecap="round" opacity=".7"/>
+        <path d="M33 26.4 q3 2 6 0 M31.6 30.4 q4.4 2.6 8.8 0" stroke="#7d3c2a" stroke-width="1" fill="none" stroke-linecap="round" opacity=".7"/>
+      </g></g></svg>` },
+    fox: { w: 106, h: 70, speed: 32, pause: 3600, svg: `<svg viewBox="0 0 96 64" focusable="false">
+      <g class="pose-walk">
+        <ellipse class="shadow" cx="46" cy="61.4" rx="30" ry="2.2"/>
+        <g class="tail" ${O(23,34)}><path d="M24 32.6 C16 30 8 31 2 37 C1 40 2 43 5 44.5 C12 44 19 41 25 38 Z" fill="#b5653a"/><path d="M2 37 C1 40 2 43 5 44.5 C7.6 43.6 9 41.6 9 39.4 C7 37.6 4.4 36.8 2 37 Z" fill="#e9dfcf"/></g>
+        <g class="leg b" ${O(28,40)}><path d="M24.4 38 C24 43 25.4 47 27 49.4 L30.8 49.4 C32.2 46 32.6 42 31.8 38 Z" fill="#8f4f2e"/><rect x="27.2" y="47.6" width="3.6" height="12" rx="1.7" fill="#2e2620"/><ellipse cx="30" cy="59.9" rx="3.2" ry="1.4" fill="#2e2620"/></g>
+        <g class="leg a" ${O(62,40)}><rect x="60.2" y="37" width="4.2" height="13" rx="2" fill="#8f4f2e"/><rect x="60.5" y="47.6" width="3.6" height="12" rx="1.7" fill="#2e2620"/><ellipse cx="63.2" cy="59.9" rx="3.2" ry="1.4" fill="#2e2620"/></g>
+        <g class="bodybob">
+          <path d="M22 34 C24 27.5 34 25.5 46 26 C56 26.4 64 27.5 68 31 C70 35 69 40 66 43 C58 46.5 40 47.5 30 45.5 C24 44 21 39 22 34 Z" fill="#b5653a"/>
+          <path d="M30 44.4 C40 47.8 57 47.2 65 43.6 C58 45.2 40 45.6 30 43.6 Z" fill="#d9b89a"/>
+          <path d="M64 32 C68 34 69.4 39 66.4 43 C63 44.4 61 42 61.4 38.4 C61.6 35.6 62.4 33.4 64 32 Z" fill="#e9dfcf"/>
+          ${foxHead(0, 0, 66, 32)}
+        </g>
+        <g class="leg a" ${O(28,40)}><path d="M24.4 38 C24 43 25.4 47 27 49.4 L30.8 49.4 C32.2 46 32.6 42 31.8 38 Z" fill="#b5653a"/><rect x="27.2" y="47.6" width="3.6" height="12" rx="1.7" fill="#2e2620"/><ellipse cx="30" cy="59.9" rx="3.2" ry="1.4" fill="#2e2620"/></g>
+        <g class="leg b" ${O(62,40)}><rect x="60.2" y="37" width="4.2" height="13" rx="2" fill="#b5653a"/><rect x="60.5" y="47.6" width="3.6" height="12" rx="1.7" fill="#2e2620"/><ellipse cx="63.2" cy="59.9" rx="3.2" ry="1.4" fill="#2e2620"/></g>
+      </g>
+      <g class="pose-stand">
+        <ellipse class="shadow" cx="42" cy="61.4" rx="24" ry="2.2"/>
+        <path d="M36 57 C26 59.4 14 59.6 8 56 C6 53 8 50.4 11 50.6 C20 52.6 30 53 38 51 Z" fill="#b5653a"/>
+        <path d="M8 56 C6 53 8 50.4 11 50.6 C13 52 13.8 54.2 13 56.4 C11.2 57 9.4 56.8 8 56 Z" fill="#e9dfcf"/>
+        <rect x="58.2" y="40" width="4" height="13" rx="2" fill="#8f4f2e"/><rect x="58.4" y="49.6" width="3.6" height="10" rx="1.7" fill="#2e2620"/><ellipse cx="61" cy="59.9" rx="3.2" ry="1.4" fill="#2e2620"/>
+        <path d="M32 50 C32 40 40 28 52 24 C58 23 62 27 62 32 C62 42 58 54 52 58 C44 60 34 58 32 50 Z" fill="#b5653a"/>
+        <ellipse cx="40" cy="50" rx="10.6" ry="10" fill="#b5653a"/>
+        <path d="M34 54 C36 47 42 43 49 44" stroke="#96512f" stroke-width="1.2" fill="none" stroke-linecap="round" opacity=".7"/>
+        <ellipse cx="45" cy="59.8" rx="7.2" ry="1.7" fill="#2e2620"/>
+        <path d="M56 28 C60.6 31 61 42 57 52 C54.6 54 52.6 52 53 48 C53.6 40 54.4 33 56 28 Z" fill="#e9dfcf"/>
+        <rect x="53.6" y="40" width="4.2" height="13" rx="2" fill="#b5653a"/><rect x="53.9" y="49.6" width="3.6" height="10" rx="1.7" fill="#2e2620"/><ellipse cx="56.6" cy="59.9" rx="3.2" ry="1.4" fill="#2e2620"/>
+        ${foxHead(-12, -6, 54, 27)}
+      </g></svg>` },
+    owl: { w: 55, h: 70, speed: 16, pause: 3800, noFlip: true, svg: `<svg viewBox="0 0 52 66" focusable="false">
+      <ellipse class="shadow" cx="26" cy="63.4" rx="13" ry="2"/>
+      <g class="leg a" ${O(21,55)}><rect x="18.6" y="52" width="5" height="7" rx="2.5" fill="#8a7a66"/><path d="M17 62.4 L21 58.4 L21.4 62.6 M21 58.4 L25 62.4" stroke="#c9a24a" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g>
+      <g class="leg b" ${O(31,55)}><rect x="28.4" y="52" width="5" height="7" rx="2.5" fill="#8a7a66"/><path d="M27 62.4 L31 58.4 L31.4 62.6 M31 58.4 L35 62.4" stroke="#c9a24a" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g>
+      <g class="waddle" ${O(26,60)}>
+        <path d="M20 53 L22 60.6 L26 55.6 L30 60.6 L32 53 Z" fill="#5b4f43"/>
+        <path d="M26 20 C36 20 41 30 41 41 C41 51 35 58 26 58 C17 58 11 51 11 41 C11 30 16 20 26 20 Z" fill="#7d6f5e"/>
+        <path d="M12 30 C8.6 36 8.6 48 13 55 C15.6 50 16 38 14.6 30 Z" fill="#5f5346"/><path d="M40 30 C43.4 36 43.4 48 39 55 C36.4 50 36 38 37.4 30 Z" fill="#5f5346"/>
+        <ellipse cx="26" cy="43" rx="9.4" ry="12.6" fill="#b7a892"/>
+        <path d="M20 36 h3 M25 36 h3.4 M30.4 36 h2.2 M19 40.4 h3 M24 40.4 h4 M30 40.4 h3 M19 44.8 h3.4 M24.6 44.8 h3 M29.8 44.8 h3 M20 49.2 h3 M25 49.2 h3.6 M30.4 49.2 h2 M22 53.4 h3 M27 53.4 h3" stroke="#6a5c4c" stroke-width="1.1" stroke-linecap="round" opacity=".75"/>
+        <g class="head" ${O(26,27)}>
+          <path d="M14.6 12 L13 3.2 L20.2 8.4 Z" fill="#5f5346"/><path d="M37.4 12 L39 3.2 L31.8 8.4 Z" fill="#5f5346"/>
+          <path d="M12.6 20 C12.6 11 18.4 7 26 7 C33.6 7 39.4 11 39.4 20 C39.4 26.4 33.6 30 26 30 C18.4 30 12.6 26.4 12.6 20 Z" fill="#7d6f5e"/>
+          <ellipse cx="20" cy="19" rx="6.6" ry="7" fill="#a8998a"/><ellipse cx="32" cy="19" rx="6.6" ry="7" fill="#a8998a"/>
+          <circle cx="20" cy="19" r="3.5" fill="#c9a24a"/><circle cx="32" cy="19" r="3.5" fill="#c9a24a"/>
+          <circle class="pupil" cx="20" cy="19" r="1.9" fill="#15110d"/><circle class="pupil" cx="32" cy="19" r="1.9" fill="#15110d"/>
+          <path d="M15 13.2 L24.6 16.8 M37 13.2 L27.4 16.8" stroke="#4a3f35" stroke-width="1.6" stroke-linecap="round"/>
+          <path d="M26 19 L23.6 23.4 L26 26 L28.4 23.4 Z" fill="#3a332b"/>
+        </g>
+      </g></svg>` },
+    tortoise: { w: 86, h: 55, speed: 11, pause: 4200, svg: `<svg viewBox="0 0 88 56" focusable="false">
+      <ellipse class="shadow" cx="42" cy="53.4" rx="29" ry="2.2"/>
+      <path d="M14 42 l-5 4.4" stroke="#9a875f" stroke-width="3" stroke-linecap="round"/>
+      <path class="leg b" ${O(31,44)} d="M27 43 L35 43 L34.4 51 C34.4 52.4 27.8 52.4 27.6 51 Z" fill="#7d6c4a"/>
+      <path class="leg a" ${O(53,44)} d="M49 43 L57 43 L56.4 51 C56.4 52.4 49.8 52.4 49.6 51 Z" fill="#7d6c4a"/>
       <g class="bodybob">
-        <g class="claw l" ${O(16,23)}><path d="M16 23 Q8 20 9 13" stroke="#c39a5a" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M9 9 L14 6.5 A5.6 5.6 0 1 0 14 11.5 Z" fill="#c39a5a"/></g>
-        <g class="claw r" ${O(40,23)}><path d="M40 23 Q48 20 47 13" stroke="#c39a5a" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M47 9 L42 6.5 A5.6 5.6 0 1 1 42 11.5 Z" fill="#c39a5a"/></g>
-        <g class="head" ${O(28,18)}>
-          <path d="M24 19 L23 11 M32 19 L33 11" stroke="#c39a5a" stroke-width="2" stroke-linecap="round"/>
-          <circle cx="23" cy="9.5" r="3" fill="#f3e7d0"/><circle cx="33" cy="9.5" r="3" fill="#f3e7d0"/>
-          <circle class="pupil" cx="23.5" cy="9.4" r="1.4" fill="#2a251e"/><circle class="pupil" cx="33.5" cy="9.4" r="1.4" fill="#2a251e"/>
+        <g class="head" ${O(64,37)}>
+          <path d="M62 38 C68 37.6 72 33 73.4 27" stroke="#a08a62" stroke-width="6.4" fill="none" stroke-linecap="round"/>
+          <path d="M66.6 34.4 q2.2 1.6 4.6 .6 M69 30.6 q2 1.4 4 .4" stroke="#74674f" stroke-width=".9" fill="none" stroke-linecap="round"/>
+          <ellipse cx="75.6" cy="23.6" rx="6.4" ry="5.2" fill="#b09a70"/>
+          <circle class="pupil" cx="77.6" cy="22.4" r="1.1" fill="#1b1512"/>
+          <path d="M76 26.6 q3 1 5.6 -.8" stroke="#5b4f3c" stroke-width=".8" fill="none" stroke-linecap="round"/>
         </g>
-        <ellipse cx="28" cy="25.5" rx="13" ry="9" fill="#c39a5a"/>
-        <ellipse cx="28" cy="22" rx="9" ry="3.6" fill="#dcbb80" opacity=".55"/>
-        <path d="M24 29.4 q4 2.4 8 0" stroke="#6b5d49" stroke-width="1.1" fill="none" stroke-linecap="round"/>
-      </g></svg>` },
-    fox: { w: 72, h: 54, speed: 30, pause: 3000, svg: `<svg viewBox="0 0 70 52" focusable="false">
-      <ellipse class="shadow" cx="34" cy="50" rx="22" ry="2.2"/>
-      <g class="tail" ${O(18,30)}><path d="M19 32 C8 31 1 23 4 13 C11 16 17 22 21 28 Z" fill="#c98a45"/><path d="M4 13 C2.4 18 3.6 22.5 7.4 25.5 C8.4 20.5 7 16.4 4 13 Z" fill="#f3e7d0"/></g>
-      <g class="leg a" ${O(22,37)}><rect x="20" y="36" width="4.2" height="13" rx="2.1" fill="#a66d33"/><rect x="20" y="43" width="4.2" height="6" rx="2.1" fill="#3a2a1c"/></g>
-      <g class="leg b" ${O(27,37)}><rect x="25" y="36" width="4.2" height="13" rx="2.1" fill="#c98a45"/><rect x="25" y="43" width="4.2" height="6" rx="2.1" fill="#3a2a1c"/></g>
-      <g class="leg b" ${O(44,37)}><rect x="42" y="36" width="4.2" height="13" rx="2.1" fill="#a66d33"/><rect x="42" y="43" width="4.2" height="6" rx="2.1" fill="#3a2a1c"/></g>
-      <g class="leg a" ${O(49,37)}><rect x="47" y="36" width="4.2" height="13" rx="2.1" fill="#c98a45"/><rect x="47" y="43" width="4.2" height="6" rx="2.1" fill="#3a2a1c"/></g>
-      <g class="bodybob">
-        <ellipse cx="35" cy="31" rx="17" ry="9" fill="#c98a45"/>
-        <ellipse cx="48.5" cy="33.5" rx="5" ry="6" fill="#f3e7d0"/>
-        <g class="head" ${O(50,27)}>
-          <path d="M48.4 14.5 L49.6 3.5 L55.4 11 Z" fill="#c98a45"/><path d="M56 11.6 L61.4 4.4 L62.8 14.4 Z" fill="#c98a45"/>
-          <path d="M49.8 6.4 L49.6 3.5 L51.4 5.8 Z" fill="#3a2a1c"/><path d="M60.2 6 L61.4 4.4 L61.8 7.2 Z" fill="#3a2a1c"/>
-          <circle cx="55" cy="20" r="8.6" fill="#c98a45"/>
-          <ellipse cx="57" cy="24.6" rx="5.2" ry="3.3" fill="#f3e7d0"/>
-          <path d="M58 20.4 L69 23.6 L58 27.2 Z" fill="#f3e7d0"/>
-          <circle cx="68.4" cy="23.5" r="1.5" fill="#2a251e"/>
-          <circle class="pupil" cx="58.2" cy="18.4" r="1.3" fill="#2a251e"/>
+        <path d="M12 42 C12 22 24 10 42 10 C60 10 71 22 70 42 Z" fill="#c2a467"/>
+        <path d="M28 13.6 C25 22 24.4 32 25 41.6 M42 10.2 C41.4 20 41.4 32 42 41.6 M56 13.4 C59 22 59.6 32 59 41.6 M14.6 30 C24 27.4 60 27.4 69 30" stroke="#6b5636" stroke-width="1.2" fill="none" stroke-linecap="round" opacity=".85"/>
+        <g fill="#4a3a28" opacity=".82">
+          <ellipse cx="19" cy="35.4" rx="2.4" ry="1.8"/><ellipse cx="20.6" cy="24" rx="1.9" ry="2.4" transform="rotate(20 20.6 24)"/><ellipse cx="32.6" cy="19.6" rx="2.6" ry="1.9"/><ellipse cx="34" cy="34" rx="2.2" ry="2.6"/><ellipse cx="36.6" cy="24.6" rx="1.5" ry="1.8"/>
+          <ellipse cx="48" cy="20" rx="2.4" ry="1.8"/><ellipse cx="50" cy="34.6" rx="2.6" ry="2"/><ellipse cx="47" cy="27" rx="1.4" ry="1.7"/><ellipse cx="62.4" cy="24" rx="2" ry="2.4" transform="rotate(-20 62.4 24)"/><ellipse cx="64" cy="35.6" rx="2.2" ry="1.7"/>
+          <ellipse cx="29" cy="37.6" rx="1.4" ry="1.2"/><ellipse cx="55" cy="38" rx="1.5" ry="1.2"/><ellipse cx="41" cy="14.6" rx="2" ry="1.3"/><ellipse cx="27" cy="29.6" rx="1.2" ry="1.4"/><ellipse cx="56" cy="29" rx="1.3" ry="1.5"/>
         </g>
-      </g></svg>` },
-    owl: { w: 46, h: 54, speed: 18, pause: 3400, noFlip: true, svg: `<svg viewBox="0 0 44 52" focusable="false">
-      <ellipse class="shadow" cx="22" cy="50" rx="11" ry="2"/>
-      <path class="leg a" ${O(17,45)} d="M14 49 h6.4" stroke="#c39a5a" stroke-width="3" stroke-linecap="round"/>
-      <path class="leg b" ${O(27,45)} d="M23.6 49 h6.4" stroke="#c39a5a" stroke-width="3" stroke-linecap="round"/>
-      <g class="waddle" ${O(22,48)}>
-        <ellipse cx="22" cy="31" rx="14" ry="17" fill="#6b5d49"/>
-        <ellipse cx="9.4" cy="33" rx="3.6" ry="10" fill="#54473a"/><ellipse cx="34.6" cy="33" rx="3.6" ry="10" fill="#54473a"/>
-        <ellipse cx="22" cy="36" rx="9" ry="11" fill="#8c7a5e"/>
-        <path d="M18 33 l2 2 2-2 M22 33 l2 2 2-2 M20 38.5 l2 2 2-2 M16 38.5 l2 2 M26 40.5 l2 -2 M18 44 l2 2 2-2 M22 44 l2 2 2-2" stroke="#e9d2ae" stroke-width="1" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity=".6"/>
-        <g class="head" ${O(22,24)}>
-          <path d="M9.6 10.5 L11.4 1.8 L17.4 8 Z" fill="#6b5d49"/><path d="M34.4 10.5 L32.6 1.8 L26.6 8 Z" fill="#6b5d49"/>
-          <ellipse cx="22" cy="16" rx="13.4" ry="10" fill="#6b5d49"/>
-          <circle cx="15.6" cy="16.6" r="7" fill="#e9d2ae"/><circle cx="28.4" cy="16.6" r="7" fill="#e9d2ae"/>
-          <circle cx="15.6" cy="16.6" r="3.9" fill="#c39a5a"/><circle cx="28.4" cy="16.6" r="3.9" fill="#c39a5a"/>
-          <circle class="pupil" cx="15.6" cy="16.6" r="2.1" fill="#120f0b"/><circle class="pupil" cx="28.4" cy="16.6" r="2.1" fill="#120f0b"/>
-          <path d="M22 18.6 l-2.4 3.2 h4.8 Z" fill="#c39a5a"/>
-        </g>
-      </g></svg>` },
-    tortoise: { w: 64, h: 42, speed: 12, pause: 3600, svg: `<svg viewBox="0 0 62 40" focusable="false">
-      <ellipse class="shadow" cx="30" cy="38" rx="20" ry="2"/>
-      <path d="M11 30 l-5 3.4" stroke="#8c7a5e" stroke-width="3" stroke-linecap="round"/>
-      <rect class="leg a" ${O(17,29)} x="14" y="27" width="6" height="10" rx="3" fill="#7a6a52"/>
-      <rect class="leg b" ${O(24,29)} x="21" y="27" width="6" height="10" rx="3" fill="#8c7a5e"/>
-      <rect class="leg b" ${O(39,29)} x="36" y="27" width="6" height="10" rx="3" fill="#7a6a52"/>
-      <rect class="leg a" ${O(46,29)} x="43" y="27" width="6" height="10" rx="3" fill="#8c7a5e"/>
-      <g class="bodybob">
-        <g class="head" ${O(46,27)}>
-          <path d="M45 27 Q52 26.5 54.5 20" stroke="#8c7a5e" stroke-width="5" fill="none" stroke-linecap="round"/>
-          <ellipse cx="56.4" cy="17" rx="5.4" ry="4.6" fill="#a08c6a"/>
-          <circle class="pupil" cx="58.2" cy="15.8" r="1.1" fill="#2a251e"/>
-          <path d="M57 19.6 q2 .9 3.6 -.4" stroke="#4a3d2c" stroke-width=".9" fill="none" stroke-linecap="round"/>
-        </g>
-        <path d="M10 30 Q12 9 30 9 Q48 9 50 30 Z" fill="#c39a5a"/>
-        <path d="M22.5 11.5 L18 21 L21 29 M37.5 11.5 L42 21 L39 29 M18 21 H42 M30 9.4 V21 M26 21 L24.5 29 M34 21 L35.5 29" stroke="#8a6c3d" stroke-width="1.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-        <rect x="8.6" y="28" width="42.8" height="4.2" rx="2.1" fill="#8a6c3d"/>
-      </g></svg>` },
+        <path d="M10.4 41 H71.6 C72 44.5 70 46.4 67 46.4 H15 C12 46.4 10 44.5 10.4 41 Z" fill="#a88a50"/>
+        <path d="M20 41.4 v4.6 M30 41.4 v4.8 M41 41.4 v4.8 M52 41.4 v4.8 M62 41.4 v4.6" stroke="#6b5636" stroke-width="1" opacity=".8"/>
+      </g>
+      <path class="leg a" ${O(22,45)} d="M17 44.6 C17 43.6 27 43.6 27 44.6 L26 51 C26 52.4 18.6 52.4 18.4 51 Z" fill="#9a875f"/><path d="M19.6 51.6 v-1.6 M22.2 51.8 v-1.6 M24.8 51.6 v-1.6" stroke="#5b4f3c" stroke-width=".8" stroke-linecap="round"/>
+      <path class="leg b" ${O(60,45)} d="M55 44.6 C55 43.6 65 43.6 65 44.6 L64 51 C64 52.4 56.6 52.4 56.4 51 Z" fill="#9a875f"/>
+    </svg>` },
   };
   // Which companion goes with which painting. Anything not listed falls back on its category, then on the gallery visitor.
   const CAST_FOR = {
@@ -1206,8 +1338,10 @@
     stopVisitor();
     const run = visitorRun, floor = document.getElementById("shopFloor"), v = document.getElementById("visitor");
     if (!floor || !v) return;
-    const kind = castFor(p), c = CAST[kind], flip = v.querySelector(".v-flip");
-    v.dataset.kind = kind; v.className = "visitor";
+    const kind = castFor(p), flip = v.querySelector(".v-flip");
+    let c = CAST[kind];
+    if (c.variants) c = c.variants[Math.floor(Math.random() * c.variants.length)];
+    v.dataset.kind = kind === "visitor" ? "person" : kind; v.className = "visitor";
     v.style.width = c.w + "px"; v.style.height = c.h + "px"; v.style.transition = "none";
     flip.innerHTML = c.svg; flip.style.transform = "";
     const DEPTH = 16, EDGE = 34;                       // how far "back" it can wander (px), and how far off-stage it goes
@@ -1478,6 +1612,33 @@
   document.getElementById("shopClose").addEventListener("click", () => closeShop(!!sale));
   shop.addEventListener("click", (e) => { if (e.target === shop) closeShop(!!sale); });
   document.addEventListener("keydown", (e) => { if (!shop.hidden && e.key === "Escape") closeShop(!!sale); });
+
+  // ---- enlarge a painting: click it in the detail view or at checkout; click again or press Esc to go back ----
+  const zoom = document.getElementById("zoom"), zoomImg = document.getElementById("zoomImg");
+  let zoomFrom = null;
+  function openZoom(p, from){
+    if (!p) return;
+    zoomImg.src = p.img; zoomImg.alt = p.title;
+    zoomFrom = from || document.activeElement;
+    zoom.hidden = false;
+    document.getElementById("zoomClose").focus();
+  }
+  function closeZoom(){
+    zoom.hidden = true; zoomImg.removeAttribute("src");
+    if (zoomFrom && zoomFrom.focus) zoomFrom.focus();
+    zoomFrom = null;
+  }
+  zoom.addEventListener("click", closeZoom);
+  const shopCanvasEl = document.getElementById("shopCanvas");
+  shopCanvasEl.addEventListener("click", () => openZoom(sale && sale.piece, shopCanvasEl));
+  shopCanvasEl.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openZoom(sale && sale.piece, shopCanvasEl); } });
+  lbCanvas.addEventListener("click", (e) => { if (!e.target.closest(".lb-nav")) openZoom(currentFiltered[currentIndex], document.getElementById("lbClose")); });
+  // while enlarged, the keyboard belongs to the enlarged view (so Esc doesn't also close the window underneath)
+  document.addEventListener("keydown", (e) => {
+    if (zoom.hidden) return;
+    if (e.key === "Escape") closeZoom();
+    if (e.key === "Escape" || e.key === "ArrowLeft" || e.key === "ArrowRight") { e.stopImmediatePropagation(); e.preventDefault(); }
+  }, true);
 
   const orderRef = new URLSearchParams(location.search).get("order");
   if (orderRef && /^DH-[A-Z0-9]+-[A-F0-9]{6}$/.test(orderRef)) showThanks(orderRef);
