@@ -11,7 +11,7 @@ process.env.FX_RATE = "24";
 process.env.SHIPPING_MARKUP = "0.15";
 process.env.SITE_URL = "https://shop.test";
 
-const state = { paystack: new Map(), prodigiOrders: new Map(), quoteFails: false, calls: [] };
+const state = { paystack: new Map(), prodigiOrders: new Map(), quoteFails: false, calls: [], emails: [], emailFails: false };
 
 global.fetch = async (url, opts = {}) => {
   const u = new URL(url);
@@ -40,6 +40,11 @@ global.fetch = async (url, opts = {}) => {
       return json(200, { outcome: "Created", order });
     }
     if (u.pathname === "/v4.0/orders") return json(200, { orders: [{ status: { stage: "InProgress" }, shipments: [] }] });
+  }
+  if (u.host === "api.emailjs.com") {
+    if (state.emailFails) return { ok: false, status: 500, text: async () => "down" };
+    state.emails.push(body);
+    return { ok: true, status: 200, text: async () => "OK" };
   }
   throw new Error("unexpected fetch " + url);
 };
@@ -132,4 +137,36 @@ test("delivery details need a usable phone number", async () => {
   assert.equal(bad.status, 400);
   const bad2 = await call("checkout", { body: { slug: "brothers", size: "12x18", recipient: { ...recipient, phone: "abc" } } });
   assert.equal(bad2.status, 400);
+});
+
+test("order emails: buyer confirmation and owner note go out once; a mail failure never blocks the order", async () => {
+  Object.assign(process.env, { EMAILJS_SERVICE_ID: "svc", EMAILJS_PUBLIC_KEY: "pub", EMAILJS_PRIVATE_KEY: "priv", EMAILJS_ORDER_TEMPLATE: "tpl_order", EMAILJS_NOTIFY_TEMPLATE: "tpl_notify" });
+  try {
+    state.emails.length = 0;
+    const c = await call("checkout", { body: { slug: "brothers", size: "12x18", recipient } });
+    pay(c.body.reference);
+    let w = await call("webhook", { body: { event: "charge.success", data: { reference: c.body.reference } } });
+    assert.equal(w.body.state, "placed");
+    assert.equal(state.emails.length, 2);
+    const buyer = state.emails.find((e) => e.template_id === "tpl_order"), owner = state.emails.find((e) => e.template_id === "tpl_notify");
+    assert.equal(buyer.template_params.to_email, "jo@example.com");
+    assert.equal(buyer.template_params.order_ref, c.body.reference);
+    assert.equal(buyer.template_params.painting, "Brothers");
+    assert.match(buyer.template_params.size, /^18 x 12 in/, "landscape painting is described wide");
+    assert.equal(buyer.template_params.total, "R 2 460");
+    assert.equal(buyer.accessToken, "priv");
+    assert.match(owner.template_params.message, /New print order/);
+    await call("webhook", { body: { event: "charge.success", data: { reference: c.body.reference } } });
+    await call("order", { method: "GET", query: { ref: c.body.reference } });
+    assert.equal(state.emails.length, 2, "repeat calls do not email again");
+
+    state.emailFails = true;
+    const c2 = await call("checkout", { body: { slug: "brothers", size: "12x18", recipient } });
+    pay(c2.body.reference);
+    w = await call("webhook", { body: { event: "charge.success", data: { reference: c2.body.reference } } });
+    assert.equal(w.body.state, "placed", "order still goes to print when email is down");
+  } finally {
+    state.emailFails = false;
+    for (const k of ["EMAILJS_SERVICE_ID", "EMAILJS_PUBLIC_KEY", "EMAILJS_PRIVATE_KEY", "EMAILJS_ORDER_TEMPLATE", "EMAILJS_NOTIFY_TEMPLATE"]) delete process.env[k];
+  }
 });

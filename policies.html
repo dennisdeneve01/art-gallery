@@ -6,11 +6,12 @@
 <meta name="description" content="Canvas print prices, delivery, refunds and terms of service for Dennis Hammerschlag Art.">
 <meta name="theme-color" content="#100f0d">
 <title>Prices &amp; policies | Dennis Hammerschlag</title>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300..600&family=Work+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-  :root{ --bg:#100f0d; --bg-raised:#1a1815; --line:#2c2822; --text:#ece6da; --muted:#a89e8d; --muted-2:#766c5d; --accent:#c39a5a; --accent-dim:#8a6c3d; color-scheme: dark; }
+  :root{ --bg:#100f0d; --bg-raised:#1a1815; --line:#2c2822; --text:#ece6da; --muted:#a89e8d; --muted-2:#8f8474; --accent:#c39a5a; --accent-dim:#8a6c3d; color-scheme: dark; }
   *{ box-sizing: border-box; }
   html{ scroll-behavior: smooth; scroll-padding-top: 84px; }
   body{ margin:0; background:var(--bg); color:var(--text); font-family:"Work Sans",-apple-system,"Segoe UI",sans-serif; font-weight:300; -webkit-font-smoothing:antialiased; line-height:1.75; }
@@ -45,6 +46,13 @@
   td.num, th.num{ text-align:right; font-variant-numeric:tabular-nums; }
   tr:last-child td{ border-bottom:0; }
   .note{ font-size:.85rem; color:var(--muted-2); }
+  /* always-visible way back to the paintings: in the left margin on wide screens, bottom-left on small ones */
+  .back{ position:fixed; z-index:6; left:clamp(14px,2.4vw,34px); top:96px; display:inline-flex; align-items:center; gap:10px; padding:11px 18px 11px 14px;
+    border:1px solid var(--accent-dim); background:rgba(26,24,21,.94); backdrop-filter:blur(8px); color:var(--accent); text-decoration:none;
+    font-size:.72rem; letter-spacing:.12em; text-transform:uppercase; transition:background .25s, color .25s, border-color .25s, transform .25s; }
+  .back:hover, .back:focus-visible{ background:var(--accent); color:#17130d; border-color:var(--accent); outline:none; transform:translateX(-2px); }
+  .back svg{ width:15px; height:15px; flex:none; }
+  @media (max-width:1180px){ .back{ top:auto; bottom:calc(18px + env(safe-area-inset-bottom, 0px)); box-shadow:0 12px 30px rgba(0,0,0,.55); } footer{ padding-bottom:84px !important; } }
   footer{ border-top:1px solid var(--line); padding-block:26px; font-size:.76rem; letter-spacing:.05em; color:var(--muted-2); }
   footer .wrap{ display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap; }
   footer a{ color:var(--muted-2); text-decoration:none; }
@@ -63,6 +71,8 @@
     </nav>
   </div>
 </header>
+
+<a class="back" href="/#gallery" aria-label="Back to the gallery"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.5 3 L4.5 8 L9.5 13"/></svg>Back to gallery</a>
 
 <main class="wrap">
   <div class="hero">

@@ -1,10 +1,11 @@
 // The shop's brain: pricing a basket, and turning a paid order into a print order.
 const crypto = require("crypto");
 const { HttpError } = require("./http");
-const { catalog, sizeById, sizesFor, skuFor, cropFor } = require("./catalog");
+const { catalog, sizeById, sizesFor, skuFor, cropFor, orientationOf } = require("./catalog");
 const printFiles = require("./printFiles");
 const prodigi = require("./prodigi");
 const paystack = require("./paystack");
+const { orderEmails } = require("./email");
 
 const COUNTRIES = new Set(catalog.countries.map((c) => c.code));
 
@@ -88,6 +89,18 @@ async function placeOrder(reference, siteBase) {
     reference, recipient: o.recipient, sku: skuFor(piece, size), wrap: catalog.wrap, assetUrl: file.url,
   });
   console.log("[ORDER PLACED]", reference, "->", placed.id, placed.outcome);
+  // First time this order reaches the printer: email the buyer a confirmation and tell Dennis.
+  // (Repeat calls come back from Prodigi as "AlreadyExists", so nobody is emailed twice.)
+  if (String(placed.outcome).toLowerCase() === "created") {
+    const country = catalog.countries.find((c) => c.code === o.recipient.country);
+    const wide = orientationOf(piece) === "landscape";
+    try {
+      await orderEmails({
+        reference, title: piece.title, sizeId: size.id, totalZAR: Number(tx.amount) / 100, recipient: o.recipient, siteBase,
+        countryName: country && country.name, w: wide ? size.h : size.w, h: wide ? size.w : size.h,
+      });
+    } catch (e) { console.error("[EMAIL] skipped", reference, e && e.message); }
+  }
   return { state: "placed", prodigiOrderId: placed.id, outcome: placed.outcome, lowRes: file.lowRes };
 }
 

@@ -19,5 +19,12 @@ FX_RATE = "24"
 SHIPPING_MARKUP = "0.15"
 SHIPPING_METHOD = "Standard"
 
+# Order emails go through EmailJS (same account as the contact forms). These ids are public.
+# EMAILJS_ORDER_TEMPLATE is the buyer's confirmation email.
+EMAILJS_SERVICE_ID = "service_gz4b0al"
+EMAILJS_PUBLIC_KEY = "qqkfBBQseJH7EIWYm"
+EMAILJS_NOTIFY_TEMPLATE = "template_0cl8dn6"
+EMAILJS_ORDER_TEMPLATE = "template_rpxbb4r"
+
 # Secrets (set in the Cloudflare dashboard, never in this file):
-#   PRODIGI_API_KEY, PAYSTACK_SECRET_KEY
+#   PRODIGI_API_KEY, PAYSTACK_SECRET_KEY, EMAILJS_PRIVATE_KEY (optional: turns order emails on)
