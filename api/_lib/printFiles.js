@@ -4,7 +4,7 @@
 // by a public link (see README), then list it in shop/print-files.json:
 //     { "burnt-horizon": "https://example.com/hi-res/burnt-horizon.jpg" }
 //
-// In SANDBOX mode, paintings without an entry fall back to the 1400px web image
+// In TEST (draft) mode, paintings without an entry fall back to the 1400px web image
 // so you can test the whole flow. In LIVE mode that fallback is switched off:
 // a 1400px file would print blurry on a big canvas, so those paintings are
 // simply not offered until you add a proper file.
@@ -12,7 +12,7 @@
 let files = {};
 try { files = require("../../shop/print-files.json"); } catch (e) { files = {}; }
 
-const isLive = () => (process.env.PRODIGI_ENV || "sandbox").toLowerCase() === "live";
+const isLive = () => (process.env.GELATO_MODE || "draft").toLowerCase() === "live";
 
 function slugOf(piece) {
   return piece.img.replace(/^.*\//, "").replace(/\.[a-z]+$/i, "");

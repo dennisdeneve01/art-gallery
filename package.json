@@ -2,15 +2,15 @@
   "name": "art-gallery",
   "version": "1.0.0",
   "private": true,
-  "description": "Dennis Hammerschlag's painting portfolio with canvas-print checkout (Paystack + Prodigi).",
+  "description": "Dennis Hammerschlag's painting portfolio with canvas-print checkout (Paystack + Gelato).",
   "engines": {
     "node": ">=20"
   },
   "scripts": {
     "dev": "node scripts/build.js && npx wrangler dev",
     "sync-catalog": "node scripts/sync-catalog.js",
-    "check-skus": "node --env-file=.env scripts/check-skus.js",
     "test": "node --test test/shop.test.js test/adapter.test.js test/worker.test.js",
-    "build": "node scripts/build.js"
+    "build": "node scripts/build.js",
+    "gelato-products": "node --env-file=.env scripts/gelato-products.js"
   }
 }

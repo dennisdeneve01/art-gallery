@@ -21,7 +21,7 @@ module.exports = handler(["POST"], async (req, res) => {
   const reference = body.data && body.data.reference;
   if (!validReference(reference)) return send(res, 200, { ok: true, ignored: "not-our-reference" });
 
-  // If this throws (Prodigi down, say), the handler returns 500 and Paystack retries later.
-  const result = await placeOrder(reference, siteUrl(req));
+  // If this throws (Gelato down, say), the handler returns 500 and Paystack retries later.
+  const result = await placeOrder(reference, siteUrl(req), { fromWebhook: true });
   send(res, 200, { ok: true, state: result.state });
 });

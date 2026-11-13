@@ -1,89 +1,265 @@
 {
-  "_readme": "Sizes and prices (rand) for canvas prints. 'pieces' is filled in by `npm run sync-catalog` from index.html. Set a painting's forSale to false to hide its Buy button, or pin its sizes with a \"sizes\": [\"12x16\"] list.",
+  "_readme": "Sizes and prices (rand) for canvas prints, printed by Gelato. 'prices' are what buyers pay for each option (slim and thick canvas at a 75% margin, framed print at 60%); 'cost' is Gelato's price in EUR (South Africa price list, Nov 2026), kept for reference. 'pieces' is filled in by `npm run sync-catalog` from index.html. Set a painting's forSale to false to hide its Buy button, or pin its sizes with a \"sizes\": [\"12x16\"] list. Gelato's product codes live in shop/gelato-products.json (npm run gelato-products).",
   "currency": "ZAR",
-  "skuPrefix": "GLOBAL-CAN",
-  "wrap": "ImageWrap",
-  "wrapNote": "Gallery-wrapped on a stretcher bar, ready to hang. The painting continues around the edges.",
+  "wrapNote": "Printed on canvas and stretched over a wooden frame, ready to hang. The painting continues around the edges.",
   "maxCrop": 0.1,
-  "minShippingZAR": 150,
+  "minShippingZAR": 100,
   "sizes": [
     {
       "id": "8x10",
       "w": 8,
       "h": 10,
-      "price": 1350
+      "price": 920,
+      "cm": [
+        20,
+        25
+      ],
+      "prices": {
+        "slim": 920,
+        "thick": 1890,
+        "framed": 1110
+      },
+      "cost": {
+        "slim": 12.08,
+        "thick": 24.78,
+        "framed": 23.24
+      }
     },
     {
       "id": "12x12",
       "w": 12,
       "h": 12,
-      "price": 1830
+      "price": 1420,
+      "cm": [
+        30,
+        30
+      ],
+      "prices": {
+        "slim": 1420,
+        "thick": 2310,
+        "framed": 1650
+      },
+      "cost": {
+        "slim": 18.65,
+        "thick": 30.33,
+        "framed": 34.72
+      }
     },
     {
       "id": "12x16",
       "w": 12,
       "h": 16,
-      "price": 1920
+      "price": 1530,
+      "cm": [
+        30,
+        40
+      ],
+      "prices": {
+        "slim": 1530,
+        "thick": 2520,
+        "framed": 1840
+      },
+      "cost": {
+        "slim": 20.01,
+        "thick": 33.13,
+        "framed": 38.62
+      }
     },
     {
       "id": "12x18",
       "w": 12,
       "h": 18,
-      "price": 2120
+      "price": 1560,
+      "cm": [
+        30,
+        45
+      ],
+      "prices": {
+        "slim": 1560,
+        "thick": 2550,
+        "framed": 1870
+      },
+      "cost": {
+        "slim": 20.41,
+        "thick": 33.55,
+        "framed": 39.34
+      }
     },
     {
       "id": "16x16",
       "w": 16,
       "h": 16,
-      "price": 2400
+      "price": 1700,
+      "cm": [
+        40,
+        40
+      ],
+      "prices": {
+        "slim": 1700,
+        "thick": 2610,
+        "framed": 2030
+      },
+      "cost": {
+        "slim": 22.29,
+        "thick": 34.22,
+        "framed": 42.72
+      }
     },
     {
       "id": "16x20",
       "w": 16,
       "h": 20,
-      "price": 2600
+      "price": 2140,
+      "cm": [
+        40,
+        50
+      ],
+      "prices": {
+        "slim": 2140,
+        "thick": 3080,
+        "framed": 2440
+      },
+      "cost": {
+        "slim": 28.1,
+        "thick": 40.45,
+        "framed": 51.25
+      }
     },
     {
       "id": "16x24",
       "w": 16,
       "h": 24,
-      "price": 2790
+      "price": 2180,
+      "cm": [
+        40,
+        60
+      ],
+      "prices": {
+        "slim": 2180,
+        "thick": 3140,
+        "framed": 2470
+      },
+      "cost": {
+        "slim": 28.66,
+        "thick": 41.26,
+        "framed": 51.87
+      }
     },
     {
       "id": "18x24",
       "w": 18,
       "h": 24,
-      "price": 3080
+      "price": 2270,
+      "cm": [
+        45,
+        60
+      ],
+      "prices": {
+        "slim": 2270,
+        "thick": 3740,
+        "framed": 2660
+      },
+      "cost": {
+        "slim": 29.81,
+        "thick": 49.18,
+        "framed": 55.83
+      }
     },
     {
       "id": "20x20",
       "w": 20,
       "h": 20,
-      "price": 3080
+      "price": 2230,
+      "cm": [
+        50,
+        50
+      ],
+      "prices": {
+        "slim": 2230,
+        "thick": 3200,
+        "framed": 2700
+      },
+      "cost": {
+        "slim": 29.23,
+        "thick": 42.1,
+        "framed": 56.77
+      }
     },
     {
       "id": "20x30",
       "w": 20,
       "h": 30,
-      "price": 3460
+      "price": 2980,
+      "cm": [
+        50,
+        75
+      ],
+      "prices": {
+        "slim": 2980,
+        "thick": 4590
+      },
+      "cost": {
+        "slim": 39.11,
+        "thick": 60.31
+      }
     },
     {
       "id": "24x24",
       "w": 24,
       "h": 24,
-      "price": 3460
+      "price": 3040,
+      "cm": [
+        60,
+        60
+      ],
+      "prices": {
+        "slim": 3040,
+        "thick": 4680
+      },
+      "cost": {
+        "slim": 39.89,
+        "thick": 61.52
+      }
     },
     {
       "id": "24x32",
       "w": 24,
       "h": 32,
-      "price": 4420
+      "price": 3500,
+      "cm": [
+        60,
+        80
+      ],
+      "prices": {
+        "slim": 3500,
+        "thick": 5470,
+        "framed": 4040
+      },
+      "cost": {
+        "slim": 46.03,
+        "thick": 71.89,
+        "framed": 85.03
+      }
     },
     {
       "id": "24x36",
       "w": 24,
       "h": 36,
-      "price": 4610
+      "price": 3740,
+      "cm": [
+        60,
+        90
+      ],
+      "prices": {
+        "slim": 3740,
+        "thick": 5690,
+        "framed": 4400
+      },
+      "cost": {
+        "slim": 49.2,
+        "thick": 74.79,
+        "framed": 92.52
+      }
     }
   ],
   "countries": [
@@ -370,5 +546,41 @@
       "h": 1400,
       "forSale": false
     }
-  }
+  },
+  "provider": "gelato",
+  "thicknesses": [
+    {
+      "id": "slim",
+      "label": "Slim",
+      "note": "A slimmer frame that sits close to the wall"
+    },
+    {
+      "id": "thick",
+      "label": "Thick",
+      "note": "A deeper frame that stands out from the wall, like an original painting"
+    },
+    {
+      "id": "framed",
+      "label": "Framed print",
+      "note": "Premium matte paper in a wooden frame, behind shatterproof plexiglass. Ready to hang.",
+      "frames": [
+        {
+          "id": "black",
+          "label": "Black"
+        },
+        {
+          "id": "white",
+          "label": "White"
+        },
+        {
+          "id": "wood",
+          "label": "Wood"
+        },
+        {
+          "id": "dark-wood",
+          "label": "Dark wood"
+        }
+      ]
+    }
+  ]
 }

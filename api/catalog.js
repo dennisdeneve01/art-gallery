@@ -1,5 +1,5 @@
 const { handler, send, siteUrl } = require("./_lib/http");
-const { catalog, sizesFor, orientationOf } = require("./_lib/catalog");
+const { catalog, sizesFor, orientationOf, offered, priceOf, THICKNESSES } = require("./_lib/catalog");
 const printFiles = require("./_lib/printFiles");
 
 // What the website needs to know to show "Buy a canvas print" buttons:
@@ -11,10 +11,17 @@ module.exports = handler(["GET"], async (req, res) => {
     if (!printFiles.resolve(slug, base)) continue;
     const list = sizesFor(piece);
     if (!list.length) continue;
-    items[slug] = {
+    const entry = {
       orientation: orientationOf(piece),
-      sizes: list.map((x) => ({ id: x.size.id, w: x.size.w, h: x.size.h, price: x.size.price, crop: Math.round(x.crop * 1000) / 1000 })),
+      sizes: list
+        .filter((x) => THICKNESSES.some((t) => priceOf(x.size, t) && offered(piece, x.size, t)))
+        .map((x) => ({
+          id: x.size.id, w: x.size.w, h: x.size.h, cm: x.size.cm, price: x.size.price, crop: Math.round(x.crop * 1000) / 1000,
+          prices: Object.fromEntries(THICKNESSES.filter((t) => priceOf(x.size, t) && offered(piece, x.size, t)).map((t) => [t, priceOf(x.size, t)])),
+        })),
     };
+    if (!entry.sizes.length) continue;
+    items[slug] = entry;
   }
   res.setHeader("Cache-Control", "public, max-age=60, s-maxage=300");
   res.statusCode = 200;
@@ -22,6 +29,7 @@ module.exports = handler(["GET"], async (req, res) => {
   res.end(JSON.stringify({
     currency: catalog.currency,
     wrapNote: catalog.wrapNote,
+    thicknesses: catalog.thicknesses,
     countries: catalog.countries,
     items,
   }));

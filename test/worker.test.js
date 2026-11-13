@@ -1,6 +1,7 @@
 // The Worker routes /api/* to the shop handlers and everything else to the static files.
 const test = require("node:test");
 const assert = require("node:assert/strict");
+require("./fake-gelato");
 
 test("worker routes api paths, 404s unknown api paths, passes the rest to assets", async () => {
   process.env.PRODIGI_ENV = "sandbox";

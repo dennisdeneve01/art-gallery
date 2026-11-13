@@ -35,11 +35,31 @@ function sizesFor(piece) {
   return scored.filter((x) => x.crop <= best + 0.03).sort((a, b) => a.size.price - b.size.price);
 }
 
-// Prodigi only lists one code per canvas size (shorter side first, e.g. 18X24);
-// landscape codes like 24X18 do not exist (confirmed against the live catalogue).
-function skuFor(piece, size) {
-  const [short, long] = [Math.min(size.w, size.h), Math.max(size.w, size.h)];
-  return `${catalog.skuPrefix}-${short}X${long}`;
+// Gelato's product code for a size, thickness and orientation, from shop/gelato-products.json
+// (written by `npm run gelato-products`). Square canvases use the vertical code.
+let gelatoProducts = {};
+try { gelatoProducts = require("../../shop/gelato-products.json").sizes || {}; } catch (e) { gelatoProducts = {}; }
+const THICKNESSES = (catalog.thicknesses || [{ id: "slim" }]).map((t) => t.id);
+// Framed prints add a frame colour level: sizes[id].framed[frame][orientation].
+const kindOf = (id) => (catalog.thicknesses || []).find((t) => t.id === id) || null;
+const framesOf = (id) => ((kindOf(id) || {}).frames || []).map((f) => f.id);
+function productUidFor(piece, size, thickness, frame) {
+  let node = gelatoProducts[size.id] && gelatoProducts[size.id][thickness];
+  if (!node) return null;
+  const frames = framesOf(thickness);
+  if (frames.length) node = node[frames.includes(frame) ? frame : frames[0]];
+  if (!node) return null;
+  const o = orientationOf(piece) === "landscape" ? "hor" : "ver";
+  return node[o] || node.ver || node.hor || null;
 }
+// Can this size be ordered in this option at all (any frame colour)?
+function offered(piece, size, thickness) {
+  const frames = framesOf(thickness);
+  return frames.length ? frames.some((f) => productUidFor(piece, size, thickness, f)) : !!productUidFor(piece, size, thickness);
+}
+const priceOf = (size, thickness) => (size.prices && size.prices[thickness]) || null;
 
-module.exports = { catalog, sizes, sizeById, sizesFor, skuFor, cropFor, orientationOf };
+// Tests swap in their own product codes.
+const _setGelatoProducts = (map) => { gelatoProducts = map || {}; };
+
+module.exports = { catalog, sizes, sizeById, sizesFor, productUidFor, offered, framesOf, priceOf, THICKNESSES, cropFor, orientationOf, _setGelatoProducts };

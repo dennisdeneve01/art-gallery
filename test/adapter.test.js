@@ -1,6 +1,7 @@
 // Checks the Cloudflare adapter turns Request/Response into the (req, res) the shop code expects.
 const test = require("node:test");
 const assert = require("node:assert/strict");
+require("./fake-gelato");
 
 async function load() { return (await import("../cf/adapter.mjs")).run; }
 

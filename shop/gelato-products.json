@@ -1,0 +1,333 @@
+{
+  "_readme": "Filled in by `npm run gelato-products`. sizes[id][option][frame?][orientation] = Gelato product code.",
+  "sizes": {
+    "8x10": {
+      "slim": {
+        "ver": "canvas_200x250-mm-8x10-inch_canvas_wood-fsc-slim_4-0_ver",
+        "hor": "canvas_200x250-mm-8x10-inch_canvas_wood-fsc-slim_4-0_hor"
+      },
+      "thick": {
+        "ver": "canvas_200x250-mm-8x10-inch_canvas_wood-fsc-thick_4-0_ver",
+        "hor": "canvas_200x250-mm-8x10-inch_canvas_wood-fsc-thick_4-0_hor"
+      },
+      "framed": {
+        "black": {
+          "ver": "framed_poster_mounted_200x250-mm-8x10-inch_black_wood_w12xt22-mm_plexiglass_200x250-mm-8x10-inch_200-gsm-80lb-uncoated_4-0_ver",
+          "hor": "framed_poster_mounted_200x250-mm-8x10-inch_black_wood_w12xt22-mm_plexiglass_200x250-mm-8x10-inch_200-gsm-80lb-uncoated_4-0_hor"
+        },
+        "white": {
+          "ver": "framed_poster_mounted_200x250-mm-8x10-inch_white_wood_w12xt22-mm_plexiglass_200x250-mm-8x10-inch_200-gsm-80lb-uncoated_4-0_ver",
+          "hor": "framed_poster_mounted_200x250-mm-8x10-inch_white_wood_w12xt22-mm_plexiglass_200x250-mm-8x10-inch_200-gsm-80lb-uncoated_4-0_hor"
+        },
+        "wood": {
+          "ver": "framed_poster_mounted_200x250-mm-8x10-inch_natural-wood_wood_w12xt22-mm_plexiglass_200x250-mm-8x10-inch_200-gsm-80lb-uncoated_4-0_ver",
+          "hor": "framed_poster_mounted_200x250-mm-8x10-inch_natural-wood_wood_w12xt22-mm_plexiglass_200x250-mm-8x10-inch_200-gsm-80lb-uncoated_4-0_hor"
+        },
+        "dark-wood": {
+          "ver": "framed_poster_mounted_200x250-mm-8x10-inch_dark-wood_wood_w12xt22-mm_plexiglass_200x250-mm-8x10-inch_200-gsm-80lb-uncoated_4-0_ver",
+          "hor": "framed_poster_mounted_200x250-mm-8x10-inch_dark-wood_wood_w12xt22-mm_plexiglass_200x250-mm-8x10-inch_200-gsm-80lb-uncoated_4-0_hor"
+        }
+      }
+    },
+    "12x12": {
+      "slim": {
+        "ver": "canvas_12x12-inch-300x300-mm_canvas_wood-fsc-slim_4-0_ver",
+        "hor": "canvas_12x12-inch-300x300-mm_canvas_wood-fsc-slim_4-0_hor"
+      },
+      "thick": {
+        "ver": "canvas_12x12-inch-300x300-mm_canvas_wood-fsc-thick_4-0_ver",
+        "hor": "canvas_12x12-inch-300x300-mm_canvas_wood-fsc-thick_4-0_hor"
+      },
+      "framed": {
+        "black": {
+          "ver": "framed_poster_mounted_12x12-inch-300x300-mm_black_wood_w12xt22-mm_plexiglass_12x12-inch-300x300-mm_200-gsm-80lb-uncoated_4-0_ver",
+          "hor": "framed_poster_mounted_12x12-inch-300x300-mm_black_wood_w12xt22-mm_plexiglass_12x12-inch-300x300-mm_200-gsm-80lb-uncoated_4-0_hor"
+        },
+        "white": {
+          "ver": "framed_poster_mounted_12x12-inch-300x300-mm_white_wood_w12xt22-mm_plexiglass_12x12-inch-300x300-mm_200-gsm-80lb-uncoated_4-0_ver",
+          "hor": "framed_poster_mounted_12x12-inch-300x300-mm_white_wood_w12xt22-mm_plexiglass_12x12-inch-300x300-mm_200-gsm-80lb-uncoated_4-0_hor"
+        },
+        "wood": {
+          "ver": "framed_poster_mounted_12x12-inch-300x300-mm_natural-wood_wood_w12xt22-mm_plexiglass_12x12-inch-300x300-mm_200-gsm-80lb-uncoated_4-0_ver",
+          "hor": "framed_poster_mounted_12x12-inch-300x300-mm_natural-wood_wood_w12xt22-mm_plexiglass_12x12-inch-300x300-mm_200-gsm-80lb-uncoated_4-0_hor"
+        },
+        "dark-wood": {
+          "ver": "framed_poster_mounted_12x12-inch-300x300-mm_dark-wood_wood_w12xt22-mm_plexiglass_12x12-inch-300x300-mm_200-gsm-80lb-uncoated_4-0_ver",
+          "hor": "framed_poster_mounted_12x12-inch-300x300-mm_dark-wood_wood_w12xt22-mm_plexiglass_12x12-inch-300x300-mm_200-gsm-80lb-uncoated_4-0_hor"
+        }
+      }
+    },
+    "12x16": {
+      "slim": {
+        "ver": "canvas_12x16-inch-300x400-mm_canvas_wood-fsc-slim_4-0_ver",
+        "hor": "canvas_12x16-inch-300x400-mm_canvas_wood-fsc-slim_4-0_hor"
+      },
+      "thick": {
+        "ver": "canvas_12x16-inch-300x400-mm_canvas_wood-fsc-thick_4-0_ver",
+        "hor": "canvas_12x16-inch-300x400-mm_canvas_wood-fsc-thick_4-0_hor"
+      },
+      "framed": {
+        "black": {
+          "ver": "framed_poster_mounted_12x16-inch-300x400-mm_black_wood_w12xt22-mm_plexiglass_12x16-inch-300x400-mm_200-gsm-80lb-uncoated_4-0_ver",
+          "hor": "framed_poster_mounted_12x16-inch-300x400-mm_black_wood_w12xt22-mm_plexiglass_12x16-inch-300x400-mm_200-gsm-80lb-uncoated_4-0_hor"
+        },
+        "white": {
+          "ver": "framed_poster_mounted_12x16-inch-300x400-mm_white_wood_w12xt22-mm_plexiglass_12x16-inch-300x400-mm_200-gsm-80lb-uncoated_4-0_ver",
+          "hor": "framed_poster_mounted_12x16-inch-300x400-mm_white_wood_w12xt22-mm_plexiglass_12x16-inch-300x400-mm_200-gsm-80lb-uncoated_4-0_hor"
+        },
+        "wood": {
+          "ver": "framed_poster_mounted_12x16-inch-300x400-mm_natural-wood_wood_w12xt22-mm_plexiglass_12x16-inch-300x400-mm_200-gsm-80lb-uncoated_4-0_ver",
+          "hor": "framed_poster_mounted_12x16-inch-300x400-mm_natural-wood_wood_w12xt22-mm_plexiglass_12x16-inch-300x400-mm_200-gsm-80lb-uncoated_4-0_hor"
+        },
+        "dark-wood": {
+          "ver": "framed_poster_mounted_12x16-inch-300x400-mm_dark-wood_wood_w12xt22-mm_plexiglass_12x16-inch-300x400-mm_200-gsm-80lb-uncoated_4-0_ver",
+          "hor": "framed_poster_mounted_12x16-inch-300x400-mm_dark-wood_wood_w12xt22-mm_plexiglass_12x16-inch-300x400-mm_200-gsm-80lb-uncoated_4-0_hor"
+        }
+      }
+    },
+    "12x18": {
+      "slim": {
+        "ver": "canvas_12x18-inch-300x450-mm_canvas_wood-fsc-slim_4-0_ver",
+        "hor": "canvas_12x18-inch-300x450-mm_canvas_wood-fsc-slim_4-0_hor"
+      },
+      "thick": {
+        "ver": "canvas_12x18-inch-300x450-mm_canvas_wood-fsc-thick_4-0_ver",
+        "hor": "canvas_12x18-inch-300x450-mm_canvas_wood-fsc-thick_4-0_hor"
+      },
+      "framed": {
+        "black": {
+          "ver": "framed_poster_mounted_12x18-inch-300x450-mm_black_wood_w12xt22-mm_plexiglass_12x18-inch-300x450-mm_200-gsm-80lb-uncoated_4-0_ver",
+          "hor": "framed_poster_mounted_12x18-inch-300x450-mm_black_wood_w12xt22-mm_plexiglass_12x18-inch-300x450-mm_200-gsm-80lb-uncoated_4-0_hor"
+        },
+        "white": {
+          "ver": "framed_poster_mounted_12x18-inch-300x450-mm_white_wood_w12xt22-mm_plexiglass_12x18-inch-300x450-mm_200-gsm-80lb-uncoated_4-0_ver",
+          "hor": "framed_poster_mounted_12x18-inch-300x450-mm_white_wood_w12xt22-mm_plexiglass_12x18-inch-300x450-mm_200-gsm-80lb-uncoated_4-0_hor"
+        },
+        "wood": {
+          "ver": "framed_poster_mounted_12x18-inch-300x450-mm_natural-wood_wood_w12xt22-mm_plexiglass_12x18-inch-300x450-mm_200-gsm-80lb-uncoated_4-0_ver",
+          "hor": "framed_poster_mounted_12x18-inch-300x450-mm_natural-wood_wood_w12xt22-mm_plexiglass_12x18-inch-300x450-mm_200-gsm-80lb-uncoated_4-0_hor"
+        },
+        "dark-wood": {
+          "ver": "framed_poster_mounted_12x18-inch-300x450-mm_dark-wood_wood_w12xt22-mm_plexiglass_12x18-inch-300x450-mm_200-gsm-80lb-uncoated_4-0_ver",
+          "hor": "framed_poster_mounted_12x18-inch-300x450-mm_dark-wood_wood_w12xt22-mm_plexiglass_12x18-inch-300x450-mm_200-gsm-80lb-uncoated_4-0_hor"
+        }
+      }
+    },
+    "16x16": {
+      "slim": {
+        "ver": "canvas_16x16-inch-400x400-mm_canvas_wood-fsc-slim_4-0_ver",
+        "hor": "canvas_16x16-inch-400x400-mm_canvas_wood-fsc-slim_4-0_hor"
+      },
+      "thick": {
+        "ver": "canvas_16x16-inch-400x400-mm_canvas_wood-fsc-thick_4-0_ver",
+        "hor": "canvas_16x16-inch-400x400-mm_canvas_wood-fsc-thick_4-0_hor"
+      },
+      "framed": {
+        "black": {
+          "ver": "framed_poster_mounted_16x16-inch-400x400-mm_black_wood_w12xt22-mm_plexiglass_16x16-inch-400x400-mm_200-gsm-80lb-uncoated_4-0_ver",
+          "hor": "framed_poster_mounted_16x16-inch-400x400-mm_black_wood_w12xt22-mm_plexiglass_16x16-inch-400x400-mm_200-gsm-80lb-uncoated_4-0_hor"
+        },
+        "white": {
+          "ver": "framed_poster_mounted_16x16-inch-400x400-mm_white_wood_w12xt22-mm_plexiglass_16x16-inch-400x400-mm_200-gsm-80lb-uncoated_4-0_ver",
+          "hor": "framed_poster_mounted_16x16-inch-400x400-mm_white_wood_w12xt22-mm_plexiglass_16x16-inch-400x400-mm_200-gsm-80lb-uncoated_4-0_hor"
+        },
+        "wood": {
+          "ver": "framed_poster_mounted_16x16-inch-400x400-mm_natural-wood_wood_w12xt22-mm_plexiglass_16x16-inch-400x400-mm_200-gsm-80lb-uncoated_4-0_ver",
+          "hor": "framed_poster_mounted_16x16-inch-400x400-mm_natural-wood_wood_w12xt22-mm_plexiglass_16x16-inch-400x400-mm_200-gsm-80lb-uncoated_4-0_hor"
+        },
+        "dark-wood": {
+          "ver": "framed_poster_mounted_16x16-inch-400x400-mm_dark-wood_wood_w12xt22-mm_plexiglass_16x16-inch-400x400-mm_200-gsm-80lb-uncoated_4-0_ver",
+          "hor": "framed_poster_mounted_16x16-inch-400x400-mm_dark-wood_wood_w12xt22-mm_plexiglass_16x16-inch-400x400-mm_200-gsm-80lb-uncoated_4-0_hor"
+        }
+      }
+    },
+    "16x20": {
+      "slim": {
+        "ver": "canvas_16x20-inch-400x500-mm_canvas_wood-fsc-slim_4-0_ver",
+        "hor": "canvas_16x20-inch-400x500-mm_canvas_wood-fsc-slim_4-0_hor"
+      },
+      "thick": {
+        "ver": "canvas_16x20-inch-400x500-mm_canvas_wood-fsc-thick_4-0_ver",
+        "hor": "canvas_16x20-inch-400x500-mm_canvas_wood-fsc-thick_4-0_hor"
+      },
+      "framed": {
+        "black": {
+          "ver": "framed_poster_mounted_16x20-inch-400x500-mm_black_wood_w12xt22-mm_plexiglass_16x20-inch-400x500-mm_200-gsm-80lb-uncoated_4-0_ver",
+          "hor": "framed_poster_mounted_16x20-inch-400x500-mm_black_wood_w12xt22-mm_plexiglass_16x20-inch-400x500-mm_200-gsm-80lb-uncoated_4-0_hor"
+        },
+        "white": {
+          "ver": "framed_poster_mounted_16x20-inch-400x500-mm_white_wood_w12xt22-mm_plexiglass_16x20-inch-400x500-mm_200-gsm-80lb-uncoated_4-0_ver",
+          "hor": "framed_poster_mounted_16x20-inch-400x500-mm_white_wood_w12xt22-mm_plexiglass_16x20-inch-400x500-mm_200-gsm-80lb-uncoated_4-0_hor"
+        },
+        "wood": {
+          "ver": "framed_poster_mounted_16x20-inch-400x500-mm_natural-wood_wood_w12xt22-mm_plexiglass_16x20-inch-400x500-mm_200-gsm-80lb-uncoated_4-0_ver",
+          "hor": "framed_poster_mounted_16x20-inch-400x500-mm_natural-wood_wood_w12xt22-mm_plexiglass_16x20-inch-400x500-mm_200-gsm-80lb-uncoated_4-0_hor"
+        },
+        "dark-wood": {
+          "ver": "framed_poster_mounted_16x20-inch-400x500-mm_dark-wood_wood_w12xt22-mm_plexiglass_16x20-inch-400x500-mm_200-gsm-80lb-uncoated_4-0_ver",
+          "hor": "framed_poster_mounted_16x20-inch-400x500-mm_dark-wood_wood_w12xt22-mm_plexiglass_16x20-inch-400x500-mm_200-gsm-80lb-uncoated_4-0_hor"
+        }
+      }
+    },
+    "16x24": {
+      "slim": {
+        "ver": "canvas_16x24-inch-400x600-mm_canvas_wood-fsc-slim_4-0_ver",
+        "hor": "canvas_16x24-inch-400x600-mm_canvas_wood-fsc-slim_4-0_hor"
+      },
+      "thick": {
+        "ver": "canvas_16x24-inch-400x600-mm_canvas_wood-fsc-thick_4-0_ver",
+        "hor": "canvas_16x24-inch-400x600-mm_canvas_wood-fsc-thick_4-0_hor"
+      },
+      "framed": {
+        "black": {
+          "ver": "framed_poster_mounted_16x24-inch-400x600-mm_black_wood_w12xt22-mm_plexiglass_16x24-inch-400x600-mm_200-gsm-80lb-uncoated_4-0_ver",
+          "hor": "framed_poster_mounted_16x24-inch-400x600-mm_black_wood_w12xt22-mm_plexiglass_16x24-inch-400x600-mm_200-gsm-80lb-uncoated_4-0_hor"
+        },
+        "white": {
+          "ver": "framed_poster_mounted_16x24-inch-400x600-mm_white_wood_w12xt22-mm_plexiglass_16x24-inch-400x600-mm_200-gsm-80lb-uncoated_4-0_ver",
+          "hor": "framed_poster_mounted_16x24-inch-400x600-mm_white_wood_w12xt22-mm_plexiglass_16x24-inch-400x600-mm_200-gsm-80lb-uncoated_4-0_hor"
+        },
+        "wood": {
+          "ver": "framed_poster_mounted_16x24-inch-400x600-mm_natural-wood_wood_w12xt22-mm_plexiglass_16x24-inch-400x600-mm_200-gsm-80lb-uncoated_4-0_ver",
+          "hor": "framed_poster_mounted_16x24-inch-400x600-mm_natural-wood_wood_w12xt22-mm_plexiglass_16x24-inch-400x600-mm_200-gsm-80lb-uncoated_4-0_hor"
+        },
+        "dark-wood": {
+          "ver": "framed_poster_mounted_16x24-inch-400x600-mm_dark-wood_wood_w12xt22-mm_plexiglass_16x24-inch-400x600-mm_200-gsm-80lb-uncoated_4-0_ver",
+          "hor": "framed_poster_mounted_16x24-inch-400x600-mm_dark-wood_wood_w12xt22-mm_plexiglass_16x24-inch-400x600-mm_200-gsm-80lb-uncoated_4-0_hor"
+        }
+      }
+    },
+    "18x24": {
+      "slim": {
+        "ver": "canvas_18x24-inch-450x600-mm_canvas_wood-fsc-slim_4-0_ver",
+        "hor": "canvas_18x24-inch-450x600-mm_canvas_wood-fsc-slim_4-0_hor"
+      },
+      "thick": {
+        "ver": "canvas_18x24-inch-450x600-mm_canvas_wood-fsc-thick_4-0_ver",
+        "hor": "canvas_18x24-inch-450x600-mm_canvas_wood-fsc-thick_4-0_hor"
+      },
+      "framed": {
+        "black": {
+          "ver": "framed_poster_mounted_18x24-inch-450x600-mm_black_wood_w12xt22-mm_plexiglass_18x24-inch-450x600-mm_200-gsm-80lb-uncoated_4-0_ver",
+          "hor": "framed_poster_mounted_18x24-inch-450x600-mm_black_wood_w12xt22-mm_plexiglass_18x24-inch-450x600-mm_200-gsm-80lb-uncoated_4-0_hor"
+        },
+        "white": {
+          "ver": "framed_poster_mounted_18x24-inch-450x600-mm_white_wood_w12xt22-mm_plexiglass_18x24-inch-450x600-mm_200-gsm-80lb-uncoated_4-0_ver",
+          "hor": "framed_poster_mounted_18x24-inch-450x600-mm_white_wood_w12xt22-mm_plexiglass_18x24-inch-450x600-mm_200-gsm-80lb-uncoated_4-0_hor"
+        },
+        "wood": {
+          "ver": "framed_poster_mounted_18x24-inch-450x600-mm_natural-wood_wood_w12xt22-mm_plexiglass_18x24-inch-450x600-mm_200-gsm-80lb-uncoated_4-0_ver",
+          "hor": "framed_poster_mounted_18x24-inch-450x600-mm_natural-wood_wood_w12xt22-mm_plexiglass_18x24-inch-450x600-mm_200-gsm-80lb-uncoated_4-0_hor"
+        },
+        "dark-wood": {
+          "ver": "framed_poster_mounted_18x24-inch-450x600-mm_dark-wood_wood_w12xt22-mm_plexiglass_18x24-inch-450x600-mm_200-gsm-80lb-uncoated_4-0_ver",
+          "hor": "framed_poster_mounted_18x24-inch-450x600-mm_dark-wood_wood_w12xt22-mm_plexiglass_18x24-inch-450x600-mm_200-gsm-80lb-uncoated_4-0_hor"
+        }
+      }
+    },
+    "20x20": {
+      "slim": {
+        "ver": "canvas_20x20-inch-500x500-mm_canvas_wood-fsc-slim_4-0_ver",
+        "hor": "canvas_20x20-inch-500x500-mm_canvas_wood-fsc-slim_4-0_hor"
+      },
+      "thick": {
+        "ver": "canvas_20x20-inch-500x500-mm_canvas_wood-fsc-thick_4-0_ver",
+        "hor": "canvas_20x20-inch-500x500-mm_canvas_wood-fsc-thick_4-0_hor"
+      },
+      "framed": {
+        "black": {
+          "ver": "framed_poster_mounted_20x20-inch-500x500-mm_black_wood_w12xt22-mm_plexiglass_20x20-inch-500x500-mm_200-gsm-80lb-uncoated_4-0_ver",
+          "hor": "framed_poster_mounted_20x20-inch-500x500-mm_black_wood_w12xt22-mm_plexiglass_20x20-inch-500x500-mm_200-gsm-80lb-uncoated_4-0_hor"
+        },
+        "white": {
+          "ver": "framed_poster_mounted_20x20-inch-500x500-mm_white_wood_w12xt22-mm_plexiglass_20x20-inch-500x500-mm_200-gsm-80lb-uncoated_4-0_ver",
+          "hor": "framed_poster_mounted_20x20-inch-500x500-mm_white_wood_w12xt22-mm_plexiglass_20x20-inch-500x500-mm_200-gsm-80lb-uncoated_4-0_hor"
+        },
+        "wood": {
+          "ver": "framed_poster_mounted_20x20-inch-500x500-mm_natural-wood_wood_w12xt22-mm_plexiglass_20x20-inch-500x500-mm_200-gsm-80lb-uncoated_4-0_ver",
+          "hor": "framed_poster_mounted_20x20-inch-500x500-mm_natural-wood_wood_w12xt22-mm_plexiglass_20x20-inch-500x500-mm_200-gsm-80lb-uncoated_4-0_hor"
+        },
+        "dark-wood": {
+          "ver": "framed_poster_mounted_20x20-inch-500x500-mm_dark-wood_wood_w12xt22-mm_plexiglass_20x20-inch-500x500-mm_200-gsm-80lb-uncoated_4-0_ver",
+          "hor": "framed_poster_mounted_20x20-inch-500x500-mm_dark-wood_wood_w12xt22-mm_plexiglass_20x20-inch-500x500-mm_200-gsm-80lb-uncoated_4-0_hor"
+        }
+      }
+    },
+    "20x30": {
+      "slim": {
+        "ver": "canvas_20x30-inch-500x750-mm_canvas_wood-fsc-slim_4-0_ver",
+        "hor": "canvas_20x30-inch-500x750-mm_canvas_wood-fsc-slim_4-0_hor"
+      },
+      "thick": {
+        "ver": "canvas_20x30-inch-500x750-mm_canvas_wood-fsc-thick_4-0_ver",
+        "hor": "canvas_20x30-inch-500x750-mm_canvas_wood-fsc-thick_4-0_hor"
+      }
+    },
+    "24x24": {
+      "slim": {
+        "ver": "canvas_24x24-inch-600x600-mm_canvas_wood-fsc-slim_4-0_ver",
+        "hor": "canvas_24x24-inch-600x600-mm_canvas_wood-fsc-slim_4-0_hor"
+      },
+      "thick": {
+        "ver": "canvas_24x24-inch-600x600-mm_canvas_wood-fsc-thick_4-0_ver",
+        "hor": "canvas_24x24-inch-600x600-mm_canvas_wood-fsc-thick_4-0_hor"
+      }
+    },
+    "24x32": {
+      "slim": {
+        "ver": "canvas_24x32-inch-600x800-mm_canvas_wood-fsc-slim_4-0_ver",
+        "hor": "canvas_24x32-inch-600x800-mm_canvas_wood-fsc-slim_4-0_hor"
+      },
+      "thick": {
+        "ver": "canvas_24x32-inch-600x800-mm_canvas_wood-fsc-thick_4-0_ver",
+        "hor": "canvas_24x32-inch-600x800-mm_canvas_wood-fsc-thick_4-0_hor"
+      },
+      "framed": {
+        "black": {
+          "ver": "framed_poster_mounted_24x32-inch-600x800-mm_black_wood_w12xt22-mm_plexiglass_24x32-inch-600x800-mm_200-gsm-80lb-uncoated_4-0_ver",
+          "hor": "framed_poster_mounted_24x32-inch-600x800-mm_black_wood_w12xt22-mm_plexiglass_24x32-inch-600x800-mm_200-gsm-80lb-uncoated_4-0_hor"
+        },
+        "white": {
+          "ver": "framed_poster_mounted_24x32-inch-600x800-mm_white_wood_w12xt22-mm_plexiglass_24x32-inch-600x800-mm_200-gsm-80lb-uncoated_4-0_ver",
+          "hor": "framed_poster_mounted_24x32-inch-600x800-mm_white_wood_w12xt22-mm_plexiglass_24x32-inch-600x800-mm_200-gsm-80lb-uncoated_4-0_hor"
+        },
+        "wood": {
+          "ver": "framed_poster_mounted_24x32-inch-600x800-mm_natural-wood_wood_w12xt22-mm_plexiglass_24x32-inch-600x800-mm_200-gsm-80lb-uncoated_4-0_ver",
+          "hor": "framed_poster_mounted_24x32-inch-600x800-mm_natural-wood_wood_w12xt22-mm_plexiglass_24x32-inch-600x800-mm_200-gsm-80lb-uncoated_4-0_hor"
+        },
+        "dark-wood": {
+          "ver": "framed_poster_mounted_24x32-inch-600x800-mm_dark-wood_wood_w12xt22-mm_plexiglass_24x32-inch-600x800-mm_200-gsm-80lb-uncoated_4-0_ver",
+          "hor": "framed_poster_mounted_24x32-inch-600x800-mm_dark-wood_wood_w12xt22-mm_plexiglass_24x32-inch-600x800-mm_200-gsm-80lb-uncoated_4-0_hor"
+        }
+      }
+    },
+    "24x36": {
+      "slim": {
+        "ver": "canvas_24x36-inch-600x900-mm_canvas_wood-fsc-slim_4-0_ver",
+        "hor": "canvas_24x36-inch-600x900-mm_canvas_wood-fsc-slim_4-0_hor"
+      },
+      "thick": {
+        "ver": "canvas_24x36-inch-600x900-mm_canvas_wood-fsc-thick_4-0_ver",
+        "hor": "canvas_24x36-inch-600x900-mm_canvas_wood-fsc-thick_4-0_hor"
+      },
+      "framed": {
+        "black": {
+          "ver": "framed_poster_mounted_24x36-inch-600x900-mm_black_wood_w12xt22-mm_plexiglass_24x36-inch-600x900-mm_200-gsm-80lb-uncoated_4-0_ver",
+          "hor": "framed_poster_mounted_24x36-inch-600x900-mm_black_wood_w12xt22-mm_plexiglass_24x36-inch-600x900-mm_200-gsm-80lb-uncoated_4-0_hor"
+        },
+        "white": {
+          "ver": "framed_poster_mounted_24x36-inch-600x900-mm_white_wood_w12xt22-mm_plexiglass_24x36-inch-600x900-mm_200-gsm-80lb-uncoated_4-0_ver",
+          "hor": "framed_poster_mounted_24x36-inch-600x900-mm_white_wood_w12xt22-mm_plexiglass_24x36-inch-600x900-mm_200-gsm-80lb-uncoated_4-0_hor"
+        },
+        "wood": {
+          "ver": "framed_poster_mounted_24x36-inch-600x900-mm_natural-wood_wood_w12xt22-mm_plexiglass_24x36-inch-600x900-mm_200-gsm-80lb-uncoated_4-0_ver",
+          "hor": "framed_poster_mounted_24x36-inch-600x900-mm_natural-wood_wood_w12xt22-mm_plexiglass_24x36-inch-600x900-mm_200-gsm-80lb-uncoated_4-0_hor"
+        },
+        "dark-wood": {
+          "ver": "framed_poster_mounted_24x36-inch-600x900-mm_dark-wood_wood_w12xt22-mm_plexiglass_24x36-inch-600x900-mm_200-gsm-80lb-uncoated_4-0_ver",
+          "hor": "framed_poster_mounted_24x36-inch-600x900-mm_dark-wood_wood_w12xt22-mm_plexiglass_24x36-inch-600x900-mm_200-gsm-80lb-uncoated_4-0_hor"
+        }
+      }
+    }
+  }
+}

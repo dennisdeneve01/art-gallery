@@ -13,7 +13,9 @@ for (const item of ["index.html", "images", "favicon.svg", "favicon.ico", "robot
 // The policies page lists live prices and countries, so it can never disagree with the shop.
 const catalog = require("../shop/catalog.json");
 const rand = (n) => "R\u00a0" + String(n).replace(/\B(?=(\d{3})+(?!\d))/g, "\u00a0");
-const rows = catalog.sizes.map((s) => `<tr><td>${s.w} \u00d7 ${s.h}</td><td>${Math.round(s.w * 2.54)} \u00d7 ${Math.round(s.h * 2.54)}</td><td class="num">${rand(s.price)}</td></tr>`).join("");
+const cmOf = (s) => s.cm || [Math.round(s.w * 2.54), Math.round(s.h * 2.54)];
+const cell = (n) => `<td class="num">${n ? rand(n) : "&ndash;"}</td>`;
+const rows = catalog.sizes.map((s) => `<tr><td>${s.w} \u00d7 ${s.h}</td><td>${cmOf(s)[0]} \u00d7 ${cmOf(s)[1]}</td>${cell((s.prices || {}).slim || s.price)}${cell((s.prices || {}).thick)}${cell((s.prices || {}).framed)}</tr>`).join("");
 const names = catalog.countries.map((c) => c.name);
 const countries = "I currently deliver to " + names.slice(0, -1).join(", ") + " and " + names[names.length - 1];
 const page = fs.readFileSync(path.join(root, "policies.html"), "utf8").replace("<!--PRICES-->", rows).replace("<!--COUNTRIES-->", countries);

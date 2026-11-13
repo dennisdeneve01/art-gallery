@@ -25,11 +25,12 @@ async function send(templateId, params) {
   return { sent: true };
 }
 
-// details: { reference, title, sizeId, w, h, totalZAR, recipient, siteBase }
+// details: { reference, title, sizeId, w, h, thickness, delivery, totalZAR, recipient, siteBase }
 async function orderEmails(d) {
   const r = d.recipient;
   const address = [r.line1, r.line2, r.city, r.state, r.postcode, d.countryName || r.country].filter(Boolean).join(", ");
-  const size = `${d.w} x ${d.h} in (${Math.round(d.w * 2.54)} x ${Math.round(d.h * 2.54)} cm)`;
+  const kind = d.thickness === "framed" ? `framed print${d.frame ? ", " + String(d.frame).replace("-", " ") + " frame" : ""}` : d.thickness ? `${d.thickness} canvas` : "";
+  const size = `${d.w} x ${d.h} in (${Math.round(d.w * 2.54)} x ${Math.round(d.h * 2.54)} cm)` + (kind ? `, ${kind}` : "") + (d.delivery ? `, ${d.delivery.toLowerCase()} delivery` : "");
   const out = {};
   try {
     out.customer = await send(process.env.EMAILJS_ORDER_TEMPLATE, {

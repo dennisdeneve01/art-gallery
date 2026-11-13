@@ -9,15 +9,16 @@ directory = "./dist"
 binding = "ASSETS"
 run_worker_first = ["/api/*"]
 
-# Non-secret settings. Switching to real printing is a deliberate commit:
-# change PRODIGI_ENV to "live" here (and add the live key as a secret).
-# SITE_URL is left out on purpose: the site works out its own address.
+# Non-secret settings. SITE_URL is left out on purpose: the site works out its own address.
 [vars]
-PRODIGI_ENV = "sandbox"
-PRODIGI_CURRENCY = "GBP"
-FX_RATE = "24"
+# Gelato prints the canvases. "draft" = test mode: orders are created as drafts that
+# Gelato never prints or charges for. Change to "live" (and commit) to print for real.
+GELATO_MODE = "draft"
+GELATO_CURRENCY = "EUR"
+# Rand per 1 EUR, used to turn Gelato's delivery price into rand. Update now and then.
+FX_RATE = "19"
+# Extra on top of Gelato's delivery price, to absorb exchange-rate swings (0.15 = 15%).
 SHIPPING_MARKUP = "0.15"
-SHIPPING_METHOD = "Standard"
 
 # Order emails go through EmailJS (same account as the contact forms). These ids are public.
 # EMAILJS_ORDER_TEMPLATE is the buyer's confirmation email.
@@ -27,4 +28,4 @@ EMAILJS_NOTIFY_TEMPLATE = "template_0cl8dn6"
 EMAILJS_ORDER_TEMPLATE = "template_rpxbb4r"
 
 # Secrets (set in the Cloudflare dashboard, never in this file):
-#   PRODIGI_API_KEY, PAYSTACK_SECRET_KEY, EMAILJS_PRIVATE_KEY (optional: turns order emails on)
+#   GELATO_API_KEY, PAYSTACK_SECRET_KEY, EMAILJS_PRIVATE_KEY (optional: turns order emails on)

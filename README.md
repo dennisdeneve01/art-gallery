@@ -5,7 +5,7 @@ Dennis Hammerschlag's painting portfolio — a single-page, responsive site for 
 ## What's here
 
 - `index.html` — the whole site (HTML, CSS and JS in one file). No build step, no dependencies to install.
-- `api/` — small server functions for the canvas-print shop (Paystack payments + Prodigi printing). See **Selling canvas prints** below.
+- `api/` — small server functions for the print shop (Paystack payments + Gelato printing). See **Selling canvas prints** below.
 - `shop/` — print sizes, prices and the list of paintings for sale.
 - `images/` — one photo per painting (about 1400px on the long side).
 - `images/thumbs/` — a smaller version of each photo, used in the gallery grid.
@@ -45,29 +45,30 @@ Cloudflare setup (Workers & Pages -> Create application -> import this GitHub re
 
 The email link uses dennishammerschlag01@gmail.com (search for `mailto:` in `index.html`); the contact form delivers to whatever address the EmailJS template is set up with.
 
-## Selling canvas prints
+## Selling prints
 
-How it works: visitor opens a painting -> **Buy a canvas print** -> picks a size -> enters delivery details -> sees shipping + total -> pays on Paystack -> Paystack tells `api/webhook.js` -> the server re-checks the payment with Paystack and places the order with Prodigi -> Prodigi prints, stretches and ships it.
+How it works: visitor opens a painting -> **Buy a print** -> picks slim canvas, thick canvas or framed print (and a frame colour) and a size -> enters delivery details -> chooses standard or express delivery (live prices and delivery times from Gelato) -> pays on Paystack -> Paystack tells `api/webhook.js` -> the server re-checks the payment with Paystack and places the order with Gelato -> Gelato prints it at the lab closest to the buyer (South Africa for South African orders) and ships it.
 
-Prices are always worked out on the server (`api/_lib/shop.js`), never trusted from the browser. A payment whose amount doesn't match is flagged in the Cloudflare logs (`[ORDER FLAGGED]`) instead of being printed, and Prodigi's idempotency key means one payment can never create two print orders.
+Prices are always worked out on the server (`api/_lib/shop.js`), never trusted from the browser. A payment whose amount doesn't match is flagged in the Cloudflare logs (`[ORDER FLAGGED]`) instead of being printed. Gelato has no idempotency key, so the server checks for an existing order with the same reference before creating one, only the webhook creates orders straight away, and the thank-you page only steps in 90 seconds after payment.
 
 ### Files you'll touch
 
-- `.env` (copy `.env.example`; used by `npm run check-skus`). On Cloudflare, secrets are set in the dashboard and other settings in `wrangler.toml`. For `npm run dev`, put the two secrets in `.dev.vars`.
-- `shop/catalog.json`: sizes and **prices in rand**. The prices in there are placeholders.
+- `.env` (copy `.env.example`; used by `npm run gelato-products`). On Cloudflare, secrets are set in the dashboard and other settings in `wrangler.toml`. For `npm run dev`, put the secrets in `.dev.vars`.
+- `shop/catalog.json`: sizes and **prices in rand** for each option (`prices.slim`, `prices.thick` at a 75% margin; `prices.framed`, premium matte framed poster, at 60%), from Gelato's South African price lists (`cost`, in EUR). A size without a price for an option isn't offered in it.
+- `shop/gelato-products.json`: Gelato's product code for each size, option (slim, thick, framed + frame colour) and orientation. Filled in by `npm run gelato-products`; a size without a code is not offered.
 - `shop/print-files.json`: `"painting-slug": "https://link-to-high-res-file.jpg"` for each painting. Slugs are the image file names, e.g. `burnt-horizon`.
 - Run `npm run sync-catalog` after adding or removing paintings in `index.html`. Set `"forSale": false` on a painting in `catalog.json` to hide its Buy button.
 
 ### Commands
 
-- `npm test`: runs the whole payment -> print flow against pretend Paystack/Prodigi servers (nothing real is called).
-- `npm run check-skus`: asks Prodigi (with your sandbox key) whether each canvas size/product code exists, and prints your real cost + shipping to South Africa so you can price properly. Pass a country code to check elsewhere: `npm run check-skus -- GB`.
+- `npm test`: runs the whole payment -> print flow against pretend Paystack/Gelato servers (nothing real is called).
+- `npm run gelato-products`: looks up Gelato's product codes for every size and thickness and saves them. Add a country to also price a sample delivery and see where it's printed: `npm run gelato-products -- ZA`.
 - `npm run dev`: builds `dist/` and runs the site and API together on your computer with Cloudflare's local runtime (`wrangler dev`) (needs `.dev.vars`).
 - `npm run build`: copies the public site into `dist/`.
 
 ### Going live checklist
 
-1. Prodigi: set the live API key as a Cloudflare secret and change `PRODIGI_ENV` to `live` in `wrangler.toml` (live mode only sells paintings that have a high-res file in `print-files.json`).
+1. Gelato: change `GELATO_MODE` to `live` in `wrangler.toml` (until then every order is a draft that Gelato never prints or charges for). Live mode only sells paintings that have a high-res file in `print-files.json`. Add a payment method in the Gelato dashboard.
 2. Paystack: finish business verification, switch to `sk_live_...`, enable international cards if you want overseas buyers.
 3. Paystack -> Settings -> API Keys & Webhooks: set the webhook URL to `https://YOUR-SITE/api/webhook`.
 4. Order one real canvas of your own painting to yourself and check the colours.
