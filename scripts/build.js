@@ -20,4 +20,28 @@ const names = catalog.countries.map((c) => c.name);
 const countries = "I currently deliver to " + names.slice(0, -1).join(", ") + " and " + names[names.length - 1];
 const page = fs.readFileSync(path.join(root, "policies.html"), "utf8").replace("<!--PRICES-->", rows).replace("<!--COUNTRIES-->", countries);
 fs.writeFileSync(path.join(out, "policies.html"), page);
+// robots.txt and a sitemap with every painting's image, so Google can find and index the paintings
+// (the gallery is drawn by JavaScript, so the image sitemap is how search engines see each one).
+const SITE = "https://dennishammerschlagart.com";
+const xml = (t) => String(t).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+const html = fs.readFileSync(path.join(root, "index.html"), "utf8");
+const m = html.match(/const pieces = (\[[\s\S]*?\n\s*\]);/);
+const pieces = m ? JSON.parse(m[1]) : [];
+const today = new Date().toISOString().slice(0, 10);
+const images = pieces.map((p) => `    <image:image><image:loc>${SITE}/${xml(p.img)}</image:loc><image:title>${xml(p.title)}</image:title>` +
+  (p.desc ? `<image:caption>${xml(p.desc)}</image:caption>` : "") + `</image:image>`).join("\n");
+fs.writeFileSync(path.join(out, "sitemap.xml"), `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+  <url>
+    <loc>${SITE}/</loc>
+    <lastmod>${today}</lastmod>
+${images}
+  </url>
+  <url>
+    <loc>${SITE}/policies</loc>
+    <lastmod>${today}</lastmod>
+  </url>
+</urlset>
+`);
+fs.writeFileSync(path.join(out, "robots.txt"), `User-agent: *\nAllow: /\nDisallow: /api/\n\nSitemap: ${SITE}/sitemap.xml\n`);
 console.log("Built dist/:", fs.readdirSync(out).join(", "));
