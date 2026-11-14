@@ -183,7 +183,27 @@
     background: var(--bg-raised); border: 1px solid var(--line); max-width: 1040px; width: 100%;
     max-height: calc(100vh - 40px); overflow-y: auto; display: grid; grid-template-columns: 1.5fr 1fr; box-shadow: var(--shadow);
   }
-  @media (max-width: 640px){ .lb-card{ grid-template-columns: 1fr; } }
+  @media (max-width: 640px){
+    .lb-card{ grid-template-columns: 1fr; }
+    #lightbox{ padding: 0; align-items: stretch; }
+    #lightbox .lb-card{ max-width: none; max-height: none; height: 100%; border: 0; box-shadow: none; display: flex; flex-direction: column; overscroll-behavior: contain; }
+    #lightbox .lb-close{ position: fixed; top: calc(12px + env(safe-area-inset-top, 0px)); right: 12px; z-index: 5; width: 40px; height: 40px; background: rgba(16,15,13,.82); }
+    #lightbox .lb-stage{ flex: none; min-height: 0; border-right: 0; border-bottom: 1px solid var(--line); padding: calc(58px + env(safe-area-inset-top, 0px)) 44px 26px; gap: 18px; }
+    #lightbox .lb-stage .shop-floor{ height: 92px; --vscale: .78; }
+    /* arrows sit low, either side of the "7 / 36" counter, clear of the painting and the close button */
+    #lightbox .lb-nav{ width: 38px; height: 38px; font-size: 1.3rem; top: auto; bottom: 4px; transform: none; background: rgba(16,15,13,.7); }
+    #lightbox .lb-prev{ left: calc(50% - 82px); } #lightbox .lb-next{ right: calc(50% - 82px); }
+    #lightbox .lb-count{ bottom: 15px; }
+    #lightbox .lb-stage{ padding-bottom: 50px; }
+    #lightbox .lb-info{ flex: 1 0 auto; padding: 22px 20px 0; }
+    #lightbox .lb-info h3{ font-size: 1.55rem; }
+    #lightbox .lb-print{ margin: -2px 0 0; text-align: center; font-size: 0.78rem; white-space: nowrap; }
+    #lightbox .lb-print .lp-long{ display: none; } #lightbox .lb-print .lp-short{ display: inline; }
+    /* the buttons stay in reach at the bottom of the screen */
+    #lightbox .lb-actions{ position: sticky; bottom: 0; margin: 18px -20px 0; padding: 14px 20px calc(14px + env(safe-area-inset-bottom, 0px));
+      background: linear-gradient(rgba(26,24,21,.0), var(--bg-raised) 18px); display: grid; grid-template-columns: 1fr; gap: 10px; }
+    #lightbox .lb-actions .btn{ justify-content: center; padding-block: 14px; }
+  }
   .lb-canvas{ position: relative; aspect-ratio: 4/5; align-self: center; background: #0b0a09; }
   .lb-canvas::after{
     content: ""; position: absolute; inset: 0; opacity: 0.16; mix-blend-mode: overlay; pointer-events: none;
@@ -199,6 +219,13 @@
   .lb-nav:hover, .lb-nav:focus-visible{ border-color: var(--accent); color: var(--accent); outline: none; }
   .lb-prev{ left: 12px; }
   .lb-next{ right: 12px; }
+  /* detail view: the painting hangs framed on the gallery wall, with its companion on the floor */
+  .lb-stage{ border-right: 1px solid var(--line); min-height: 100%; }
+  @media (min-width: 641px){ #lightbox .lb-card{ height: min(680px, calc(100vh - 40px)); } }
+  .lb-stage .lb-canvas{ width: 300px; aspect-ratio: 4 / 5; }
+  .lb-stage .lb-nav{ top: calc(50% - 50px); }
+  .lb-count{ position: absolute; left: 0; right: 0; bottom: 10px; text-align: center; font-size: 0.68rem; letter-spacing: 0.14em; color: var(--muted-2); pointer-events: none; }
+  .lb-stage .shop-floor{ --vscale: 1; }
   .lb-info{ padding: clamp(22px, 4vw, 40px); display: flex; flex-direction: column; }
   .lb-info .cat{ font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); }
   .lb-info h3{ font-size: clamp(1.5rem, 3vw, 1.9rem); margin-top: 10px; }
@@ -207,11 +234,11 @@
   .lb-details{ margin: 22px 0 0; display: grid; grid-template-columns: auto 1fr; gap: 9px 22px; font-size: 0.88rem; border-top: 1px solid var(--line); padding-top: 18px; }
   .lb-details dt{ font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted-2); align-self: center; }
   .lb-details dd{ margin: 0; color: var(--text); }
-  .lb-print{ margin-top: auto; padding-top: 26px; font-size: 0.88rem; color: var(--muted); }
+  .lb-print .lp-short{ display: none; }
+  .lb-print{ flex: 1 0 100%; margin: 4px 0 0; font-size: 0.84rem; color: var(--muted); }
   .lb-print strong{ color: var(--accent); font-weight: 500; }
   .lb-print a{ color: var(--muted); text-underline-offset: 3px; margin-left: 8px; white-space: nowrap; }
   .lb-print a:hover{ color: var(--accent); }
-  .lb-print:not([hidden]) + .lb-actions{ margin-top: 0; padding-top: 14px; }
   .plate .print-from{ font-size: 0.74rem; color: var(--muted-2); margin-top: 8px; letter-spacing: 0.02em; }
   .plate .print-from b{ color: var(--accent); font-weight: 400; }
   .lb-actions{ margin-top: auto; padding-top: 28px; display: flex; gap: 12px; flex-wrap: wrap; }
@@ -298,16 +325,21 @@
   .shop-card.solo .shop-stage{ display: none; }
   @media (max-width: 640px){
     .shop-card{ grid-template-columns: 1fr; }
-    .shop-card .shop-stage{ padding: 22px 18px 20px; gap: 0; border-right: 0; border-bottom: 1px solid var(--line); }
-    .shop-card .shop-floor{ display: none; }
+    .shop-card .shop-stage{ padding: 22px 18px 18px; gap: 14px; border-right: 0; border-bottom: 1px solid var(--line); }
+    .shop-card .shop-floor{ height: 78px; --vscale: .7; }
     #shopCanvas{ width: auto !important; height: 150px; box-shadow: 0 0 0 1px var(--accent-dim), 0 0 0 5px #1c1710, 0 0 0 6px var(--accent-dim), 0 16px 30px rgba(0,0,0,.6) !important; }
   }
   /* click a painting to see it large */
   #shopCanvas, #lbCanvas{ cursor: zoom-in; }
   #shopCanvas:focus-visible{ outline: 2px solid var(--accent); outline-offset: 12px; }
-  .zoom{ position: fixed; inset: 0; z-index: 200; display: flex; align-items: center; justify-content: center; padding: clamp(12px, 3vw, 44px); background: rgba(6,5,4,.95); cursor: zoom-out; }
+  /* enlarged view: the same painting, still hanging on the gallery wall, just closer */
+  .zoom{ position: fixed; inset: 0; z-index: 200; display: flex; align-items: center; justify-content: center; padding: clamp(30px, 5vw, 64px) clamp(26px, 5vw, 64px) clamp(56px, 9vh, 96px); cursor: zoom-out;
+    background: radial-gradient(ellipse 70% 60% at 50% 42%, rgba(195,154,90,.20), transparent 72%), linear-gradient(#151310, #0b0a09); }
+  .zoom::after{ content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: clamp(34px, 6vh, 64px); pointer-events: none;
+    border-top: 1px solid rgba(195,154,90,.26); background: linear-gradient(rgba(195,154,90,.10), rgba(195,154,90,.02)); }
   .zoom[hidden]{ display: none; }
-  .zoom img{ max-width: 100%; max-height: 100%; object-fit: contain; box-shadow: var(--shadow); }
+  .zoom img{ max-width: 100%; max-height: 100%; object-fit: contain;
+    box-shadow: 0 0 0 1px var(--accent-dim), 0 0 0 clamp(6px, 1vw, 11px) #1c1710, 0 0 0 calc(clamp(6px, 1vw, 11px) + 1px) var(--accent-dim), 0 34px 70px rgba(0,0,0,.7); }
   /* the painting "hung" on a gallery wall, with a little visitor strolling past */
   .shop-stage{
     position: relative; align-self: stretch; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 30px;
@@ -489,8 +521,8 @@
       <div class="portrait"><img src="images/dennis.jpg" alt="Dennis Hammerschlag" width="750" height="1000" loading="lazy" decoding="async"></div>
       <div>
         <h2>About the artist</h2>
-        <p>My father is a poet who paints. I learned from watching him, on the south coast, when I was seven. I painted until I was twelve, then stopped, the way you stop doing most things you loved as a child.</p>
-        <p>After finishing my computer science degree at UCT, I had &lsquo;graduated&rsquo; my analytical mind at the expense of my artist&rsquo;s mind, which fell by the wayside. Two years ago I started again &mdash; not to recover what I'd lost, but to see what an adult's hand does with a child's habit. What comes out now is less about getting a scene technically right and more about getting it felt.</p>
+        <p>Painting started for me at seven, on the South Coast of KwaZulu-Natal: salt air, wide skies, and colour everywhere you looked. By twelve, the brushes had been packed away.</p>
+        <p>I went on to study computer science at UCT and spent years building things out of logic. Two years ago I came back to the canvas and found it had waited. These days I care less about getting a scene right, and more about getting it felt.</p>
         <p class="pull">&ldquo;The brush remembered what I'd forgotten.&rdquo;</p>
       </div>
     </div>
@@ -549,9 +581,12 @@
 <div class="lightbox" id="lightbox" hidden>
   <div class="lb-card" role="dialog" aria-modal="true" aria-labelledby="lbTitle">
     <button class="lb-close" id="lbClose" aria-label="Close">&times;</button>
-    <div class="lb-canvas" id="lbCanvas">
+    <div class="shop-stage lb-stage" id="lbStage">
+      <div class="lb-canvas" id="lbCanvas" role="button" tabindex="0" aria-label="Enlarge the painting" title="Tap to enlarge"></div>
+      <div class="shop-floor" id="lbFloor" aria-hidden="true"><div class="visitor" id="lbVisitor"><div class="v-flip"></div></div></div>
       <button class="lb-nav lb-prev" id="lbPrev" aria-label="Previous piece">&lsaquo;</button>
       <button class="lb-nav lb-next" id="lbNext" aria-label="Next piece">&rsaquo;</button>
+      <p class="lb-count" id="lbCount" aria-hidden="true"></p>
     </div>
     <div class="lb-info">
       <p class="cat" id="lbCat"></p>
@@ -559,10 +594,10 @@
       <p class="meta" id="lbMeta"></p>
       <p class="desc" id="lbDesc"></p>
       <dl class="lb-details" id="lbDetails" hidden></dl>
-      <p class="lb-print" id="lbPrint" hidden></p>
       <div class="lb-actions">
         <button class="btn primary" id="lbBuy" type="button" hidden>Buy a print</button>
         <a class="btn" id="lbInquire" href="#contact">Inquire about this piece</a>
+        <p class="lb-print" id="lbPrint" hidden></p>
       </div>
     </div>
   </div>
@@ -607,7 +642,7 @@
     "h": 1400,
     "thumb": "images/thumbs/burnt-horizon.jpg",
     "img": "images/burnt-horizon.jpg",
-    "desc": "Two acacias against a sky burning down into the grass."
+    "desc": "The sun has already gone, but the sky hasn't let go of it. Two acacias stand in the last of the heat, one near, one far, the grass glowing beneath them."
   },
   {
     "title": "Fire at Moonrise",
@@ -616,25 +651,25 @@
     "h": 1400,
     "thumb": "images/thumbs/fire-at-moonrise.jpg",
     "img": "images/fire-at-moonrise.jpg",
-    "desc": "A lighthouse, a crescent moon and a bonfire on the sand, the last green of the sky sinking into night."
+    "desc": "A beach fire, a lighthouse, and a sliver of moon: the three lights of a coastal night."
   },
   {
-    "title": "The Lookout",
+    "title": "Mother's Watch",
     "category": "Wildlife",
     "w": 1400,
     "h": 613,
     "thumb": "images/thumbs/the-lookout.jpg",
     "img": "images/the-lookout.jpg",
-    "desc": "A cheetah keeps watch from the rocks while her four cubs peer over the edge."
+    "desc": "High on the rocks, a mother keeps watch while her four cubs line up behind her, copying her stare without quite knowing what they're looking for."
   },
   {
-    "title": "Aurora & Embers",
+    "title": "Campfire Aurora",
     "category": "Landscapes",
     "w": 1400,
     "h": 1104,
     "thumb": "images/thumbs/aurora-and-embers.jpg",
     "img": "images/aurora-and-embers.jpg",
-    "desc": "Green light pouring over the pines, with a campfire the only warmth in the frame."
+    "desc": "The aurora drapes itself over the pine ridge in long green folds, while far below a campfire burns its own small, warm patch out of the dark."
   },
   {
     "title": "Meadow in Bloom",
@@ -643,34 +678,34 @@
     "h": 1389,
     "thumb": "images/thumbs/meadow-in-bloom.jpg",
     "img": "images/meadow-in-bloom.jpg",
-    "desc": "A figure in red wanders a meadow of wildflowers, with cypresses, haystacks and mountains under a churning blue sky."
+    "desc": "A figure in red takes the long way through a meadow full of wildflowers. Cypresses lean in, haystacks wait in the fields, and the sky swirls overhead as if it's in a hurry."
   },
   {
-    "title": "Dusk Walker",
+    "title": "The Long Walk Home",
     "category": "Wildlife",
     "w": 1199,
     "h": 1400,
     "thumb": "images/thumbs/dusk-walker.jpg",
     "img": "images/dusk-walker.jpg",
-    "desc": "An elephant walks out of the grey as the sun sinks behind him."
+    "desc": "An elephant steps out of the dusky haze with the sun sinking at his back, every slow footstep sure of where it's going."
   },
   {
-    "title": "Red Sail, Quiet Harbour",
+    "title": "Tied Up for the Night",
     "category": "Seascapes",
     "w": 1400,
     "h": 1006,
     "thumb": "images/thumbs/red-sail-quiet-harbour.jpg",
     "img": "images/red-sail-quiet-harbour.jpg",
-    "desc": "Boats tied up at the quay, one red sail catching what light is left."
+    "desc": "Boats lined up at the quay like they're waiting for morning, their masts still and their reflections barely shivering. Only the red sail looks like it might still be dreaming of the open sea."
   },
   {
-    "title": "Wildfire",
+    "title": "Ignition",
     "category": "Abstracts",
     "w": 1061,
     "h": 1400,
     "thumb": "images/thumbs/wildfire.jpg",
     "img": "images/wildfire.jpg",
-    "desc": "Orange, gold and white flames licking up out of the black."
+    "desc": "The moment a spark decides to become a flame."
   },
   {
     "title": "Through the Palms",
@@ -679,7 +714,7 @@
     "h": 1059,
     "thumb": "images/thumbs/through-the-palms.jpg",
     "img": "images/through-the-palms.jpg",
-    "desc": "A sailboat on bright water, framed by two leaning palms."
+    "desc": "The kind of view you'd stay on holiday for."
   },
   {
     "title": "Night Howl",
@@ -688,16 +723,16 @@
     "h": 1400,
     "thumb": "images/thumbs/night-howl.jpg",
     "img": "images/night-howl.jpg",
-    "desc": "A lone wolf on a ridge, calling out to the Milky Way."
+    "desc": "A wolf on the ridge, singing to the stars."
   },
   {
-    "title": "Roar & Wonder",
+    "title": "Cub Life",
     "category": "Wildlife",
     "w": 1400,
     "h": 1010,
     "thumb": "images/thumbs/roar-and-wonder.jpg",
     "img": "images/roar-and-wonder.jpg",
-    "desc": "Two lion cubs: one mid-yawn, the other quietly taking the world in."
+    "desc": "Brothers on a lazy afternoon: one trying out his roar, the other taking it all in. One day they'll rule the plains, but not today."
   },
   {
     "title": "Where the Sun Lands",
@@ -706,34 +741,34 @@
     "h": 1400,
     "thumb": "images/thumbs/where-the-sun-lands.jpg",
     "img": "images/where-the-sun-lands.jpg",
-    "desc": "A gold sun hangs in a red sky above a deep blue sea."
+    "desc": "The sun is coming in to land, and the sea has cleared the runway."
   },
   {
-    "title": "Amber Eyes",
+    "title": "Night Watch",
     "category": "Wildlife",
     "w": 1400,
     "h": 966,
     "thumb": "images/thumbs/amber-eyes.jpg",
     "img": "images/amber-eyes.jpg",
-    "desc": "Only the eyes break the surface."
+    "desc": "The eyes rest on the waterline, mirrored perfectly in the still river. Below, a long grin full of teeth waits for something to come a little closer."
   },
   {
-    "title": "Fire Lily",
+    "title": "Flame Lily",
     "category": "Florals",
     "w": 1118,
     "h": 1400,
     "thumb": "images/thumbs/fire-lily.jpg",
     "img": "images/fire-lily.jpg",
-    "desc": "An orange lily glowing against black."
+    "desc": "The dark only makes it burn brighter."
   },
   {
-    "title": "Breach",
+    "title": "Leap of Joy",
     "category": "Wildlife",
     "w": 1400,
     "h": 1082,
     "thumb": "images/thumbs/breach.jpg",
     "img": "images/breach.jpg",
-    "desc": "A dolphin at the top of its leap, spray still hanging in the air."
+    "desc": "Halfway between the sea and the sky, and loving every second."
   },
   {
     "title": "Autumn Valley",
@@ -742,7 +777,7 @@
     "h": 967,
     "thumb": "images/thumbs/autumn-valley.jpg",
     "img": "images/autumn-valley.jpg",
-    "desc": "A stream winding down through a valley, with pink along the horizon."
+    "desc": "The stream knows the way down; the colours are just along for the ride."
   },
   {
     "title": "Old Soul",
@@ -1074,7 +1109,7 @@
 
   // ---- lightbox ----
   const lightbox = document.getElementById("lightbox");
-  const lbCanvas = document.getElementById("lbCanvas");
+  const lbCanvas = document.getElementById("lbCanvas"), lbCount = document.getElementById("lbCount");
   const lbDetails = document.getElementById("lbDetails"), lbPrint = document.getElementById("lbPrint");
   const lbCat = document.getElementById("lbCat");
   const lbTitle = document.getElementById("lbTitle");
@@ -1087,6 +1122,9 @@
   function fillLightbox(p){
     lbCanvas.style.background = `#0b0a09 url("${p.img}") center / cover no-repeat`;
     lbCanvas.style.aspectRatio = `${p.w} / ${p.h}`;
+    lbCanvas.setAttribute("aria-label", `Enlarge ${p.title}`);
+    lbCount.textContent = currentFiltered.length > 1 ? `${currentFiltered.indexOf(p) + 1} / ${currentFiltered.length}` : "";
+    sizeLbArt(p);
     lbCat.textContent = p.category;
     lbTitle.textContent = p.title;
     const meta = p.credit || "";
@@ -1100,27 +1138,50 @@
     lbDetails.innerHTML = rows.map(r => `<dt>${esc(r[0])}</dt><dd>${esc(r[1])}</dd>`).join("");
     lbDetails.hidden = !rows.length;
     const from = printFrom(p);
-    lbPrint.innerHTML = from ? `Canvas and framed prints from <strong>${money(from)}</strong><a href="/policies#pricing">All sizes and prices</a>` : "";
+    lbPrint.innerHTML = from ? `<span class="lp-long">Canvas and framed prints</span><span class="lp-short">Prints</span> from <strong>${money(from)}</strong><a href="/policies#pricing">All sizes and prices</a>` : "";
     lbPrint.hidden = !from;
     const buy = document.getElementById("lbBuy");
     if (buy) { const can = !!(typeof shopData !== "undefined" && shopData && shopData.items[p.img.replace(/^.*\//, "").replace(/\.[a-z]+$/i, "")]); buy.hidden = !can; lbInquire.classList.toggle("primary", !can); }
   }
+  // The framed painting fills the wall without ever being cropped: as wide as the wall allows,
+  // but never taller than the space left above the floor.
+  function sizeLbArt(p){
+    if (!p || lightbox.hidden) return;
+    const stage = document.getElementById("lbStage"), cs = getComputedStyle(stage);
+    const phone = window.matchMedia("(max-width: 640px)").matches;
+    const maxW = stage.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight) - 20;
+    let maxH;
+    if (phone) maxH = Math.min(window.innerHeight * 0.46, 460);
+    else { // fixed-size card: fit the painting into the wall space above the floor, whatever its shape
+      const floor = stage.querySelector(".shop-floor");
+      maxH = stage.clientHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom) - (floor ? floor.offsetHeight : 0) - parseFloat(cs.rowGap || 0) - 24;
+    }
+    lbCanvas.style.width = Math.max(120, Math.round(Math.min(maxW, maxH * p.w / p.h))) + "px";
+  }
   function openLightbox(p){
     lastFocused = document.activeElement;
     currentIndex = currentFiltered.indexOf(p);
-    fillLightbox(p);
     lightbox.hidden = false;
+    document.body.style.overflow = "hidden";
+    fillLightbox(p);
+    lbWalker.start(p);
     document.getElementById("lbClose").focus();
   }
   function closeLightbox(){
+    lbWalker.stop();
     lightbox.hidden = true;
+    document.body.style.overflow = "";
     if (lastFocused) lastFocused.focus();
   }
   function showByOffset(offset){
     if (!currentFiltered.length) return;
     currentIndex = (currentIndex + offset + currentFiltered.length) % currentFiltered.length;
-    fillLightbox(currentFiltered[currentIndex]);
+    const p = currentFiltered[currentIndex];
+    fillLightbox(p);
+    lbWalker.start(p);
+    document.querySelector("#lightbox .lb-card").scrollTop = 0;
   }
+  window.addEventListener("resize", () => { if (!lightbox.hidden) sizeLbArt(currentFiltered[currentIndex]); });
   document.getElementById("lbClose").addEventListener("click", closeLightbox);
   document.getElementById("lbPrev").addEventListener("click", () => showByOffset(-1));
   document.getElementById("lbNext").addEventListener("click", () => showByOffset(1));
@@ -1458,15 +1519,20 @@
   // Movement: the companion wanders in from one side, drifts nearer to and further from the wall as it goes,
   // slows down and stops in front of the painting (sometimes stepping back for a better look), then carries on
   // out the other side. A little later it comes back the other way. Every pass is slightly different.
-  let visitorRun = 0;
-  function stopVisitor(){ visitorRun++; }
-  function startVisitor(p){
-    stopVisitor();
-    const run = visitorRun, floor = document.getElementById("shopFloor"), v = document.getElementById("visitor");
-    if (!floor || !v) return;
+  // One "walker" per stage (the detail view and the checkout each have their own floor).
+  function makeWalker(floorId, visitorId){
+    let visitorRun = 0;
+    const stop = () => { visitorRun++; };
+    const start = (p) => { stop(); walk(p); };
+    function walk(p){
+    const run = visitorRun, floor = document.getElementById(floorId), v = document.getElementById(visitorId);
+    if (!floor || !v || !p) return;
     const kind = castFor(p), flip = v.querySelector(".v-flip");
     let c = CAST[kind];
     if (c.variants) c = c.variants[Math.floor(Math.random() * c.variants.length)];
+    // smaller floors (phones) get smaller, slower companions
+    const S = parseFloat(getComputedStyle(floor).getPropertyValue("--vscale")) || 1;
+    if (S !== 1) c = Object.assign({}, c, { w: Math.round(c.w * S), h: Math.round(c.h * S), speed: c.speed * S });
     v.dataset.kind = kind === "visitor" ? "person" : kind; v.className = "visitor";
     v.style.width = c.w + "px"; v.style.height = c.h + "px"; v.style.transition = "none";
     flip.innerHTML = c.svg; flip.style.transform = "";
@@ -1574,6 +1640,11 @@
     place(x, d);
     requestAnimationFrame(frame);
   }
+    return { start, stop };
+  }
+  const shopWalker = makeWalker("shopFloor", "visitor");
+  const lbWalker = makeWalker("lbFloor", "lbVisitor");
+  const startVisitor = (p) => shopWalker.start(p), stopVisitor = () => shopWalker.stop();
 
   function openShop(p){
     const slug = slugOf(p);
@@ -1588,7 +1659,9 @@
     document.getElementById("shopCat").textContent = "Buy a print";
     document.getElementById("shopTitle").textContent = p.title;
     lightbox.hidden = true;
+    lbWalker.stop();
     shop.hidden = false;
+    document.body.style.overflow = "hidden";
     viewSize();
     startVisitor(p);
     document.getElementById("shopClose").focus();
@@ -1597,8 +1670,8 @@
     stopVisitor();
     shop.hidden = true;
     clearTimeout(pollTimer);
-    if (backToLightbox && sale) { lightbox.hidden = false; document.getElementById("lbClose").focus(); }
-    else if (lastFocused) lastFocused.focus();
+    if (backToLightbox && sale) { lightbox.hidden = false; lbWalker.start(sale.piece); document.getElementById("lbClose").focus(); }
+    else { document.body.style.overflow = ""; if (lastFocused) lastFocused.focus(); }
     sale = null;
   }
 
@@ -1928,14 +2001,16 @@
 
   // ---- swipe left / right on a phone to move between paintings ----
   let touchX = null, touchY = null, swiped = false;
-  lbCanvas.addEventListener("touchstart", (e) => { const t = e.changedTouches[0]; touchX = t.clientX; touchY = t.clientY; swiped = false; }, { passive: true });
-  lbCanvas.addEventListener("touchend", (e) => {
+  const lbStageEl = document.getElementById("lbStage");
+  lbStageEl.addEventListener("touchstart", (e) => { const t = e.changedTouches[0]; touchX = t.clientX; touchY = t.clientY; swiped = false; }, { passive: true });
+  lbStageEl.addEventListener("touchend", (e) => {
     if (touchX === null) return;
     const t = e.changedTouches[0], dx = t.clientX - touchX, dy = t.clientY - touchY;
     touchX = null;
     if (Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy) * 1.5) { swiped = true; showByOffset(dx < 0 ? 1 : -1); }
   }, { passive: true });
   lbCanvas.addEventListener("click", (e) => { if (swiped) { swiped = false; e.stopImmediatePropagation(); } }, true);
+  lbCanvas.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openZoom(currentFiltered[currentIndex], lbCanvas); } });
 </script>
 
 </body>
