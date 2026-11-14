@@ -1,6 +1,6 @@
-// Where Prodigi downloads the print-quality file for each painting.
+// Where Gelato downloads the print-quality file for each painting.
 //
-// Put the full-resolution image for each painting somewhere Prodigi can reach
+// Put the full-resolution image for each painting somewhere Gelato can reach
 // by a public link (see README), then list it in shop/print-files.json:
 //     { "burnt-horizon": "https://example.com/hi-res/burnt-horizon.jpg" }
 //

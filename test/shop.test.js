@@ -226,7 +226,7 @@ test("order emails: buyer confirmation and owner note go out once; a mail failur
     const buyer = state.emails.find((e) => e.template_id === "tpl_order"), owner = state.emails.find((e) => e.template_id === "tpl_notify");
     assert.equal(buyer.template_params.to_email, "jo@example.com");
     assert.equal(buyer.template_params.order_ref, c.body.reference);
-    assert.equal(buyer.template_params.painting, "Brothers");
+    assert.equal(buyer.template_params.painting, "Kings at Rest");
     assert.match(buyer.template_params.size, /^18 x 12 in .*thick canvas, standard delivery$/, "landscape painting is described wide, with depth and delivery");
     assert.equal(buyer.template_params.total, `R ${String(2550 + zar(10)).replace(/\B(?=(\d{3})+(?!\d))/g, " ")}`);
     assert.equal(buyer.accessToken, "priv");

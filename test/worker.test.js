@@ -4,7 +4,7 @@ const assert = require("node:assert/strict");
 require("./fake-gelato");
 
 test("worker routes api paths, 404s unknown api paths, passes the rest to assets", async () => {
-  process.env.PRODIGI_ENV = "sandbox";
+  process.env.GELATO_MODE = "draft";
   const worker = (await import("../src/worker.mjs")).default;
   const env = { ASSETS: { fetch: async (r) => new Response("static:" + new URL(r.url).pathname) } };
   const cat = await worker.fetch(new Request("https://shop.test/api/catalog"), env);

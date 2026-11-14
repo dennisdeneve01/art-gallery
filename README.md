@@ -25,7 +25,7 @@ Without the shop, this is a static site and works on any static host. **With the
 Cloudflare setup (Workers & Pages -> Create application -> import this GitHub repo):
 - Build command: `npm run build`
 - Deploy command: `npx wrangler deploy`
-- Secrets (Settings -> Variables and Secrets): `PRODIGI_API_KEY` and `PAYSTACK_SECRET_KEY`. Everything else (`PRODIGI_ENV`, `FX_RATE` ...) lives in `wrangler.toml`.
+- Secrets (Settings -> Variables and Secrets, type **Secret**): `GELATO_API_KEY`, `PAYSTACK_SECRET_KEY` and `EMAILJS_PRIVATE_KEY`. Everything else (`GELATO_MODE`, `FX_RATE` ...) lives in `wrangler.toml`.
 
 ## Adding or editing paintings
 

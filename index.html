@@ -89,11 +89,13 @@
   .hero-text{ grid-area: text; align-self: end; }
   .hero-cta{ grid-area: cta; align-self: start; }
   .hero-show{ grid-area: show; min-width: 0; }
-  .hero-frame{ position: relative; width: 100%; height: min(64vh, 600px); }
+  .hero-frame{ position: relative; width: 100%; --hero-h: min(64vh, 600px); height: var(--hero-h); }
   .hero-slide{ position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; padding: 12px; margin: 0; border: 0; background: none; cursor: pointer;
     opacity: 0; visibility: hidden; transition: opacity 1.2s ease, visibility 0s linear 1.2s; }
   .hero-slide.on{ opacity: 1; visibility: visible; transition: opacity 1.2s ease; }
-  .hero-slide img{ max-width: 100%; max-height: 100%; width: auto; height: auto;
+  /* every painting sits in the same square frame, on a dark mount, so the slideshow never changes size */
+  .hero-slide img{ width: min(100%, var(--hero-h) - 24px); height: auto; aspect-ratio: 1 / 1; object-fit: contain; box-sizing: border-box;
+    padding: clamp(12px, 2.2vw, 22px); background: radial-gradient(ellipse at 50% 40%, #1d1a15, #110f0d);
     box-shadow: 0 0 0 1px var(--accent-dim), 0 0 0 9px #1c1710, 0 0 0 10px var(--accent-dim), 0 34px 60px -20px rgba(0,0,0,.75); transform: scale(1); transition: transform 7s ease-out; }
   .hero-slide.on img{ transform: scale(1.025); }
   .hero-slide:focus-visible{ outline: none; }
@@ -107,7 +109,7 @@
   .hero-dots button[aria-current="true"]::before{ background: var(--accent); border-color: var(--accent); }
   @media (max-width: 860px){
     .hero{ grid-template-columns: 1fr; grid-template-areas: "text" "show" "cta"; row-gap: 30px; }
-    .hero-frame{ height: min(52vh, 440px); }
+    .hero-frame{ --hero-h: min(52vh, 440px); }
     .hero-cta .rule{ display: none; } .hero-cta .scrollcue{ margin-top: 6px; }
   }
   @media (prefers-reduced-motion: reduce){ .hero-slide img{ transition: none; } }
@@ -189,7 +191,7 @@
     #lightbox .lb-card{ max-width: none; max-height: none; height: 100%; border: 0; box-shadow: none; display: flex; flex-direction: column; overscroll-behavior: contain; }
     #lightbox .lb-close{ position: fixed; top: calc(12px + env(safe-area-inset-top, 0px)); right: 12px; z-index: 5; width: 40px; height: 40px; background: rgba(16,15,13,.82); }
     #lightbox .lb-stage{ flex: none; min-height: 0; border-right: 0; border-bottom: 1px solid var(--line); padding: calc(58px + env(safe-area-inset-top, 0px)) 44px 26px; gap: 18px; }
-    #lightbox .lb-stage .shop-floor{ height: 92px; --vscale: .78; }
+    #lightbox .lb-stage .shop-floor{ height: 92px; --vscale: .78; --front: 0px; --back: 36px; }
     /* arrows sit low, either side of the "7 / 36" counter, clear of the painting and the close button */
     #lightbox .lb-nav{ width: 38px; height: 38px; font-size: 1.3rem; top: auto; bottom: 4px; transform: none; background: rgba(16,15,13,.7); }
     #lightbox .lb-prev{ left: calc(50% - 82px); } #lightbox .lb-next{ right: calc(50% - 82px); }
@@ -328,7 +330,7 @@
   @media (max-width: 640px){
     .shop-card{ grid-template-columns: 1fr; }
     .shop-card .shop-stage{ padding: 22px 18px 18px; gap: 14px; border-right: 0; border-bottom: 1px solid var(--line); }
-    .shop-card .shop-floor{ height: 78px; --vscale: .7; }
+    .shop-card .shop-floor{ height: 78px; --vscale: .7; --front: -4px; --back: 28px; }
     #shopCanvas{ --wire: 12px; width: auto !important; height: 150px; box-shadow: 0 0 0 1px var(--accent-dim), 0 0 0 5px #1c1710, 0 0 0 6px var(--accent-dim), 0 16px 30px rgba(0,0,0,.6) !important; }
   }
   /* click a painting to see it large */
@@ -365,8 +367,8 @@
     64%{ transform: rotate(.9deg); } 82%{ transform: rotate(-.35deg); } 100%{ transform: rotate(0); }
   }
   @media (prefers-reduced-motion: reduce){ .swing{ animation: none; } }
-  .shop-floor{ position: relative; width: 100%; height: 116px; flex: none; }
-  .shop-floor::before{ content: ""; position: absolute; left: -26px; right: -26px; bottom: -30px; height: 56px; border-top: 1px solid rgba(195,154,90,.26); background: linear-gradient(rgba(195,154,90,.10), rgba(195,154,90,.02)); }
+  .shop-floor{ position: relative; width: 100%; height: 116px; flex: none; --front: -12px; --back: 46px; }
+  .shop-floor::before{ content: ""; position: absolute; left: -26px; right: -26px; bottom: -30px; height: calc(var(--back) + 42px); border-top: 1px solid rgba(195,154,90,.26); background: linear-gradient(rgba(195,154,90,.10), rgba(195,154,90,.02)); }
   .visitor{ position: absolute; left: 0; bottom: 2px; width: 46px; height: 74px; will-change: transform; transform-origin: 50% 100%; --swing: 26deg; --step: .5s; --tilt: -16deg; }
   .visitor .v-flip{ width: 100%; height: 100%; transition: transform .25s; }
   .shop-floor .visitor{ cursor: pointer; }
@@ -827,40 +829,40 @@
     "desc": "The mountains let go of winter, one cold stream at a time."
   },
   {
-    "title": "Before the Storm",
+    "title": "Ride Out the Storm",
     "category": "Wildlife",
     "w": 1350,
     "h": 1400,
     "thumb": "images/thumbs/before-the-storm.jpg",
     "img": "images/before-the-storm.jpg",
-    "desc": "Two dark horses, braced and watchful, as a cloud builds behind them."
+    "desc": "Racing the rain home across the open field."
   },
   {
-    "title": "Red Funnels",
+    "title": "Grand Departure",
     "category": "Seascapes",
     "w": 1400,
     "h": 1006,
     "thumb": "images/thumbs/red-funnels.jpg",
     "img": "images/red-funnels.jpg",
-    "desc": "An ocean liner slides past a skyline of colour."
+    "desc": "The city waves goodbye as she heads for open water."
   },
   {
-    "title": "Amber Dusk",
+    "title": "Alone with the Moon",
     "category": "Abstracts",
     "w": 1400,
     "h": 1129,
     "thumb": "images/thumbs/amber-dusk.jpg",
     "img": "images/amber-dusk.jpg",
-    "desc": "A lone figure walks the glowing sand beneath a rising moon."
+    "desc": "The sand still holds the sun's warmth; the sky already belongs to the moon."
   },
   {
-    "title": "The Road Home",
+    "title": "The Back Road",
     "category": "Landscapes",
     "w": 1400,
     "h": 991,
     "thumb": "images/thumbs/the-road-home.jpg",
     "img": "images/the-road-home.jpg",
-    "desc": "A dirt road climbing past a red barn and through the trees."
+    "desc": "Up the hill, past the barn, and you're nearly there."
   },
   {
     "title": "Violet Bloom",
@@ -869,90 +871,90 @@
     "h": 1400,
     "thumb": "images/thumbs/violet-bloom.jpg",
     "img": "images/violet-bloom.jpg",
-    "desc": "A violet flower against a soft, rain-grey blue."
+    "desc": "Violet petals, opening wide against a soft grey sky."
   },
   {
-    "title": "Long Shadows",
+    "title": "Still Standing",
     "category": "Landscapes",
     "w": 1400,
     "h": 1027,
     "thumb": "images/thumbs/long-shadows.jpg",
     "img": "images/long-shadows.jpg",
-    "desc": "Dunes cut by long black shadows, and one dead tree."
+    "desc": "Centuries of wind, and one stubborn tree."
   },
   {
-    "title": "Restless Sky",
+    "title": "Starry Study",
     "category": "Abstracts",
     "credit": "After Van Gogh",
     "w": 1400,
     "h": 948,
     "thumb": "images/thumbs/restless-sky.jpg",
     "img": "images/restless-sky.jpg",
-    "desc": "A study after The Starry Night."
+    "desc": "Painted after Van Gogh, to learn how a sky can move."
   },
   {
-    "title": "Brothers",
+    "title": "Kings at Rest",
     "category": "Wildlife",
     "w": 1400,
     "h": 886,
     "thumb": "images/thumbs/brothers.jpg",
     "img": "images/brothers.jpg",
-    "desc": "Two lions resting in the long grass as evening settles in."
+    "desc": "Two kings off duty, the sky turning gold above them."
   },
   {
-    "title": "Breaking Light",
+    "title": "Sea Cave",
     "category": "Seascapes",
     "w": 1400,
     "h": 970,
     "thumb": "images/thumbs/breaking-light.jpg",
     "img": "images/breaking-light.jpg",
-    "desc": "Surf crashing through the mouth of a cave, a band of amber sky beyond."
+    "desc": "The sea never stops knocking at the cave's door."
   },
   {
-    "title": "Small Giant",
+    "title": "Up Close",
     "category": "Wildlife",
     "w": 1178,
     "h": 1400,
     "thumb": "images/thumbs/small-giant.jpg",
     "img": "images/small-giant.jpg",
-    "desc": "An ant up close, balanced on a single blade of grass against burnt orange."
+    "desc": "Antennae up, legs ready, about to leap into the orange."
   },
   {
-    "title": "Last Light, Two Huts",
+    "title": "Burning Homestead",
     "category": "Landscapes",
     "w": 1400,
     "h": 1036,
     "thumb": "images/thumbs/last-light-two-huts.jpg",
     "img": "images/last-light-two-huts.jpg",
-    "desc": "Two thatched huts in the last of the light, mountains behind."
+    "desc": "The hills have seen fires before; the people never get used to them."
   },
   {
-    "title": "Lady with an Ermine",
+    "title": "The Lady and the Ermine",
     "category": "Figures & Studies",
     "credit": "After Leonardo da Vinci",
     "w": 1118,
     "h": 1400,
     "thumb": "images/thumbs/lady-with-an-ermine.jpg",
     "img": "images/lady-with-an-ermine.jpg",
-    "desc": "A study after Leonardo's portrait."
+    "desc": "Painted after Leonardo, to learn how a glance can tell a story."
   },
   {
-    "title": "Violet Tide",
+    "title": "Shoreline at Dusk",
     "category": "Seascapes",
     "w": 1400,
     "h": 1097,
     "thumb": "images/thumbs/violet-tide.jpg",
     "img": "images/violet-tide.jpg",
-    "desc": "Dusk settling over the waves on a quiet shoreline."
+    "desc": "The beach empties, the light fades, and the waves keep their rhythm."
   },
   {
-    "title": "The Sweep",
+    "title": "106 Runs Not Out",
     "category": "Figures & Studies",
     "w": 1400,
     "h": 917,
     "thumb": "images/thumbs/the-sweep.jpg",
     "img": "images/the-sweep.jpg",
-    "desc": "A batsman drops to one knee and sweeps."
+    "desc": "My famous 106 runs not out in cricket for Port Edward Primary. Margate Primary still remembers it, I'm sure."
   },
   {
     "title": "Leaning Palm",
@@ -961,16 +963,16 @@
     "h": 1237,
     "thumb": "images/thumbs/leaning-palm.jpg",
     "img": "images/leaning-palm.jpg",
-    "desc": "A palm leans out over a quiet beach."
+    "desc": "Years of sea wind, and the palm just leaned into it."
   },
   {
-    "title": "The Hollow",
+    "title": "The Cavern",
     "category": "Landscapes",
     "w": 1400,
     "h": 1087,
     "thumb": "images/thumbs/the-hollow.jpg",
     "img": "images/the-hollow.jpg",
-    "desc": "A pinnacle of rock lit from within a dark cavern."
+    "desc": "Deep underground, the rock glows like it's been holding onto sunlight."
   },
   {
     "title": "Window, Bone & Blue",
@@ -980,7 +982,7 @@
     "h": 1400,
     "thumb": "images/thumbs/window-bone-and-blue.jpg",
     "img": "images/window-bone-and-blue.jpg",
-    "desc": "A horned skull on a table by the window, in Picasso's angles."
+    "desc": "Painted after Picasso, to learn how to break a still life into pieces."
   }
 ];
 
@@ -1574,10 +1576,13 @@
     v.dataset.kind = kind === "visitor" ? "person" : kind; v.className = "visitor";
     v.style.width = c.w + "px"; v.style.height = c.h + "px"; v.style.transition = "none";
     flip.innerHTML = c.svg; flip.style.transform = "";
-    const DEPTH = 16, EDGE = 34;                       // how far "back" it can wander (px), and how far off-stage it goes
+    // the ground runs from --front (closest to the viewer, below the floor line) to --back (up near the wall)
+    const fcs = getComputedStyle(floor), FRONT = parseFloat(fcs.getPropertyValue("--front")) || 0, BACK = parseFloat(fcs.getPropertyValue("--back")) || 16;
+    const DEPTH = Math.max(4, BACK - FRONT), EDGE = 34;  // how far "back" it can wander (px), and how far off-stage it goes
     const room = () => Math.max(0, floor.clientWidth - c.w);
     const rnd = (a, b) => a + Math.random() * (b - a);
-    const place = (x, d, lift) => { v.style.transform = `translate(${x.toFixed(1)}px, ${(-d - (lift || 0)).toFixed(1)}px) scale(${(1 - 0.1 * d / DEPTH).toFixed(3)})`; };
+    // further back = higher up the ground and smaller; closer = lower and a touch bigger
+    const place = (x, d, lift) => { v.style.transform = `translate(${x.toFixed(1)}px, ${(-(FRONT + d) - (lift || 0)).toFixed(1)}px) scale(${(1.06 - 0.28 * d / DEPTH).toFixed(3)})`; };
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches || room() === 0) { place(room() * 0.62, DEPTH * 0.5); v.classList.add("admire"); return; }
 
     if (c.fly) {
@@ -1673,8 +1678,8 @@
 
       vx += (want - vx) * Math.min(1, dt * 3.2);
       x += vx * dt;
-      const sway = Math.sin(now / 1700 + run) * 2.2;
-      const goal = Math.max(0, Math.min(DEPTH, (wp ? wp.d : d) + (mode === "walk" ? sway : 0)));
+      const sway = Math.sin(now / 1700 + run) * DEPTH * 0.08;
+      const goal = Math.max(0, Math.min(DEPTH, (following ? DEPTH * 0.1 : (wp ? wp.d : d)) + (mode === "walk" ? sway : 0)));
       d += (goal - d) * Math.min(1, dt * (mode === "walk" ? 0.9 : 0.4));
       place(x, d);
 

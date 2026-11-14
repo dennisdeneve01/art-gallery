@@ -37,7 +37,7 @@ test("adapter copies Cloudflare settings into process.env and survives a crashin
 });
 
 test("real shop handlers work through the adapter (catalog, wrong method)", async () => {
-  process.env.PRODIGI_ENV = "sandbox";
+  process.env.GELATO_MODE = "draft";
   const run = await load();
   const catalog = run(require("../api/catalog.js"));
   const ok = await catalog({ request: new Request("https://shop.test/api/catalog"), env: {} });
