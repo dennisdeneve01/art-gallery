@@ -40,7 +40,8 @@ async function orderEmails(d) {
   } catch (e) { console.error("[EMAIL] customer confirmation failed", d.reference, e.message); out.customer = { sent: false, reason: "error" }; }
   try {
     out.owner = await send(process.env.EMAILJS_NOTIFY_TEMPLATE, {
-      name: r.name, email: r.email,
+      name: r.name, email: r.email, subject: `New print order ${d.reference}`,
+      time: new Date().toLocaleString("en-ZA", { timeZone: "Africa/Johannesburg" }),
       message: `[New print order ${d.reference}]\n\n${d.title}, ${size}\nPaid: ${money(d.totalZAR)}\nShip to: ${r.name}, ${address}\nPhone: ${r.phone || "-"}`,
     });
   } catch (e) { console.error("[EMAIL] owner notification failed", d.reference, e.message); out.owner = { sent: false, reason: "error" }; }

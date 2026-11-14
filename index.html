@@ -1999,7 +1999,7 @@
         const res = await fetch("https://api.emailjs.com/api/v1.0/email/send", {
           method: "POST", headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ service_id: EMAILJS.service, template_id: EMAILJS.template, user_id: EMAILJS.key,
-            template_params: { name, email, message: "[Art gallery]\n\n" + message } }),
+            template_params: { name, email, subject: "Art gallery enquiry", time: new Date().toLocaleString("en-ZA"), message: "[Art gallery]\n\n" + message } }),
         });
         if (!res.ok) throw new Error("send failed");
         contactForm.reset();
