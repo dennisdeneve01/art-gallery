@@ -41,7 +41,7 @@ async function orderEmails(d) {
   try {
     out.owner = await send(process.env.EMAILJS_NOTIFY_TEMPLATE, {
       name: r.name, email: r.email,
-      message: `[New print order ${d.reference}]\n\n${d.title}, canvas ${size}\nPaid: ${money(d.totalZAR)}\nShip to: ${r.name}, ${address}\nPhone: ${r.phone || "-"}`,
+      message: `[New print order ${d.reference}]\n\n${d.title}, ${size}\nPaid: ${money(d.totalZAR)}\nShip to: ${r.name}, ${address}\nPhone: ${r.phone || "-"}`,
     });
   } catch (e) { console.error("[EMAIL] owner notification failed", d.reference, e.message); out.owner = { sent: false, reason: "error" }; }
   return out;
