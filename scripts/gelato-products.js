@@ -121,7 +121,7 @@ const pickBest = (hits, prefer) => hits.sort(prefer || ((x, y) => x.extra - y.ex
     let shownQuote = false;
     // Every 12x16 vertical canvas variant, to see whether any is printed in the buyer's country.
     // A real image is attached, as some labs only quote for a product with a file.
-    const fileUrl = "https://art-gallery.dennishammerschlag01.workers.dev/images/burnt-horizon.jpg";
+    const fileUrl = "https://dennishammerschlagart.com/images/burnt-horizon.jpg";
     if (process.argv.includes("--variants")) {
       console.log("\n12x16 canvas variants (with an image attached):");
       for (const t of Object.keys(alternatives)) for (const uid of alternatives[t]) {

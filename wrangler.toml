@@ -4,6 +4,13 @@ main = "src/worker.mjs"
 compatibility_date = "2025-09-01"
 compatibility_flags = ["nodejs_compat"]
 
+# The site's own domain (registered on Cloudflare). Deploying sets up DNS and HTTPS for both.
+# The old art-gallery...workers.dev address keeps working too.
+routes = [
+  { pattern = "dennishammerschlagart.com", custom_domain = true },
+  { pattern = "www.dennishammerschlagart.com", custom_domain = true },
+]
+
 [assets]
 directory = "./dist"
 binding = "ASSETS"
