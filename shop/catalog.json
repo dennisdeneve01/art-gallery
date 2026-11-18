@@ -578,26 +578,26 @@
     },
     "yellow-hibiscus": {
       "title": "Yellow Hibiscus",
-      "w": 374,
-      "h": 278,
+      "w": 1400,
+      "h": 1041,
       "forSale": false
     },
     "the-bicycle-kick": {
       "title": "Bicycle Kick",
-      "w": 287,
-      "h": 198,
+      "w": 1148,
+      "h": 792,
       "forSale": false
     },
     "angel-with-flute": {
       "title": "The Angel's Song",
-      "w": 290,
-      "h": 394,
+      "w": 1030,
+      "h": 1400,
       "forSale": false
     },
     "falcon-on-post": {
       "title": "Perched",
-      "w": 310,
-      "h": 400,
+      "w": 1085,
+      "h": 1400,
       "forSale": false
     }
   },
