@@ -545,6 +545,60 @@
       "w": 1030,
       "h": 1400,
       "forSale": false
+    },
+    "he-reaches-out": {
+      "title": "He Reaches Out",
+      "w": 925,
+      "h": 1252,
+      "forSale": false
+    },
+    "lighthouse-sunset": {
+      "title": "Last Cast",
+      "w": 800,
+      "h": 601,
+      "forSale": false
+    },
+    "fish-eagle": {
+      "title": "The Catch",
+      "w": 1280,
+      "h": 824,
+      "forSale": false
+    },
+    "full-sail": {
+      "title": "Full Sail",
+      "w": 1162,
+      "h": 998,
+      "forSale": false
+    },
+    "humpback-breach": {
+      "title": "Breaching",
+      "w": 1280,
+      "h": 955,
+      "forSale": false
+    },
+    "yellow-hibiscus": {
+      "title": "Yellow Hibiscus",
+      "w": 374,
+      "h": 278,
+      "forSale": false
+    },
+    "the-bicycle-kick": {
+      "title": "Bicycle Kick",
+      "w": 287,
+      "h": 198,
+      "forSale": false
+    },
+    "angel-with-flute": {
+      "title": "The Angel's Song",
+      "w": 290,
+      "h": 394,
+      "forSale": false
+    },
+    "falcon-on-post": {
+      "title": "Perched",
+      "w": 310,
+      "h": 400,
+      "forSale": false
     }
   },
   "provider": "gelato",
