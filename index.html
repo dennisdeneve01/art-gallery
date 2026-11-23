@@ -280,10 +280,11 @@
   .about p{ color: var(--muted); line-height: 1.8; font-size: 1rem; max-width: 58ch; }
   .about p + p{ margin-top: 16px; }
   /* where it started: a small photo with Helene under the story */
-  .about .early{ margin: 30px 0 0; display: flex; gap: 18px; align-items: center; max-width: 58ch; }
-  .about .early img{ width: 132px; height: auto; flex: none; box-shadow: 0 0 0 1px var(--accent-dim), 0 0 0 6px #1c1710, 0 0 0 7px var(--accent-dim), 0 16px 30px rgba(0,0,0,.5); }
-  .about .early figcaption{ font-size: 0.86rem; color: var(--muted-2); line-height: 1.6; font-style: italic; }
-  @media (max-width: 420px){ .about .early{ flex-direction: column; align-items: flex-start; } .about .early img{ width: 160px; } }
+  .about .early-row{ margin-top: 30px; display: grid; grid-template-columns: 1fr 1fr; gap: 22px; max-width: 58ch; }
+  .about .early{ margin: 0; }
+  .about .early img{ display: block; width: 100%; height: 170px; object-fit: cover; object-position: 50% 30%; box-shadow: 0 0 0 1px var(--accent-dim), 0 0 0 6px #1c1710, 0 0 0 7px var(--accent-dim), 0 16px 30px rgba(0,0,0,.5); }
+  .about .early figcaption{ margin-top: 14px; font-size: 0.84rem; color: var(--muted-2); line-height: 1.55; font-style: italic; }
+  @media (max-width: 420px){ .about .early img{ height: 130px; } .about .early figcaption{ font-size: 0.8rem; } }
   .about .pull{ font-family: "Fraunces", serif; font-style: italic; color: var(--text); font-size: 1.2rem; margin-top: 26px; max-width: 40ch; line-height: 1.5; }
 
   /* ---------- contact ---------- */
@@ -553,10 +554,16 @@
         <p>Painting started for me at seven, on the South Coast of KwaZulu-Natal: salt air, wide skies and colour everywhere you looked. By twelve, the brushes had been packed away.</p>
         <p>Then came the &ldquo;adulting&rdquo;: a computer science degree at UCT, and years spent building things out of logic. Not long after, I came back to the canvas and found it had waited. These days I care less about getting a scene right, and more about getting it felt.</p>
         <p class="pull">&ldquo;The brush remembered what I'd forgotten.&rdquo;</p>
-        <figure class="early">
-          <img src="images/dennis-with-helene.jpg" alt="Dennis as a boy with his art teacher, Helene Bruce-Webster" width="827" height="915" loading="lazy" decoding="async">
-          <figcaption>Me as a boy with my art teacher, Helene Bruce-Webster, at Helene&rsquo;s Art Studio, holding my Bicycle Kick painting.</figcaption>
-        </figure>
+        <div class="early-row">
+          <figure class="early">
+            <img src="images/first-painting-with-helene.jpg" alt="Dennis as a young boy painting with his art teacher, Helene Bruce-Webster" width="1344" height="1008" loading="lazy" decoding="async">
+            <figcaption>Working on my very first painting with Helene.</figcaption>
+          </figure>
+          <figure class="early">
+            <img src="images/dennis-with-helene.jpg" alt="Dennis as a boy with his art teacher, Helene Bruce-Webster" width="827" height="915" loading="lazy" decoding="async">
+            <figcaption>With my art teacher, Helene Bruce-Webster, at Helene&rsquo;s Art Studio, holding my Bicycle Kick painting.</figcaption>
+          </figure>
+        </div>
       </div>
     </div>
   </section>
@@ -1076,6 +1083,33 @@
     "thumb": "images/thumbs/falcon-on-post.jpg",
     "img": "images/falcon-on-post.jpg",
     "desc": "A falcon on a fence post, sizing up the field."
+  },
+  {
+    "title": "Rowing Home",
+    "category": "Seascapes",
+    "w": 998,
+    "h": 1368,
+    "thumb": "images/thumbs/rowing-home.jpg",
+    "img": "images/rowing-home.jpg",
+    "desc": "Everything swirls, but right in the middle, it's calm enough to row."
+  },
+  {
+    "title": "Fish Eagle",
+    "category": "Wildlife",
+    "w": 1400,
+    "h": 1046,
+    "thumb": "images/thumbs/fish-eagle-2014.jpg",
+    "img": "images/fish-eagle-2014.jpg",
+    "desc": "Quiet water, a dark forest, and one bird that owns it all."
+  },
+  {
+    "title": "Bowl of Trouble",
+    "category": "Wildlife",
+    "w": 1014,
+    "h": 1380,
+    "thumb": "images/thumbs/bowl-of-trouble.jpg",
+    "img": "images/bowl-of-trouble.jpg",
+    "desc": "The fish moved out; the kitten moved in."
   }
   ];
 

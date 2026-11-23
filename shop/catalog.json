@@ -599,6 +599,24 @@
       "w": 1085,
       "h": 1400,
       "forSale": false
+    },
+    "rowing-home": {
+      "title": "Rowing Home",
+      "w": 998,
+      "h": 1368,
+      "forSale": false
+    },
+    "fish-eagle-2014": {
+      "title": "Fish Eagle",
+      "w": 1400,
+      "h": 1046,
+      "forSale": false
+    },
+    "bowl-of-trouble": {
+      "title": "Bowl of Trouble",
+      "w": 1014,
+      "h": 1380,
+      "forSale": false
     }
   },
   "provider": "gelato",
