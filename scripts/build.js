@@ -6,7 +6,7 @@ const root = path.join(__dirname, "..");
 const out = process.argv[2] ? path.resolve(process.argv[2]) : path.join(root, "dist"); // optional: node scripts/build.js <folder>
 try { fs.rmSync(out, { recursive: true, force: true }); } catch (e) { /* locked folder: files are simply overwritten below */ }
 fs.mkdirSync(out, { recursive: true });
-for (const item of ["index.html", "images", "favicon.svg", "favicon.ico", "robots.txt", "sitemap.xml"]) {
+for (const item of ["index.html", "lucy.html", "images", "favicon.svg", "favicon.ico", "robots.txt", "sitemap.xml"]) {
   const from = path.join(root, item);
   if (fs.existsSync(from)) fs.cpSync(from, path.join(out, item), { recursive: true });
 }
@@ -30,12 +30,19 @@ const pieces = m ? JSON.parse(m[1]) : [];
 const today = new Date().toISOString().slice(0, 10);
 const images = pieces.map((p) => `    <image:image><image:loc>${SITE}/${xml(p.img)}</image:loc><image:title>${xml(p.title)}</image:title>` +
   (p.desc ? `<image:caption>${xml(p.desc)}</image:caption>` : "") + `</image:image>`).join("\n");
+const lm = fs.readFileSync(path.join(root, "lucy.html"), "utf8").match(/const works = (\[[\s\S]*?\n\s*\]);/);
+const lucyImages = (lm ? JSON.parse(lm[1]) : []).map((p) => `    <image:image><image:loc>${SITE}/${xml(p.img)}</image:loc><image:title>${xml(p.title + " by Lucy Hammerschlag")}</image:title></image:image>`).join("\n");
 fs.writeFileSync(path.join(out, "sitemap.xml"), `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>${SITE}/</loc>
     <lastmod>${today}</lastmod>
 ${images}
+  </url>
+  <url>
+    <loc>${SITE}/lucy</loc>
+    <lastmod>${today}</lastmod>
+${lucyImages}
   </url>
   <url>
     <loc>${SITE}/policies</loc>

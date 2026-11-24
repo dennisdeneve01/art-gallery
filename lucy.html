@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Lucy Hammerschlag | Drawings, prints and paintings</title>
+<meta name="description" content="A tribute to Lucy Hammerschlag: charcoal drawings, prints and paintings by a Portuguese-born artist who studied at the Johannesburg School of Art, shared by her family.">
+<meta name="theme-color" content="#efe8dc">
+<link rel="canonical" href="https://dennishammerschlagart.com/lucy">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://dennishammerschlagart.com/lucy">
+<meta property="og:title" content="Lucy Hammerschlag | Drawings, prints and paintings">
+<meta property="og:description" content="Charcoal drawings, prints and paintings by Lucy Hammerschlag, shared by her family so her work can be seen.">
+<meta property="og:image" content="https://dennishammerschlagart.com/images/lucy/them.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..600;1,9..144,300..500&family=Work+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper: #efe8dc; --card: #fbf8f2; --ink: #2e2923; --muted: #6f665a; --soft: #8a8072;
+    --accent: #9a7440; --line: #d9cfbf;
+    --oak: linear-gradient(135deg,#caa074,#a87a4a 45%,#c49a6c 55%,#9c6f40);
+  }
+  *{ box-sizing: border-box; }
+  html{ scroll-behavior: smooth; }
+  body{
+    margin: 0; color: var(--ink); font-family: "Work Sans", system-ui, sans-serif; font-weight: 400; line-height: 1.6;
+    background: var(--paper) url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='2'/><feColorMatrix values='0 0 0 0 .5 0 0 0 0 .44 0 0 0 0 .36 0 0 0 .08 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+    -webkit-font-smoothing: antialiased;
+  }
+  img{ display: block; max-width: 100%; }
+  .wrap{ width: min(1180px, 100% - 2 * clamp(16px, 5vw, 60px)); margin-inline: auto; }
+
+  /* nav: same links as the main site, in Lucy's light colours */
+  header{ position: sticky; top: 0; z-index: 50; padding-block: 16px; background: rgba(239,232,220,.9); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+  nav{ display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+  .mark{ font-family: "Fraunces", serif; font-size: 1.05rem; color: var(--ink); text-decoration: none; }
+  .mark em{ color: var(--accent); }
+  .navlinks{ display: flex; gap: clamp(12px, 3vw, 30px); list-style: none; margin: 0; padding: 0; }
+  .navlinks a{ text-decoration: none; font-size: .76rem; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); padding-bottom: 3px; border-bottom: 1px solid transparent; }
+  .navlinks a:hover, .navlinks a:focus-visible, .navlinks a[aria-current]{ color: var(--ink); border-color: var(--accent); outline: none; }
+  .short{ display: none; }
+  @media (max-width: 560px){ .navlinks{ gap: 11px; } .navlinks a{ font-size: .6rem; letter-spacing: .07em; } .long{ display: none; } .short{ display: inline; } }
+
+  /* opening: oval portrait, name, tribute */
+  .intro{ text-align: center; padding-block: clamp(44px, 7vw, 80px) clamp(30px, 5vw, 50px); }
+  .oval{ width: clamp(170px, 22vw, 220px); aspect-ratio: 19 / 24; margin: 0 auto; border-radius: 50%; overflow: hidden;
+    box-shadow: 0 0 0 10px #f8f4ec, 0 0 0 22px #b98d5c, 0 0 0 24px #8a6438, 0 22px 40px rgba(70,45,20,.28); }
+  .oval img{ width: 100%; height: 100%; object-fit: cover; object-position: 50% 22%; }
+  .kicker{ margin: clamp(48px, 6vw, 60px) 0 0; font-size: .72rem; letter-spacing: .2em; text-transform: uppercase; color: var(--accent); font-weight: 500; }
+  h1{ font-family: "Fraunces", serif; font-weight: 300; font-size: clamp(2.4rem, 6vw, 4rem); line-height: 1.05; margin: 12px 0 0; }
+  .story{ max-width: 62ch; margin: 30px auto 0; text-align: left; color: #4d463d; font-size: 1.02rem; line-height: 1.85; }
+  .story p{ margin: 0 0 18px; }
+  .story p:last-child{ font-family: "Fraunces", serif; font-style: italic; font-size: 1.18rem; color: var(--ink); text-align: center; margin-top: 26px; }
+  .born{ max-width: 760px; margin: clamp(30px, 5vw, 46px) auto 0; }
+  .born .fr{ padding: 12px; }
+  .born figcaption{ margin-top: 14px; font-family: "Fraunces", serif; font-style: italic; color: var(--muted); font-size: .95rem; }
+
+  /* sections and framed works */
+  .section-head{ display: flex; align-items: baseline; justify-content: space-between; gap: 16px; border-top: 1px solid var(--line); padding-top: 34px; margin-top: clamp(40px, 6vw, 70px); }
+  .section-head h2{ font-family: "Fraunces", serif; font-weight: 300; font-size: clamp(1.6rem, 3vw, 2.1rem); margin: 0; }
+  .section-head span{ font-size: .72rem; letter-spacing: .16em; text-transform: uppercase; color: var(--soft); }
+  .grid{ display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(36px, 5vw, 60px) clamp(24px, 4vw, 50px); padding-top: 34px; align-items: center; }
+  @media (max-width: 860px){ .grid{ grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 520px){ .grid{ grid-template-columns: 1fr; } }
+  .work{ margin: 0; cursor: zoom-in; }
+  .work:focus-visible{ outline: 2px solid var(--accent); outline-offset: 10px; }
+  .fr{ padding: 14px; background: var(--oak); box-shadow: inset 0 0 0 1px rgba(0,0,0,.25), 0 18px 34px rgba(70,45,20,.28); }
+  .mt{ background: var(--card); padding: clamp(16px, 2.2vw, 24px); box-shadow: inset 0 0 0 1px #e2d8c7, inset 2px 2px 6px rgba(0,0,0,.12); }
+  .mt img{ width: 100%; height: auto; }
+  .work figcaption{ text-align: center; margin-top: 18px; }
+  .work figcaption b{ display: block; font-family: "Fraunces", serif; font-weight: 400; font-size: 1.05rem; }
+  .work figcaption span{ font-size: .8rem; color: var(--soft); }
+  /* ceramics are objects, so a simple photo card instead of a frame */
+  .grid.objects .fr{ padding: 0; background: none; box-shadow: 0 14px 28px rgba(70,45,20,.22); }
+  .grid.objects .mt{ padding: 0; }
+
+  .closing{ text-align: center; padding-block: clamp(60px, 8vw, 90px); }
+  .closing p{ font-family: "Fraunces", serif; font-style: italic; font-size: 1.15rem; color: var(--muted); margin: 0 0 22px; }
+  .btn{ display: inline-block; padding: 13px 22px; border: 1px solid var(--accent); color: #6e5124; text-decoration: none; font-size: .74rem; letter-spacing: .12em; text-transform: uppercase; font-weight: 500; margin: 6px; }
+  .btn:hover{ background: rgba(154,116,64,.08); }
+  footer{ border-top: 1px solid var(--line); padding-block: 26px; font-size: .78rem; color: var(--soft); text-align: center; }
+
+  /* enlarged view, still in its oak frame */
+  .zoom{ position: fixed; inset: 0; z-index: 100; background: rgba(239,232,220,.97); display: flex; align-items: center; justify-content: center; padding: 64px clamp(12px, 6vw, 90px) 80px; }
+  .zoom[hidden]{ display: none; }
+  .zoom .fr{ max-width: 100%; max-height: 100%; display: flex; }
+  .zoom .mt{ display: flex; }
+  .zoom img{ max-width: calc(100vw - 2 * clamp(12px, 6vw, 90px) - 80px); max-height: calc(100vh - 220px); max-height: calc(100dvh - 220px); width: auto; height: auto; }
+  .zbtn{ position: absolute; width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--line); background: var(--card); color: var(--ink); font-size: 1.4rem; line-height: 1; cursor: pointer; display: grid; place-items: center; }
+  .zbtn:hover, .zbtn:focus-visible{ border-color: var(--accent); outline: none; }
+  .zclose{ top: 14px; right: 14px; }
+  .zprev{ left: 14px; top: 50%; transform: translateY(-50%); } .znext{ right: 14px; top: 50%; transform: translateY(-50%); }
+  .zcap{ position: absolute; left: 0; right: 0; bottom: 20px; text-align: center; font-family: "Fraunces", serif; font-size: 1.05rem; }
+  .zcap span{ display: block; font-family: "Work Sans", sans-serif; font-size: .74rem; letter-spacing: .12em; text-transform: uppercase; color: var(--soft); margin-top: 2px; }
+  @media (max-width: 640px){ .zprev, .znext{ top: auto; bottom: 14px; transform: none; } .zcap{ bottom: 24px; padding-inline: 70px; } }
+</style>
+</head>
+<body>
+<header>
+  <nav class="wrap">
+    <a class="mark" href="/">Dennis <em>Hammerschlag</em></a>
+    <ul class="navlinks">
+      <li><a href="/#gallery">Gallery</a></li>
+      <li><a href="/lucy" aria-current="page"><span class="long">Lucy Hammerschlag</span><span class="short">Lucy</span></a></li>
+      <li><a href="/policies#pricing">Prices</a></li>
+      <li><a href="/#about">About</a></li>
+      <li><a href="/#contact">Contact</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main>
+  <section class="intro wrap">
+    <div class="oval"><img src="images/lucy/lucy.jpg" alt="Lucy Hammerschlag, laughing" width="1008" height="1400"></div>
+    <p class="kicker">Drawings, prints and paintings</p>
+    <h1>Lucy Hammerschlag</h1>
+    <div class="story">
+      <p>Lucy&rsquo;s story starts in Vidigal, a village of stone houses in the Portuguese hills. A boat carried her to Mozambique, and from there her family made their way to the south of Johannesburg. That is where my dad met her.</p>
+      <p>She grew up in a strict, Portuguese-speaking home, with parents who never learnt to read or write. Art was not the obvious path, but it was hers. She left Wits after a year to study at the Johannesburg School of Art, and the drawings she made there are full of figures: bent, reaching, resting, alive.</p>
+      <p>For years these drawings were kept close by the people who loved her. My dad always hoped the world would see them one day. Now it can.</p>
+    </div>
+    <figure class="born">
+      <div class="fr"><div class="mt"><img src="images/lucy/vidigal.jpg" alt="An old stone house in Vidigal, Portugal" width="1400" height="1050" loading="lazy"></div></div>
+      <figcaption>Vidigal, Portugal, where Lucy was born.</figcaption>
+    </figure>
+  </section>
+
+  <div class="wrap" id="works"></div>
+
+  <section class="closing wrap">
+    <p>Shared with love by her family.</p>
+    <a class="btn" href="/#contact">Ask about Lucy&rsquo;s work</a>
+    <a class="btn" href="/">Back to Dennis&rsquo;s gallery</a>
+  </section>
+</main>
+
+<footer><div class="wrap">Works by Lucy Hammerschlag &copy; the Hammerschlag family. Shown on dennishammerschlagart.com.</div></footer>
+
+<div class="zoom" id="zoom" role="dialog" aria-modal="true" aria-label="Enlarged view" hidden>
+  <div class="fr"><div class="mt"><img id="zoomImg" alt=""></div></div>
+  <p class="zcap" id="zoomCap"></p>
+  <button class="zbtn zclose" id="zClose" type="button" aria-label="Close">&times;</button>
+  <button class="zbtn zprev" id="zPrev" type="button" aria-label="Previous">&lsaquo;</button>
+  <button class="zbtn znext" id="zNext" type="button" aria-label="Next">&rsaquo;</button>
+</div>
+
+<script>
+  // Lucy's works. Titles she gave are used where known; the rest are "Untitled" for now.
+  const works = [
+    {
+      "title": "Them",
+      "category": "Drawings",
+      "w": 1400,
+      "h": 1069,
+      "img": "images/lucy/them.jpg",
+      "thumb": "images/lucy/thumbs/them.jpg"
+    },
+    {
+      "title": "Poet",
+      "category": "Drawings",
+      "w": 1036,
+      "h": 1400,
+      "img": "images/lucy/poet.jpg",
+      "thumb": "images/lucy/thumbs/poet.jpg"
+    },
+    {
+      "title": "Lucy’s Religion",
+      "category": "Drawings",
+      "w": 1008,
+      "h": 1400,
+      "img": "images/lucy/lucys-religion.jpg",
+      "thumb": "images/lucy/thumbs/lucys-religion.jpg"
+    },
+    {
+      "title": "Untitled (1994)",
+      "category": "Drawings",
+      "w": 1400,
+      "h": 1050,
+      "img": "images/lucy/figures-1994.jpg",
+      "thumb": "images/lucy/thumbs/figures-1994.jpg"
+    },
+    {
+      "title": "Untitled",
+      "category": "Drawings",
+      "w": 1060,
+      "h": 1400,
+      "img": "images/lucy/dark-figures.jpg",
+      "thumb": "images/lucy/thumbs/dark-figures.jpg"
+    },
+    {
+      "title": "Untitled",
+      "category": "Drawings",
+      "w": 1400,
+      "h": 897,
+      "img": "images/lucy/crouching-figure.jpg",
+      "thumb": "images/lucy/thumbs/crouching-figure.jpg"
+    },
+    {
+      "title": "Untitled",
+      "category": "Drawings",
+      "w": 965,
+      "h": 1400,
+      "img": "images/lucy/standing-figure.jpg",
+      "thumb": "images/lucy/thumbs/standing-figure.jpg"
+    },
+    {
+      "title": "Untitled",
+      "category": "Drawings",
+      "w": 927,
+      "h": 1400,
+      "img": "images/lucy/head-bowed.jpg",
+      "thumb": "images/lucy/thumbs/head-bowed.jpg"
+    },
+    {
+      "title": "Untitled",
+      "category": "Drawings",
+      "w": 1400,
+      "h": 1012,
+      "img": "images/lucy/resting.jpg",
+      "thumb": "images/lucy/thumbs/resting.jpg"
+    },
+    {
+      "title": "My Friend Anna",
+      "category": "Drawings",
+      "w": 943,
+      "h": 1400,
+      "img": "images/lucy/my-friend-anna.jpg",
+      "thumb": "images/lucy/thumbs/my-friend-anna.jpg"
+    },
+    {
+      "title": "Untitled",
+      "category": "Drawings",
+      "w": 947,
+      "h": 1400,
+      "img": "images/lucy/figure-and-tree.jpg",
+      "thumb": "images/lucy/thumbs/figure-and-tree.jpg"
+    },
+    {
+      "title": "Untitled",
+      "category": "Drawings",
+      "w": 999,
+      "h": 1400,
+      "img": "images/lucy/mother-and-children.jpg",
+      "thumb": "images/lucy/thumbs/mother-and-children.jpg"
+    },
+    {
+      "title": "Untitled",
+      "category": "Drawings",
+      "w": 1014,
+      "h": 1400,
+      "img": "images/lucy/standing-nude.jpg",
+      "thumb": "images/lucy/thumbs/standing-nude.jpg"
+    },
+    {
+      "title": "Untitled",
+      "category": "Drawings",
+      "w": 1291,
+      "h": 1400,
+      "img": "images/lucy/at-the-board.jpg",
+      "thumb": "images/lucy/thumbs/at-the-board.jpg"
+    },
+    {
+      "title": "Untitled",
+      "category": "Drawings",
+      "w": 1057,
+      "h": 1400,
+      "img": "images/lucy/two-figures.jpg",
+      "thumb": "images/lucy/thumbs/two-figures.jpg"
+    },
+    {
+      "title": "Untitled",
+      "category": "Drawings",
+      "w": 1142,
+      "h": 1400,
+      "img": "images/lucy/roots.jpg",
+      "thumb": "images/lucy/thumbs/roots.jpg"
+    },
+    {
+      "title": "Untitled",
+      "category": "Drawings",
+      "w": 1011,
+      "h": 1400,
+      "img": "images/lucy/bowed-figure.jpg",
+      "thumb": "images/lucy/thumbs/bowed-figure.jpg"
+    },
+    {
+      "title": "Untitled",
+      "category": "Drawings",
+      "w": 1023,
+      "h": 1400,
+      "img": "images/lucy/portrait.jpg",
+      "thumb": "images/lucy/thumbs/portrait.jpg"
+    },
+    {
+      "title": "Untitled",
+      "category": "Drawings",
+      "w": 841,
+      "h": 1400,
+      "img": "images/lucy/tangle.jpg",
+      "thumb": "images/lucy/thumbs/tangle.jpg"
+    },
+    {
+      "title": "Untitled",
+      "category": "Drawings",
+      "w": 1070,
+      "h": 1400,
+      "img": "images/lucy/reclining-in-light.jpg",
+      "thumb": "images/lucy/thumbs/reclining-in-light.jpg"
+    },
+    {
+      "title": "Untitled",
+      "category": "Drawings",
+      "w": 1400,
+      "h": 1050,
+      "img": "images/lucy/two-seated.jpg",
+      "thumb": "images/lucy/thumbs/two-seated.jpg"
+    },
+    {
+      "title": "Untitled",
+      "category": "Drawings",
+      "w": 1037,
+      "h": 1400,
+      "img": "images/lucy/leaning.jpg",
+      "thumb": "images/lucy/thumbs/leaning.jpg"
+    },
+    {
+      "title": "Untitled",
+      "category": "Drawings",
+      "w": 964,
+      "h": 1400,
+      "img": "images/lucy/figure-in-colour.jpg",
+      "thumb": "images/lucy/thumbs/figure-in-colour.jpg"
+    },
+    {
+      "title": "Untitled",
+      "category": "Drawings",
+      "w": 907,
+      "h": 1400,
+      "img": "images/lucy/ghost-figure.jpg",
+      "thumb": "images/lucy/thumbs/ghost-figure.jpg"
+    },
+    {
+      "title": "Untitled",
+      "category": "Drawings",
+      "w": 1342,
+      "h": 1356,
+      "img": "images/lucy/ladder.jpg",
+      "thumb": "images/lucy/thumbs/ladder.jpg"
+    },
+    {
+      "title": "Untitled",
+      "category": "Drawings",
+      "w": 996,
+      "h": 1400,
+      "img": "images/lucy/pale-figure.jpg",
+      "thumb": "images/lucy/thumbs/pale-figure.jpg"
+    },
+    {
+      "title": "Untitled",
+      "category": "Drawings",
+      "w": 1072,
+      "h": 1400,
+      "img": "images/lucy/woman-with-roses.jpg",
+      "thumb": "images/lucy/thumbs/woman-with-roses.jpg"
+    },
+    {
+      "title": "Untitled",
+      "category": "Prints",
+      "w": 974,
+      "h": 1400,
+      "img": "images/lucy/floating-1.jpg",
+      "thumb": "images/lucy/thumbs/floating-1.jpg"
+    },
+    {
+      "title": "Untitled",
+      "category": "Prints",
+      "w": 975,
+      "h": 1400,
+      "img": "images/lucy/floating-2.jpg",
+      "thumb": "images/lucy/thumbs/floating-2.jpg"
+    },
+    {
+      "title": "Untitled",
+      "category": "Prints",
+      "w": 1060,
+      "h": 1400,
+      "img": "images/lucy/floating-3.jpg",
+      "thumb": "images/lucy/thumbs/floating-3.jpg"
+    },
+    {
+      "title": "Untitled",
+      "category": "Prints",
+      "w": 1069,
+      "h": 1400,
+      "img": "images/lucy/trees-and-flowers.jpg",
+      "thumb": "images/lucy/thumbs/trees-and-flowers.jpg"
+    },
+    {
+      "title": "Untitled",
+      "category": "Prints",
+      "w": 1400,
+      "h": 1089,
+      "img": "images/lucy/cut-shapes.jpg",
+      "thumb": "images/lucy/thumbs/cut-shapes.jpg"
+    },
+    {
+      "title": "Untitled",
+      "category": "Prints",
+      "w": 1211,
+      "h": 1400,
+      "img": "images/lucy/fairy.jpg",
+      "thumb": "images/lucy/thumbs/fairy.jpg"
+    },
+    {
+      "title": "Rose",
+      "category": "Prints",
+      "w": 1071,
+      "h": 1400,
+      "img": "images/lucy/rose.jpg",
+      "thumb": "images/lucy/thumbs/rose.jpg"
+    },
+    {
+      "title": "Ruby",
+      "category": "Paintings",
+      "w": 1033,
+      "h": 1400,
+      "img": "images/lucy/ruby.jpg",
+      "thumb": "images/lucy/thumbs/ruby.jpg"
+    },
+    {
+      "title": "Art School",
+      "category": "Paintings",
+      "w": 1037,
+      "h": 1400,
+      "img": "images/lucy/art-school.jpg",
+      "thumb": "images/lucy/thumbs/art-school.jpg"
+    },
+    {
+      "title": "Untitled",
+      "category": "Paintings",
+      "w": 1021,
+      "h": 1400,
+      "img": "images/lucy/yellow.jpg",
+      "thumb": "images/lucy/thumbs/yellow.jpg"
+    },
+    {
+      "title": "Avo’s Picture",
+      "category": "Paintings",
+      "w": 1195,
+      "h": 1400,
+      "img": "images/lucy/avos-picture.jpg",
+      "thumb": "images/lucy/thumbs/avos-picture.jpg"
+    },
+    {
+      "title": "Untitled",
+      "category": "Paintings",
+      "w": 1109,
+      "h": 1400,
+      "img": "images/lucy/gold-figure.jpg",
+      "thumb": "images/lucy/thumbs/gold-figure.jpg"
+    },
+    {
+      "title": "Untitled",
+      "category": "Paintings",
+      "w": 1400,
+      "h": 1050,
+      "img": "images/lucy/dark-gold.jpg",
+      "thumb": "images/lucy/thumbs/dark-gold.jpg"
+    },
+    {
+      "title": "Untitled",
+      "category": "Paintings",
+      "w": 1080,
+      "h": 1400,
+      "img": "images/lucy/seated-in-gold.jpg",
+      "thumb": "images/lucy/thumbs/seated-in-gold.jpg"
+    },
+    {
+      "title": "Untitled",
+      "category": "Paintings",
+      "w": 917,
+      "h": 1400,
+      "img": "images/lucy/pink-figure.jpg",
+      "thumb": "images/lucy/thumbs/pink-figure.jpg"
+    },
+    {
+      "title": "Untitled",
+      "category": "Paintings",
+      "w": 1400,
+      "h": 962,
+      "img": "images/lucy/blue-figures.jpg",
+      "thumb": "images/lucy/thumbs/blue-figures.jpg"
+    },
+    {
+      "title": "Untitled",
+      "category": "Ceramics",
+      "w": 1400,
+      "h": 1050,
+      "img": "images/lucy/torso.jpg",
+      "thumb": "images/lucy/thumbs/torso.jpg"
+    },
+    {
+      "title": "Untitled",
+      "category": "Ceramics",
+      "w": 1400,
+      "h": 1050,
+      "img": "images/lucy/vase.jpg",
+      "thumb": "images/lucy/thumbs/vase.jpg"
+    },
+    {
+      "title": "Untitled",
+      "category": "Ceramics",
+      "w": 1400,
+      "h": 1050,
+      "img": "images/lucy/bowl.jpg",
+      "thumb": "images/lucy/thumbs/bowl.jpg"
+    },
+    {
+      "title": "Untitled",
+      "category": "Ceramics",
+      "w": 1400,
+      "h": 1050,
+      "img": "images/lucy/painted-bowl.jpg",
+      "thumb": "images/lucy/thumbs/painted-bowl.jpg"
+    }
+  ];
+  const SECTIONS = ["Drawings", "Prints", "Paintings", "Ceramics"];
+  const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+  const host = document.getElementById("works");
+  const order = [];
+  host.innerHTML = SECTIONS.map((sec) => {
+    const list = works.filter((w) => w.category === sec);
+    if (!list.length) return "";
+    const cards = list.map((w) => {
+      order.push(w);
+      return `<figure class="work" tabindex="0" role="button" data-i="${order.length - 1}" aria-label="Enlarge ${esc(w.title)}">
+        <div class="fr"><div class="mt"><img src="${w.thumb}" alt="${esc(w.title)} by Lucy Hammerschlag" width="${w.w}" height="${w.h}" loading="lazy" decoding="async"></div></div>
+        <figcaption><b>${esc(w.title)}</b>${w.desc ? `<span>${esc(w.desc)}</span>` : ""}</figcaption></figure>`;
+    }).join("");
+    return `<div class="section-head"><h2>${sec}</h2><span>${list.length} ${list.length === 1 ? "work" : "works"}</span></div>
+      <div class="grid${sec === "Ceramics" ? " objects" : ""}">${cards}</div>`;
+  }).join("");
+
+  const zoom = document.getElementById("zoom"), zImg = document.getElementById("zoomImg"), zCap = document.getElementById("zoomCap");
+  let at = -1, from = null;
+  function show(i){
+    at = (i + order.length) % order.length; const w = order[at];
+    zImg.src = w.img; zImg.alt = `${w.title} by Lucy Hammerschlag`;
+    zCap.innerHTML = `${esc(w.title)}<span>${esc(w.category)} &middot; ${at + 1} / ${order.length}</span>`;
+  }
+  function open(i){ from = document.activeElement; show(i); zoom.hidden = false; document.body.style.overflow = "hidden"; document.getElementById("zClose").focus(); }
+  function close(){ zoom.hidden = true; zImg.removeAttribute("src"); document.body.style.overflow = ""; if (from) from.focus(); }
+  host.addEventListener("click", (e) => { const f = e.target.closest(".work"); if (f) open(+f.dataset.i); });
+  host.addEventListener("keydown", (e) => { const f = e.target.closest(".work"); if (f && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); open(+f.dataset.i); } });
+  document.getElementById("zClose").addEventListener("click", close);
+  document.getElementById("zPrev").addEventListener("click", () => show(at - 1));
+  document.getElementById("zNext").addEventListener("click", () => show(at + 1));
+  zoom.addEventListener("click", (e) => { if (e.target === zoom) close(); });
+  document.addEventListener("keydown", (e) => {
+    if (zoom.hidden) return;
+    if (e.key === "Escape") close(); else if (e.key === "ArrowLeft") show(at - 1); else if (e.key === "ArrowRight") show(at + 1);
+  });
+  let sx = null;
+  zoom.addEventListener("touchstart", (e) => { sx = e.touches[0].clientX; }, { passive: true });
+  zoom.addEventListener("touchend", (e) => { if (sx === null) return; const dx = e.changedTouches[0].clientX - sx; if (Math.abs(dx) > 50) show(at + (dx < 0 ? 1 : -1)); sx = null; });
+</script>
+</body>
+</html>
